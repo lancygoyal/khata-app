@@ -4,15 +4,14 @@ import Layout from "./layout";
 
 export default ({
   component: Component,
-  type = "public",
+  type = "private",
   auth = false,
-  to = "/hello",
+  to = "/",
   ...rest
 }) => (
   <Route
     {...rest}
     render={(props: any) => {
-      if (type === "public") return <Component {...props} />;
       if (type === "private")
         return auth ? (
           <Layout {...props}>
