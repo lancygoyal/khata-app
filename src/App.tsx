@@ -32,7 +32,7 @@ class App extends React.Component<AppProps> {
       <Provider store={store}>
         <PersistGate loading={<Loader />} persistor={persistor}>
           <ThemeProvider theme={theme}>
-            <Routers />
+            <Routers store={store} />
           </ThemeProvider>
         </PersistGate>
       </Provider>

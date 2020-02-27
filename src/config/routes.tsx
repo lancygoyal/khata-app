@@ -1,23 +1,21 @@
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
-import { connect } from "react-redux";
 import EnRoute from "../components/enRoute";
 import SignIn from "../pages/signin";
 import SignUp from "../pages/signup";
 
 const Routes = [
-  { path: "/", component: SignUp, type: "user" },
-  { path: "/signin", component: SignIn, type: "user" }
+  { path: "/", component: SignIn, type: "signin", to: "/signup" },
+  { path: "/signup", component: SignUp, type: "signup" },
+  { path: "/signin", component: SignIn, type: "signin", to: "/signup" }
 ];
 
-const Routers = ({ user }) => (
+const Routers = ({ store }) => (
   <Router>
     {Routes.map((route, index) => (
-      <EnRoute key={index} exact {...route} auth={false} />
+      <EnRoute key={index} exact {...route} store={store} />
     ))}
   </Router>
 );
 
-const mapStateToProps = ({ user }) => ({ user });
-
-export default connect(mapStateToProps)(Routers);
+export default Routers;

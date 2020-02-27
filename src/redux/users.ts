@@ -1,20 +1,17 @@
-const initialState = {
-  isLogin: false,
-  data: null
-};
+const initialState = [];
 
 export type UserState = Readonly<typeof initialState>;
 
 export const Types = {
-  SET_USER: "SET_USER",
+  CREATE_ACCOUNT: "CREATE_ACCOUNT",
   RESET: "RESET"
 };
 
 // REDUCERS
 export default (state: UserState = initialState, action): UserState => {
   switch (action.type) {
-    case Types.SET_USER:
-      return { isLogin: action.payload ? true : false, data: action.payload };
+    case Types.CREATE_ACCOUNT:
+      return [...state, action.payload];
     case Types.RESET:
       return initialState;
     default:
@@ -23,6 +20,6 @@ export default (state: UserState = initialState, action): UserState => {
 };
 
 // ACTIONS
-export const setUser = payload => {
-  return { type: Types.SET_USER, payload };
+export const createAccount = payload => {
+  return { type: Types.CREATE_ACCOUNT, payload };
 };

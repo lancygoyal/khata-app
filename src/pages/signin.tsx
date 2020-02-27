@@ -6,7 +6,7 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { withStyles, WithStyles, createStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { setUser } from "../redux/user";
+import { setUser } from "../redux/app";
 
 const styles = theme =>
   createStyles({
@@ -51,12 +51,12 @@ interface SignInProps extends WithStyles, StateProps, DispatchProps {
 
 class Hello extends React.Component<SignInProps> {
   render() {
-    const { classes, user } = this.props;
-    const userName = user.isLogin
-      ? `Hello ${user.data.displayName}`
+    const { classes, app } = this.props;
+    const userName = app.isLogin
+      ? `Hello ${app.user.displayName}`
       : "Hello Guest";
-    const userImage = user.isLogin
-      ? user.data.photoURL
+    const userImage = app.isLogin
+      ? app.user.photoURL
       : "https://w5insight.com/wp-content/uploads/2014/07/placeholder-user-400x400.png";
     return (
       <main className={classes.main}>
@@ -73,7 +73,7 @@ class Hello extends React.Component<SignInProps> {
             color="primary"
             className={classes.submit}
           >
-            {user.isLogin ? "Logout" : "Login"}
+            {app.isLogin ? "Logout" : "Login"}
           </Button>
         </Paper>
       </main>
@@ -81,7 +81,7 @@ class Hello extends React.Component<SignInProps> {
   }
 }
 
-const mapStateToProps = ({ user }) => ({ user });
+const mapStateToProps = ({ app }) => ({ app });
 
 const mapDispatchToProps = { setUser };
 

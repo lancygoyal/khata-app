@@ -1,6 +1,9 @@
 {
-  "welcome": {
-    "title": "Punjabi {{framework}}",
-    "intro": "To get started, edit <1><0></0></1> and save to reload."
-  }
+  "setupFirm": "ਆਪਣੀ ਫਰਮ ਸੈਟ ਅਪ ਕਰੋ",
+  "firmName": "Firm Name",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "createAccount": "Create Account"
 }

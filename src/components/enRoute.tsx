@@ -1,19 +1,20 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
+import isEmpty from "lodash/isEmpty";
 import Layout from "./layout";
 
 export default ({
   component: Component,
   type = "private",
-  auth = false,
-  to = "/",
+  to = "/signin",
+  store,
   ...rest
 }) => (
   <Route
     {...rest}
     render={(props: any) => {
       if (type === "private")
-        return auth ? (
+        return store.getState().isLogin ? (
           <Layout {...props}>
             <Component {...props} />
           </Layout>
@@ -25,7 +26,28 @@ export default ({
             }}
           />
         );
-      if (type === "user") return <Component {...props} />;
+      if (type === "signin")
+        return !isEmpty(store.getState().users) ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: to,
+              state: { from: props.location }
+            }}
+          />
+        );
+      if (type === "signup")
+        return isEmpty(store.getState().users) ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: to,
+              state: { from: props.location }
+            }}
+          />
+        );
     }}
   />
 );

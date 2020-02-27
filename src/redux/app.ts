@@ -1,5 +1,6 @@
 const initialState = {
   user: {},
+  isLogin: false,
   locale: "en"
 };
 
@@ -15,7 +16,7 @@ export const Types = {
 export default (state: AppState = initialState, action): AppState => {
   switch (action.type) {
     case Types.SET_USER:
-      return { ...state, user: action.payload };
+      return { ...state, user: action.payload, isLogin: true };
     case Types.SET_LOCALE:
       return { ...state, locale: action.payload };
     case Types.RESET:

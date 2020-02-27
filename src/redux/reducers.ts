@@ -1,15 +1,15 @@
 import { combineReducers } from "redux";
 import app, { AppState } from "./app";
-import user, { UserState } from "./user";
+import users, { UserState } from "./users";
 
 export interface IRootState {
   readonly app: AppState;
-  readonly user: UserState;
+  readonly users: UserState;
 }
 
 const rootReducer = combineReducers<IRootState>({
   app,
-  user
+  users
 });
 
 export default rootReducer;

@@ -5,5 +5,9 @@
   "lastName": "Last Name",
   "password": "Password",
   "confirmPassword": "Confirm Password",
-  "createAccount": "Create Account"
+  "createAccount": "Create Account",
+  "fieldRequired": "{{field}} is required.",
+  "fieldMinSize": "{{field}} is too short - should be {{size}} chars minimum.",
+  "fieldMaxSize": "{{field}} is too long - should be {{size}} chars maximum.",
+  "passwordMatch": "Passwords must match"
 }
