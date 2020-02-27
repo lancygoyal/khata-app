@@ -1,0 +1,9 @@
+{
+  "setupFirm": "Setup Your Firm",
+  "firmName": "Firm Name",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "createAccount": "Create Account"
+}

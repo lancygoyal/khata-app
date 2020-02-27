@@ -19,6 +19,7 @@
     "classnames": "^2.2.6",
     "electron-is-dev": "^1.1.0",
     "electron-store": "^5.1.1",
+    "i18next": "^19.3.2",
     "loaders.css": "^0.1.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
