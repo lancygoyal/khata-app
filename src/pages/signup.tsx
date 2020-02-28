@@ -17,6 +17,7 @@ import { InputAdornment, IconButton } from "@material-ui/core";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { encryptPassword } from "../utils/common";
+import { ALPHA_SPACE_DOT } from "../constants/regex";
 
 const styles = theme =>
   createStyles({
@@ -145,9 +146,16 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
                 isSubmitting,
                 handleChange,
                 handleBlur,
-                handleSubmit,
-                handleReset
+                handleSubmit
               } = props;
+
+              const handleInputChange = evt => {
+                const { value = "", pattern = "" } = evt.target;
+                pattern
+                  ? RegExp(pattern).test(value) && handleChange(evt)
+                  : handleChange(evt);
+              };
+
               return (
                 <form
                   className={classes.form}
@@ -164,12 +172,13 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
                         id="firmName"
                         label={t("app:firmName")}
                         value={values.firmName}
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         onBlur={handleBlur}
                         helperText={
                           errors.firmName && touched.firmName && errors.firmName
                         }
                         error={errors.firmName && touched.firmName}
+                        inputProps={{ pattern: ALPHA_SPACE_DOT }}
                       />
                     </Grid>
                     <Grid item xs={6} sm={6}>
@@ -189,6 +198,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
                           errors.firstName
                         }
                         error={errors.firstName && touched.firstName}
+                        inputProps={{ pattern: ALPHA_SPACE_DOT }}
                       />
                     </Grid>
                     <Grid item xs={6} sm={6}>
@@ -206,6 +216,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
                           errors.lastName && touched.lastName && errors.lastName
                         }
                         error={errors.lastName && touched.lastName}
+                        inputProps={{ pattern: ALPHA_SPACE_DOT }}
                       />
                     </Grid>
                     <Grid item xs={12}>
