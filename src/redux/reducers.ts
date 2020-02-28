@@ -1,14 +1,25 @@
 import { combineReducers } from "redux";
+import { persistReducer } from "redux-persist";
+import createElectronStorage from "redux-persist-electron-storage";
 import app, { AppState } from "./app";
 import users, { UserState } from "./users";
+import electronStore from "../config/storage";
 
 export interface IRootState {
   readonly app: AppState;
   readonly users: UserState;
 }
 
+const appPersistConfig = {
+  key: "app",
+  storage: createElectronStorage({
+    electronStore
+  }),
+  whitelist: ["locale"]
+};
+
 const rootReducer = combineReducers<IRootState>({
-  app,
+  app: persistReducer(appPersistConfig, app),
   users
 });
 

@@ -6,84 +6,138 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { withStyles, WithStyles, createStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { setUser } from "../redux/app";
+import { login } from "../redux/app";
+import { Grid } from "@material-ui/core";
+import EnhancedEncryptionIcon from "@material-ui/icons/EnhancedEncryption";
+import LockIcon from "@material-ui/icons/Lock";
+import { withTranslation, WithTranslation } from "react-i18next";
+import EnterPassword from "../components/dialogs/enterPassword";
 
 const styles = theme =>
   createStyles({
-    main: {
-      width: "auto",
-      display: "block", // Fix IE 11 issue.
-      marginLeft: theme.spacing.unit * 3,
-      marginRight: theme.spacing.unit * 3,
-      [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-        width: 400,
-        marginLeft: "auto",
-        marginRight: "auto"
-      }
+    root: {
+      height: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      textTransform: "capitalize"
+    },
+    firmName: {
+      fontWeight: "bold",
+      fontSize: 32
     },
     paper: {
-      marginTop: theme.spacing.unit * 20,
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
-        .spacing.unit * 3}px`
+      padding: 15,
+      margin: theme.spacing(3)
     },
     avatar: {
-      margin: theme.spacing.unit,
       backgroundColor: theme.palette.secondary.main,
-      width: 144,
-      height: 144
-    },
-    form: {
-      width: "100%", // Fix IE 11 issue.
-      marginTop: theme.spacing.unit
+      width: 80,
+      height: 80,
+      margin: theme.spacing(1)
     },
     submit: {
-      marginTop: theme.spacing.unit * 3
+      marginTop: theme.spacing(2)
     }
   });
 
-interface SignInProps extends WithStyles, StateProps, DispatchProps {
-  firebase: any;
+interface SignInProps
+  extends WithStyles,
+    StateProps,
+    DispatchProps,
+    WithTranslation {
   history: any;
 }
 
-class Hello extends React.Component<SignInProps> {
+interface SignInState {
+  data: any;
+  loginDialog: boolean;
+}
+
+class SignIn extends React.Component<SignInProps, SignInState> {
+  state = {
+    data: null,
+    loginDialog: false
+  };
+
+  handleLoginDialog = (user = null) => {
+    this.setState(({ loginDialog }) => ({
+      data: { user },
+      loginDialog: !loginDialog
+    }));
+  };
+
+  login = () => {
+    const { login, history } = this.props;
+    const {
+      data: { user }
+    } = this.state;
+    login(user);
+    this.handleLoginDialog();
+    history.replace("/");
+  };
+
   render() {
-    const { classes, app } = this.props;
-    const userName = app.isLogin
-      ? `Hello ${app.user.displayName}`
-      : "Hello Guest";
-    const userImage = app.isLogin
-      ? app.user.photoURL
-      : "https://w5insight.com/wp-content/uploads/2014/07/placeholder-user-400x400.png";
+    const { classes, users, t } = this.props;
+    const { loginDialog, data } = this.state;
+
     return (
-      <main className={classes.main}>
+      <div className={classes.root}>
         <CssBaseline />
-        <Paper className={classes.paper}>
-          <Avatar alt={userName} src={userImage} className={classes.avatar} />
-          <Typography component="h1" variant="h5">
-            {userName}
-          </Typography>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            {app.isLogin ? "Logout" : "Login"}
-          </Button>
-        </Paper>
-      </main>
+        <Typography
+          component="h1"
+          variant="h5"
+          className={classes.firmName}
+          color="secondary"
+        >
+          {t("app:firm")} - {users.find(user => user.isMaster).firmName}
+        </Typography>
+        <Grid container alignItems="center" justify="center">
+          {[...users].map((user, idx) => (
+            <Grid item xs={6} key={idx}>
+              <Paper className={classes.paper}>
+                <Avatar alt={user.firmName} className={classes.avatar}>
+                  {user.isMaster ? (
+                    <EnhancedEncryptionIcon fontSize="large" />
+                  ) : (
+                    <LockIcon fontSize="large" />
+                  )}
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                  {user.firstName + " " + user.lastName}
+                </Typography>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                  onClick={() => this.handleLoginDialog(user)}
+                >
+                  Login
+                </Button>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
+        <EnterPassword
+          data={data}
+          open={loginDialog}
+          handleClose={this.handleLoginDialog}
+          handleOpen={this.login}
+        />
+      </div>
     );
   }
 }
 
-const mapStateToProps = ({ app }) => ({ app });
+const mapStateToProps = ({ users }) => ({ users });
 
-const mapDispatchToProps = { setUser };
+const mapDispatchToProps = { login };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
@@ -91,4 +145,4 @@ type DispatchProps = typeof mapDispatchToProps;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(styles)(Hello));
+)(withStyles(styles)(withTranslation()(SignIn)));

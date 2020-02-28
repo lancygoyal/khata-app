@@ -7,7 +7,8 @@ const initialState = {
 export type AppState = Readonly<typeof initialState>;
 
 export const Types = {
-  SET_USER: "SET_USER",
+  LOGIN: "LOGIN",
+  LOGOUT: "LOGOUT",
   SET_LOCALE: "SET_LOCALE",
   RESET: "RESET"
 };
@@ -15,8 +16,14 @@ export const Types = {
 // REDUCERS
 export default (state: AppState = initialState, action): AppState => {
   switch (action.type) {
-    case Types.SET_USER:
-      return { ...state, user: action.payload, isLogin: true };
+    case Types.LOGIN:
+      return {
+        ...state,
+        user: { ...action.payload, loginTime: Date.now() },
+        isLogin: true
+      };
+    case Types.LOGOUT:
+      return { ...state, user: {}, isLogin: false };
     case Types.SET_LOCALE:
       return { ...state, locale: action.payload };
     case Types.RESET:
@@ -27,8 +34,12 @@ export default (state: AppState = initialState, action): AppState => {
 };
 
 // ACTIONS
-export const setUser = payload => {
-  return { type: Types.SET_USER, payload };
+export const login = payload => {
+  return { type: Types.LOGIN, payload };
+};
+
+export const logout = payload => {
+  return { type: Types.LOGOUT, payload };
 };
 
 export const setLocale = payload => {

@@ -12,7 +12,7 @@ import { connect } from "react-redux";
 import { withTranslation, WithTranslation } from "react-i18next";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import { setLocale } from "../redux/app";
+import { createAccount } from "../redux/users";
 import { InputAdornment, IconButton } from "@material-ui/core";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -44,7 +44,9 @@ interface SignUpProps
   extends WithStyles,
     WithTranslation,
     StateProps,
-    DispatchProps {}
+    DispatchProps {
+  history: any;
+}
 
 interface SignUpState {
   showPassword: boolean;
@@ -62,7 +64,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
   };
 
   render() {
-    const { classes, t } = this.props;
+    const { classes, history, t, createAccount } = this.props;
     const { showPassword } = this.state;
 
     return (
@@ -83,10 +85,20 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
               password: "",
               confirmPassword: ""
             }}
-            onSubmit={(values, { setSubmitting }) => {
-              console.log(values, encryptPassword(values.password));
-              // setSubmitting(true);
-              setSubmitting(false);
+            onSubmit={(
+              { firmName, firstName, lastName, password },
+              { setSubmitting }
+            ) => {
+              setSubmitting(true);
+              createAccount({
+                firmName,
+                firstName,
+                lastName,
+                password: encryptPassword(password),
+                isMaster: true,
+                createdAt: Date.now()
+              });
+              history.replace("/");
             }}
             validationSchema={Yup.object().shape({
               firmName: Yup.string()
@@ -151,7 +163,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
 
               const handleInputChange = evt => {
                 const { value = "", pattern = "" } = evt.target;
-                pattern
+                pattern && value
                   ? RegExp(pattern).test(value) && handleChange(evt)
                   : handleChange(evt);
               };
@@ -179,6 +191,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
                         }
                         error={errors.firmName && touched.firmName}
                         inputProps={{ pattern: ALPHA_SPACE_DOT }}
+                        autoFocus
                       />
                     </Grid>
                     <Grid item xs={6} sm={6}>
@@ -190,7 +203,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
                         id="firstName"
                         label={t("app:firstName")}
                         value={values.firstName}
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         onBlur={handleBlur}
                         helperText={
                           errors.firstName &&
@@ -210,7 +223,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
                         id="lastName"
                         label={t("app:lastName")}
                         value={values.lastName}
-                        onChange={handleChange}
+                        onChange={handleInputChange}
                         onBlur={handleBlur}
                         helperText={
                           errors.lastName && touched.lastName && errors.lastName
@@ -296,9 +309,9 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
   }
 }
 
-const mapStateToProps = ({ user }) => ({ user });
+const mapStateToProps = () => ({});
 
-const mapDispatchToProps = { setLocale };
+const mapDispatchToProps = { createAccount };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

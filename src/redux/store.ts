@@ -10,7 +10,8 @@ const persistConfig = {
   key: "root",
   storage: createElectronStorage({
     electronStore
-  })
+  }),
+  blacklist: ["app"]
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

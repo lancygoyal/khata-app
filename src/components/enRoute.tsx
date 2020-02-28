@@ -14,7 +14,7 @@ export default ({
     {...rest}
     render={(props: any) => {
       if (type === "private")
-        return store.getState().isLogin ? (
+        return store.getState().app.isLogin ? (
           <Layout {...props}>
             <Component {...props} />
           </Layout>

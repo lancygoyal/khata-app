@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const Navbar = ({ history, user, products, cart }) => {
+export const Navbar = ({ history, app }) => {
   const classes = useStyles({});
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -38,64 +38,14 @@ export const Navbar = ({ history, user, products, cart }) => {
           <Typography className={classes.title} variant="h6" noWrap>
             {APP_NAME}
           </Typography>
-          {user.isLogin && (
-            <>
-              {cart.items && Object.keys(cart.items).length > 0 && (
-                <>
-                  <IconButton
-                    aria-label="items in cart"
-                    color="inherit"
-                    onClick={event => setAnchorEl(event.currentTarget)}
-                  >
-                    <Badge
-                      badgeContent={Object.keys(cart.items).length}
-                      color="secondary"
-                    >
-                      <ShoppingCartIcon />
-                    </Badge>
-                  </IconButton>
-                  <Menu
-                    id="cart"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={() => setAnchorEl(null)}
-                    anchorOrigin={{
-                      vertical: "top",
-                      horizontal: "right"
-                    }}
-                    transformOrigin={{
-                      vertical: "top",
-                      horizontal: "right"
-                    }}
-                    PaperProps={{
-                      style: {
-                        maxHeight: 500
-                      }
-                    }}
-                  ></Menu>
-                </>
-              )}
-              <IconButton
-                edge="end"
-                color="inherit"
-                aria-label={user.data.displayName}
-                onClick={() => history.push("/hello")}
-              >
-                <Avatar alt={user.data.displayName} src={user.data.photoURL} />
-              </IconButton>
-            </>
-          )}
         </Toolbar>
       </AppBar>
     </div>
   );
 };
 
-const mapStateToProps = ({ user, product, cart }) => ({
-  user,
-  products: product.data,
-  cart: cart.data
+const mapStateToProps = ({ app }) => ({
+  app
 });
 
 export default connect(mapStateToProps)(Navbar);

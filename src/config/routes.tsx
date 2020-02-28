@@ -3,9 +3,10 @@ import { BrowserRouter as Router } from "react-router-dom";
 import EnRoute from "../components/enRoute";
 import SignIn from "../pages/signin";
 import SignUp from "../pages/signup";
+import Home from "../pages/home";
 
 const Routes = [
-  { path: "/", component: SignIn, type: "signin", to: "/signup" },
+  { path: "/", component: Home, type: "private" },
   { path: "/signup", component: SignUp, type: "signup" },
   { path: "/signin", component: SignIn, type: "signin", to: "/signup" }
 ];
