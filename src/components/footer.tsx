@@ -1,30 +1,34 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
 import Link from "@material-ui/core/Link";
+import { APP_NAME } from "../constants/app";
 
 const Copyright = () => {
   return (
-    <Typography variant="body2" color="textSecondary">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
+    <Typography variant="body2" color="secondary">
+      {APP_NAME}
+      {" | Copyright © "}
+      <Link color="secondary" href="https://lancygoyal.github.io/">
         Lancy Goyal
       </Link>{" "}
       {new Date().getFullYear()}
-      {"."}
     </Typography>
   );
 };
 
 const useStyles = makeStyles(theme => ({
   footer: {
-    padding: theme.spacing(3, 2),
-    marginTop: "auto",
-    backgroundColor:
-      theme.palette.type === "dark"
-        ? theme.palette.grey[800]
-        : theme.palette.grey[200]
+    position: "fixed",
+    right: 0,
+    bottom: 0,
+    left: 0,
+    backgroundColor: theme.palette.grey[100],
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    height: 39,
+    paddingRight: 10
   }
 }));
 
@@ -32,9 +36,7 @@ const Footer = () => {
   const classes = useStyles({});
   return (
     <footer className={classes.footer}>
-      <Container maxWidth="sm">
-        <Copyright />
-      </Container>
+      <Copyright />
     </footer>
   );
 };

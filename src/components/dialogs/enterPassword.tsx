@@ -6,8 +6,10 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { encryptPassword } from "../../utils/common";
+import { useTranslation } from "react-i18next";
 
 export default ({ open, data, handleOpen, handleClose }) => {
+  const { t } = useTranslation();
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState(false);
 
@@ -19,6 +21,12 @@ export default ({ open, data, handleOpen, handleClose }) => {
     }
   };
 
+  const keyPress = e => {
+    if (e.keyCode === 13) {
+      checkLogin();
+    }
+  };
+
   return (
     <Dialog
       open={open}
@@ -26,27 +34,28 @@ export default ({ open, data, handleOpen, handleClose }) => {
       aria-labelledby="enter-password-title"
       disableBackdropClick={true}
     >
-      <DialogTitle id="enter-password-title">Login</DialogTitle>
+      <DialogTitle id="enter-password-title">{t("app:login")}</DialogTitle>
       <DialogContent style={{ width: "400px" }}>
         <TextField
           autoFocus
           margin="dense"
           id="password"
-          label="Enter Password"
+          label={t("app:enterPwd")}
           type="password"
           fullWidth
           value={password}
           onChange={evt => setPassword(evt.target.value)}
-          helperText={error && "Invalid Password"}
+          helperText={error && t("app:invalidPwd")}
           error={error}
+          onKeyDown={keyPress}
         />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">
-          Cancel
+          {t("app:close")}
         </Button>
         <Button onClick={checkLogin} color="primary">
-          Open
+          {t("app:open")}
         </Button>
       </DialogActions>
     </Dialog>

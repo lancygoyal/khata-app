@@ -118,7 +118,7 @@ class SignIn extends React.Component<SignInProps, SignInState> {
                   className={classes.submit}
                   onClick={() => this.handleLoginDialog(user)}
                 >
-                  Login
+                  {t("app:login")}
                 </Button>
               </Paper>
             </Grid>

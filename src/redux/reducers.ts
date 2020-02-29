@@ -10,13 +10,21 @@ export interface IRootState {
   readonly users: UserState;
 }
 
-const appPersistConfig = {
-  key: "app",
-  storage: createElectronStorage({
-    electronStore
-  }),
-  whitelist: ["locale"]
-};
+const appPersistConfig =
+  process.env.NODE_ENV === "development"
+    ? {
+        key: "app",
+        storage: createElectronStorage({
+          electronStore
+        })
+      }
+    : {
+        key: "app",
+        storage: createElectronStorage({
+          electronStore
+        }),
+        whitelist: ["locale"]
+      };
 
 const rootReducer = combineReducers<IRootState>({
   app: persistReducer(appPersistConfig, app),

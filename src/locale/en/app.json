@@ -10,5 +10,11 @@
   "fieldRequired": "{{field}} is required.",
   "fieldMinSize": "{{field}} is too short - should be {{size}} chars minimum.",
   "fieldMaxSize": "{{field}} is too long - should be {{size}} chars maximum.",
-  "passwordMatch": "Passwords must match"
+  "passwordMatch": "Passwords must match",
+  "login": "Login",
+  "enterPwd": "Enter Password",
+  "invalidPwd": "Invalid Password",
+  "close": "Close",
+  "open": "Open"
+
 }
