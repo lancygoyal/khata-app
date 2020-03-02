@@ -3,10 +3,15 @@ import { BrowserRouter as Router } from "react-router-dom";
 import EnRoute from "../components/enRoute";
 import SignIn from "../pages/signin";
 import SignUp from "../pages/signup";
-import Home from "../pages/home";
+import Daybook from "../pages/daybook";
+import Books from "../pages/books";
+import Settings from "../pages/daybook";
 
 const Routes = [
-  { path: "/", component: Home, type: "private" },
+  { path: "/", component: Daybook, type: "private" },
+  { path: "/daybook", component: Daybook, type: "private" },
+  { path: "/books", component: Books, type: "private" },
+  { path: "/settings", component: Settings, type: "private" },
   { path: "/signup", component: SignUp, type: "signup" },
   { path: "/signin", component: SignIn, type: "signin", to: "/signup" }
 ];

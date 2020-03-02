@@ -13,8 +13,8 @@ let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 900,
-    height: 680,
+    width: 960,
+    height: 720,
     webPreferences: {
       nodeIntegration: true, // <--- flag
       nodeIntegrationInWorker: true // <---  for web workers

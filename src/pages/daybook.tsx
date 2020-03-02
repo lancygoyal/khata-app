@@ -22,7 +22,7 @@ class Home extends React.Component<HomeProps, HomeState> {
   render() {
     return (
       <Container component="main" maxWidth="xs">
-        Home
+        Daybook
       </Container>
     );
   }
