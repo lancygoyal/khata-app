@@ -15,6 +15,8 @@
   "enterPwd": "Enter Password",
   "invalidPwd": "Invalid Password",
   "close": "Close",
-  "open": "Open"
-
+  "open": "Open",
+  "daybook": "Daybook",
+  "books": "Books",
+  "settings": "Settings"
 }

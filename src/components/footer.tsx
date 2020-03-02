@@ -4,13 +4,25 @@ import { makeStyles } from "@material-ui/core/styles";
 import Link from "@material-ui/core/Link";
 import { APP_NAME, APP_VER } from "../constants/app";
 
+const fmtMSS = s => (s - (s %= 60)) / 60 + (9 < s ? ":" : ":0") + s;
+
 const Copyright = () => {
+  const [time, setTime] = React.useState(0);
+  React.useEffect(() => {
+    const tick = setInterval(() => setTime(time + 1), 1000);
+    return () => {
+      clearInterval(tick);
+    };
+  });
+
   return (
     <Typography variant="body2" color="secondary">
+      {fmtMSS(time)}
+      {" | "}
       {APP_NAME}
       {" - v"}
       {APP_VER}
-      {" | Copyright © "}
+      {" | © "}
       <Link color="secondary" href="https://lancygoyal.github.io/">
         Lancy Goyal
       </Link>{" "}

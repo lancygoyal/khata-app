@@ -5,7 +5,7 @@ import SignIn from "../pages/signin";
 import SignUp from "../pages/signup";
 import Daybook from "../pages/daybook";
 import Books from "../pages/books";
-import Settings from "../pages/daybook";
+import Settings from "../pages/settings";
 
 const Routes = [
   { path: "/", component: Daybook, type: "private" },

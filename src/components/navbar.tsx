@@ -10,6 +10,7 @@ import { deepOrange } from "@material-ui/core/colors";
 import { useSelector } from "react-redux";
 import { Typography } from "@material-ui/core";
 import { useHistory, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flex: 1,
       alignItems: "center",
       justifyContent: "flex-start",
-      padding: '20px 10px',
+      padding: "20px 10px",
       minWidth: 250
     },
     avatar: {
@@ -38,6 +39,7 @@ const Navbar = ({ collapsed, data }) => {
   const { user } = useSelector((state: any) => state.app);
   const history = useHistory();
   const location = useLocation();
+  const { t } = useTranslation();
   const handleListItemClick = (path: string) => {
     history.push(path);
   };
@@ -57,7 +59,7 @@ const Navbar = ({ collapsed, data }) => {
         </Typography>
       </div>
       <Divider />
-      <List component="nav" aria-label="main mailbox folders">
+      <List component="nav" aria-label="library">
         {data.map((nav, idx) => (
           <ListItem
             key={idx}
@@ -68,7 +70,7 @@ const Navbar = ({ collapsed, data }) => {
             <ListItemIcon>
               <nav.icon />
             </ListItemIcon>
-            <ListItemText primary={nav.title} />
+            <ListItemText primary={t(`app:${nav.title}`)} />
           </ListItem>
         ))}
       </List>

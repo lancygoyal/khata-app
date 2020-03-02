@@ -22,8 +22,8 @@ const config = {
     collapsedWidth: 64
   },
   header: {
-    position: "fixed",
-    offsetHeight: 64 // 64 is the height of header
+    position: "fixed"
+    // offsetHeight: 64 // 64 is the height of header
   }
 };
 

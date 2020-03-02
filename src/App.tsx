@@ -7,6 +7,8 @@ import Routers from "./config/routes";
 import theme from "./config/theme";
 import initializeStore from "./redux/store";
 import Loader from "./components/loader";
+import moment from "moment";
+import "moment/locale/pa-in";
 
 const { store, persistor } = initializeStore();
 
@@ -21,6 +23,7 @@ class App extends React.Component<AppProps> {
 
   handleChange = () => {
     this.props.i18n.changeLanguage(store.getState().app.locale);
+    moment.locale(store.getState().app.locale);
   };
 
   componentWillUnmount() {

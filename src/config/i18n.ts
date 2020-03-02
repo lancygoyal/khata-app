@@ -8,7 +8,7 @@ const resources = {
     translation: {},
     app: appEn
   },
-  pa: {
+  "pa-in": {
     translation: {},
     app: appPa
   }
