@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const data = [
-  { name: "Lancy Goyal", amount: "100000" },
+  { name: "Lancy Goyal", amount: "1000000" },
   { name: "Lancy Goyal", amount: "100000" },
   { name: "Lancy Goyal", amount: "100000" },
   { name: "Lancy Goyal", amount: "100000" },
@@ -60,8 +60,8 @@ export default () => {
 
   return (
     <List className={classes.root}>
-      {data.map(obj => (
-        <ListItem alignItems="flex-start" style={{ padding: 0 }}>
+      {data.map((obj, idx) => (
+        <ListItem key={idx} alignItems="flex-start" style={{ padding: 0 }}>
           <ListItemAvatar style={{ marginTop: 4 }}>
             <Typography
               component="h1"

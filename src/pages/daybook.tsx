@@ -9,6 +9,7 @@ import { Typography } from "@material-ui/core";
 import WbSunny from "@material-ui/icons/WbSunny";
 import Grid from "@material-ui/core/Grid";
 import Records from "../components/daybook/records";
+import AddDialog from "../components/daybook/addDialog";
 
 const styles = theme =>
   createStyles({
@@ -56,12 +57,24 @@ interface HomeProps
 }
 
 interface HomeState {
-  showPassword: boolean;
+  addDialog: boolean;
 }
 
 class Home extends React.Component<HomeProps, HomeState> {
+  state = {
+    addDialog: false
+  };
+
+  handleAddDialog = () => {
+    this.setState(({ addDialog }) => ({
+      addDialog: !addDialog
+    }));
+  };
+
   render() {
     const { classes, t } = this.props;
+    const { addDialog } = this.state;
+
     return (
       <div className={classes.root}>
         <Typography
@@ -105,9 +118,15 @@ class Home extends React.Component<HomeProps, HomeState> {
             </div>
           </Grid>
         </Grid>
-        <Fab color="primary" aria-label="add" className={classes.speedDial}>
+        <Fab
+          color="primary"
+          aria-label="add"
+          className={classes.speedDial}
+          onClick={this.handleAddDialog}
+        >
           <AddIcon />
         </Fab>
+        <AddDialog open={addDialog} handleClose={this.handleAddDialog} />
       </div>
     );
   }

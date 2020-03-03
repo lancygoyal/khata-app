@@ -20,5 +20,10 @@
   "books": "Books",
   "settings": "Settings",
   "in": "In",
-  "out": "Out"
+  "out": "Out",
+  "addRecord": "Add Record",
+  "city": "City",
+  "contactNumber": "Contact Number",
+  "addDetails": "Additional Details",
+  "save": "Save"
 }
