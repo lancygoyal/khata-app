@@ -1,6 +1,6 @@
 const initialState = [];
 
-export type UserState = Readonly<typeof initialState>;
+export type UsersState = Readonly<typeof initialState>;
 
 export const Types = {
   CREATE_ACCOUNT: "CREATE_ACCOUNT",
@@ -8,7 +8,7 @@ export const Types = {
 };
 
 // REDUCERS
-export default (state: UserState = initialState, action): UserState => {
+export default (state: UsersState = initialState, action): UsersState => {
   switch (action.type) {
     case Types.CREATE_ACCOUNT:
       return [...state, action.payload];

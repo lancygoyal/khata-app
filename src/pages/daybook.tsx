@@ -43,7 +43,7 @@ const styles = theme =>
     inOut: {
       height: "80vh",
       overflowY: "scroll",
-      paddingRight: "15px"
+      paddingRight: "10px"
     }
   });
 
@@ -61,7 +61,7 @@ interface HomeState {
 
 class Home extends React.Component<HomeProps, HomeState> {
   render() {
-    const { classes } = this.props;
+    const { classes, t } = this.props;
     return (
       <div className={classes.root}>
         <Typography
@@ -85,7 +85,7 @@ class Home extends React.Component<HomeProps, HomeState> {
               color="secondary"
               className={classes.title}
             >
-              In
+              {t("app:in")}
             </Typography>
             <div className={classes.inOut}>
               <Records />
@@ -98,7 +98,7 @@ class Home extends React.Component<HomeProps, HomeState> {
               color="secondary"
               className={classes.title}
             >
-              Out
+              {t("app:out")}
             </Typography>
             <div className={classes.inOut}>
               <Records />
