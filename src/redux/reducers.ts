@@ -3,15 +3,15 @@ import { persistReducer } from "redux-persist";
 import createElectronStorage from "redux-persist-electron-storage";
 import app, { AppState } from "./app";
 import users, { UsersState } from "./users";
-import parties, { PartiesState } from "./parties";
-import bills, { BillsState } from "./bills";
+import parties, { AccountsState } from "./accounts";
+import bills, { LedgerState } from "./ledger";
 import electronStore from "../config/storage";
 
 export interface IRootState {
   readonly app: AppState;
   readonly users: UsersState;
-  readonly parties: PartiesState;
-  readonly bills: BillsState;
+  readonly parties: AccountsState;
+  readonly bills: LedgerState;
 }
 
 const appPersistConfig =

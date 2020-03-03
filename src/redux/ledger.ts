@@ -1,14 +1,14 @@
 const initialState = [];
 
-export type BillsState = Readonly<typeof initialState>;
+export type LedgerState = Readonly<typeof initialState>;
 
 export const Types = {
-    ADD_BILL: "ADD_BILL",
+  ADD_BILL: "ADD_BILL",
   RESET: "RESET"
 };
 
 // REDUCERS
-export default (state: BillsState = initialState, action): BillsState => {
+export default (state: LedgerState = initialState, action): LedgerState => {
   switch (action.type) {
     case Types.ADD_BILL:
       return [...state, action.payload];
