@@ -22,6 +22,7 @@
     "electron-is-dev": "^1.1.0",
     "electron-store": "^5.1.1",
     "formik": "^2.1.4",
+    "humanize-plus": "^1.8.2",
     "i18next": "^19.3.2",
     "loaders.css": "^0.1.2",
     "lodash": "^4.17.15",

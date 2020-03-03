@@ -23,6 +23,9 @@ class Home extends React.Component<HomeProps, HomeState> {
     return (
       <Container component="main" maxWidth="xs">
         Settings
+        Backup
+        Add Account
+        Langauga
       </Container>
     );
   }

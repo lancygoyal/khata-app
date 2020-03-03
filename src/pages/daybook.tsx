@@ -5,9 +5,10 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import moment from "moment";
-import { Typography, Button } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import WbSunny from "@material-ui/icons/WbSunny";
 import Grid from "@material-ui/core/Grid";
+import Records from "../components/daybook/records";
 
 const styles = theme =>
   createStyles({
@@ -20,9 +21,29 @@ const styles = theme =>
       float: "right"
     },
     speedDial: {
-      position: "absolute",
+      position: "fixed",
       bottom: theme.spacing(10),
       right: theme.spacing(5)
+    },
+    title: {
+      display: "flex",
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      fontWeight: "bold",
+      fontSize: 16,
+      padding: 3,
+      borderBottomStyle: "solid",
+      borderBottomWidth: 1
+    },
+    inOutRoot: {
+      marginTop: "50px",
+      height: "90vh"
+    },
+    inOut: {
+      height: "80vh",
+      overflowY: "scroll",
+      paddingRight: "15px"
     }
   });
 
@@ -52,12 +73,36 @@ class Home extends React.Component<HomeProps, HomeState> {
           <WbSunny style={{ top: "5px", position: "relative" }} />{" "}
           {moment().format("dddd, Do MMMM YYYY")}
         </Typography>
-        <Grid container spacing={1}>
-          <Grid item xs={6}>
-            <Button variant="contained">In</Button>
+        <Grid container spacing={0} className={classes.inOutRoot}>
+          <Grid
+            item
+            xs={6}
+            style={{ borderRightStyle: "solid", borderRightWidth: 1 }}
+          >
+            <Typography
+              component="h1"
+              variant="subtitle1"
+              color="secondary"
+              className={classes.title}
+            >
+              In
+            </Typography>
+            <div className={classes.inOut}>
+              <Records />
+            </div>
           </Grid>
           <Grid item xs={6}>
-            <Button variant="contained">Out</Button>
+            <Typography
+              component="h1"
+              variant="subtitle1"
+              color="secondary"
+              className={classes.title}
+            >
+              Out
+            </Typography>
+            <div className={classes.inOut}>
+              <Records />
+            </div>
           </Grid>
         </Grid>
         <Fab color="primary" aria-label="add" className={classes.speedDial}>
