@@ -2,7 +2,6 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { useTranslation } from "react-i18next";
@@ -13,22 +12,13 @@ import { ALPHA_SPACE_DOT } from "../../constants/regex";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    paper: {
-      marginTop: theme.spacing(9),
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center"
-    },
-    avatar: {
-      margin: theme.spacing(1),
-      backgroundColor: theme.palette.secondary.main
-    },
     form: {
-      width: "100%", // Fix IE 11 issue.
-      marginTop: theme.spacing(3)
+      width: "100%"
     },
-    submit: {
-      margin: theme.spacing(3, 0, 2)
+    btn: {
+      margin: 5,
+      marginTop: 20,
+      width: "45%"
     }
   })
 );
@@ -44,9 +34,11 @@ export default ({ open, handleClose }) => {
       aria-labelledby="enter-password-title"
       disableBackdropClick={true}
       fullScreen={false}
+      maxWidth="md"
+      style={{ maxHeight: "700px" }}
     >
       <DialogTitle id="enter-password-title">{t("app:addRecord")}</DialogTitle>
-      <DialogContent style={{ width: "400px" }}>
+      <DialogContent style={{ width: "500px" }}>
         <Formik
           initialValues={{
             firmName: "",
@@ -199,25 +191,34 @@ export default ({ open, handleClose }) => {
                     />
                   </Grid>
                 </Grid>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.submit}
-                  disabled={isSubmitting}
-                  onClick={handleClose}
+                <Grid
+                  container
+                  item
+                  xs={12}
+                  sm={12}
+                  justify="center"
+                  alignItems="center"
                 >
-                  {t("app:close")}
-                </Button>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  className={classes.submit}
-                  disabled={isSubmitting}
-                  onClick={handleClose}
-                >
-                  {t("app:save")}
-                </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.btn}
+                    disabled={isSubmitting}
+                    onClick={handleClose}
+                  >
+                    {t("app:close")}
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    className={classes.btn}
+                    disabled={isSubmitting}
+                    onClick={handleClose}
+                  >
+                    {t("app:save")}
+                  </Button>
+                </Grid>
               </form>
             );
           }}
