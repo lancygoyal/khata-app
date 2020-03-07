@@ -188,11 +188,23 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
 
 const mapStateToProps = ({ accounts, ledger, app: { user } }) => ({
   accounts,
-  ledgerIn: filter(ledger, ["type", TYPES.IN]).map(data => ({
+  ledgerIn: filter(
+    ledger,
+    o =>
+      o.type === TYPES.IN &&
+      new Date(o.createAt).toLocaleDateString() ===
+        new Date().toLocaleDateString()
+  ).map(data => ({
     ...data,
     account: find(accounts, ["id", data.accountId])
   })),
-  ledgerOut: filter(ledger, ["type", TYPES.OUT]).map(data => ({
+  ledgerOut: filter(
+    ledger,
+    o =>
+      o.type === TYPES.OUT &&
+      new Date(o.createAt).toLocaleDateString() ===
+        new Date().toLocaleDateString()
+  ).map(data => ({
     ...data,
     account: find(accounts, ["id", data.accountId])
   })),

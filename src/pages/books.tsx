@@ -3,10 +3,15 @@ import { withStyles, WithStyles, createStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { connect } from "react-redux";
 import { withTranslation, WithTranslation } from "react-i18next";
+import MaterialTable from "material-table";
+import find from "lodash/find";
+import filter from "lodash/filter";
+import { TYPES } from "../constants/app";
+import moment from "moment";
 
 const styles = theme => createStyles({});
 
-interface HomeProps
+interface BooksProps
   extends WithStyles,
     WithTranslation,
     StateProps,
@@ -14,21 +19,52 @@ interface HomeProps
   history: any;
 }
 
-interface HomeState {
-  showPassword: boolean;
-}
+interface BooksState {}
 
-class Home extends React.Component<HomeProps, HomeState> {
+class Books extends React.Component<BooksProps, BooksState> {
   render() {
+    const { classes, t, ledger } = this.props;
+
     return (
-      <Container component="main" maxWidth="xs">
-        Books
-      </Container>
+      <div style={{ padding: 25, paddingBottom: 70 }}>
+        <MaterialTable
+          columns={[
+            { title: "Account Name", field: "account.accountName" },
+            { title: "City", field: "account.city" },
+            { title: "Contact Number", field: "account.contactNumber" },
+            {
+              title: "Date",
+              field: "createAt",
+              render: (rowData: any) =>
+                moment(rowData.createAt).format("Do MMM YYYY")
+            },
+            {
+              title: "In",
+              field: "amount",
+              render: (rowData: any) =>
+                rowData.type === TYPES.IN && rowData.amount
+            },
+            {
+              title: "Out",
+              field: "amount",
+              render: (rowData: any) =>
+                rowData.type === TYPES.OUT && rowData.amount
+            }
+          ]}
+          data={ledger}
+          title="Ledger Book"
+        />
+      </div>
     );
   }
 }
 
-const mapStateToProps = () => ({});
+const mapStateToProps = ({ accounts, ledger }) => ({
+  ledger: filter(ledger).map(data => ({
+    ...data,
+    account: find(accounts, ["id", data.accountId])
+  }))
+});
 
 const mapDispatchToProps = {};
 
@@ -38,4 +74,4 @@ type DispatchProps = typeof mapDispatchToProps;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(styles)(withTranslation()(Home)));
+)(withStyles(styles)(withTranslation()(Books)));

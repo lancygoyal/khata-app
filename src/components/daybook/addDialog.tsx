@@ -25,6 +25,7 @@ import Autocomplete, {
 } from "@material-ui/lab/Autocomplete";
 import Close from "@material-ui/icons/Close";
 import { TYPES } from "../../constants/app";
+import Humanize from "humanize-plus";
 
 const filter = createFilterOptions();
 const useStyles = makeStyles((theme: Theme) =>
@@ -326,12 +327,12 @@ export default ({
                         if (option.inputValue) {
                           return option.accountName;
                         }
-                        return `${option.accountName}, ${option.city} (${option.contactNumber})`;
+                        return Humanize.capitalizeAll(`${option.accountName}, ${option.city} (${option.contactNumber})`);
                       }}
                       renderOption={option =>
                         option.inputValue
                           ? option.accountName
-                          : `${option.accountName}, ${option.city} (${option.contactNumber})`
+                          : Humanize.capitalizeAll(`${option.accountName}, ${option.city} (${option.contactNumber})`)
                       }
                       freeSolo
                       blurOnSelect

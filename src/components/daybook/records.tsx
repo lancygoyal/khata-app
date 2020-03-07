@@ -5,6 +5,9 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Typography from "@material-ui/core/Typography";
+import InfoIcon from "@material-ui/icons/Info";
+import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
 import Humanize from "humanize-plus";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -14,7 +17,8 @@ const useStyles = makeStyles((theme: Theme) =>
       maxWidth: 360
     },
     inline: {
-      display: "inline"
+      display: "inline",
+      marginTop: 10
     },
     rupees: {
       fontWeight: "bold",
@@ -22,7 +26,8 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: "0 10px",
       borderTopWidth: 1,
       borderTopStyle: "solid",
-      borderTopRightRadius: 3
+      borderTopRightRadius: 3,
+      width: 100
     },
     listBody: {
       borderLeftWidth: 1,
@@ -55,7 +60,7 @@ export default ({ data }) => {
           </ListItemAvatar>
           <ListItemText
             className={classes.listBody}
-            primary={`${obj.account.accountName}, ${obj.account.city} (${obj.account.contactNumber})`}
+            primary={Humanize.capitalizeAll(`${obj.account.accountName}`)}
             secondary={
               <React.Fragment>
                 <Typography
@@ -64,8 +69,17 @@ export default ({ data }) => {
                   className={classes.inline}
                   color="textPrimary"
                 >
-                  View
+                  {Humanize.capitalizeAll(
+                    `${obj.account.city} (${obj.account.contactNumber})`
+                  )}
                 </Typography>
+                {obj.notes && (
+                  <Tooltip title={obj.notes}>
+                    <IconButton aria-label="Info" style={{ padding: 5 }}>
+                      <InfoIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                )}
               </React.Fragment>
             }
           />
