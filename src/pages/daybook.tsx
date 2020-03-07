@@ -126,7 +126,11 @@ class Home extends React.Component<HomeProps, HomeState> {
         >
           <AddIcon />
         </Fab>
-        <AddDialog open={addDialog} handleClose={this.handleAddDialog} />
+        <AddDialog
+          key={"add-dialog-" + addDialog}
+          open={addDialog}
+          handleClose={this.handleAddDialog}
+        />
       </div>
     );
   }

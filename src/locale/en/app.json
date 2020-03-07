@@ -25,5 +25,16 @@
   "city": "City",
   "contactNumber": "Contact Number",
   "addDetails": "Additional Details",
-  "save": "Save"
+  "save": "Save",
+  "selectAccount": "Select Account",
+  "invoiceNumber": "Invoice Number",
+  "accountName": "Account Name",
+  "city": "City",
+  "contactNumber": "Contact Number",
+  "addInfo": "Additional Information",
+  "amount": "Amount",
+  "notes": "Notes",
+  "add": "Add",
+  "account": "Account",
+  "addAccount": "Adding New Account"
 }

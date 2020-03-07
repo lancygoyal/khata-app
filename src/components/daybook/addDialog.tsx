@@ -8,10 +8,17 @@ import { useTranslation } from "react-i18next";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Grid, Theme, makeStyles, createStyles } from "@material-ui/core";
-import { ALPHA_SPACE_DOT } from "../../constants/regex";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import BillTable from "./billTable";
+import {
+  ALPHA_SPACE_DOT,
+  ALPHA_SPACE,
+  CONTACT_NUMBER,
+  NUMERIC
+} from "../../constants/regex";
+import Autocomplete, {
+  createFilterOptions
+} from "@material-ui/lab/Autocomplete";
 
+const filter = createFilterOptions();
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     form: {
@@ -22,7 +29,8 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: 0,
       borderBottomStyle: "solid",
       borderBottomWidth: 5,
-      borderBottomColor: theme.palette.primary.main
+      borderBottomColor: theme.palette.grey[700],
+      backgroundColor: theme.palette.grey[700]
     },
     tabBtnActive: {
       width: "50%",
@@ -33,9 +41,9 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.background.default
     },
     btn: {
-      margin: 5,
+      margin: "2%",
       marginTop: 20,
-      width: "45%"
+      width: "46%"
     }
   })
 );
@@ -149,7 +157,10 @@ const top100Films = [
 
 export default ({ open, handleClose }) => {
   const classes = useStyles();
+  const [selectAccount, handleSelectAccount] = React.useState(null);
+  const [addAccount, handleAddAccount] = React.useState(false);
   const [type, setType] = React.useState("in");
+  const [invoiceNumber, setInvoiceNumber] = React.useState("00001");
   const { t } = useTranslation();
 
   return (
@@ -161,67 +172,103 @@ export default ({ open, handleClose }) => {
       maxWidth="md"
     >
       <DialogTitle id="enter-password-title">{t("app:addRecord")}</DialogTitle>
-      <DialogContent style={{ width: "700px", maxHeight: "500px" }}>
+      <DialogContent style={{ maxWidth: "700px", maxHeight: "700px" }}>
         <Formik
           initialValues={{
-            firmName: "",
-            firstName: "",
-            lastName: "",
-            password: "",
-            confirmPassword: ""
+            accountName: "",
+            city: "",
+            contactNumber: "",
+            addInfo: "",
+            amount: "",
+            notes: ""
           }}
           onSubmit={(
-            { firmName, firstName, lastName, password },
+            { accountName, city, contactNumber, addInfo, amount, notes },
             { setSubmitting }
           ) => {
             setSubmitting(true);
+            handleClose();
           }}
           validationSchema={Yup.object().shape({
-            firmName: Yup.string()
+            accountName: Yup.string()
               .min(
                 2,
-                t("app:fieldMinSize", { field: t("app:firmName"), size: 2 })
+                t("app:fieldMinSize", { field: t("app:accountName"), size: 2 })
               )
               .max(
                 40,
-                t("app:fieldMaxSize", { field: t("app:firmName"), size: 40 })
+                t("app:fieldMaxSize", { field: t("app:accountName"), size: 40 })
               )
-              .required(t("app:fieldRequired", { field: t("app:firmName") })),
-            firstName: Yup.string()
-              .min(
-                2,
-                t("app:fieldMinSize", { field: t("app:firstName"), size: 2 })
-              )
-              .max(
-                20,
-                t("app:fieldMaxSize", { field: t("app:firstName"), size: 20 })
-              )
-              .required(t("app:fieldRequired", { field: t("app:firstName") })),
-            lastName: Yup.string()
-              .min(
-                2,
-                t("app:fieldMinSize", { field: t("app:lastName"), size: 2 })
-              )
-              .max(
-                20,
-                t("app:fieldMaxSize", { field: t("app:lastName"), size: 20 })
-              )
-              .required(t("app:fieldRequired", { field: t("app:lastName") })),
-            password: Yup.string()
-              .min(
-                6,
-                t("app:fieldMinSize", { field: t("app:password"), size: 6 })
-              )
-              .max(
-                20,
-                t("app:fieldMaxSize", { field: t("app:password"), size: 20 })
-              )
-              .required(t("app:fieldRequired", { field: t("app:password") })),
-            confirmPassword: Yup.string()
               .required(
-                t("app:fieldRequired", { field: t("app:confirmPassword") })
+                t("app:fieldRequired", { field: t("app:accountName") })
+              ),
+            city: Yup.string()
+              .min(2, t("app:fieldMinSize", { field: t("app:city"), size: 2 }))
+              .max(
+                30,
+                t("app:fieldMaxSize", { field: t("app:city"), size: 30 })
               )
-              .oneOf([Yup.ref("password")], t("app:passwordMatch"))
+              .when("addAccount", {
+                is: () => addAccount,
+                then: Yup.string().required(
+                  t("app:fieldRequired", { field: t("app:city") })
+                )
+              }),
+            contactNumber: Yup.string()
+              .min(
+                10,
+                t("app:fieldMinSize", {
+                  field: t("app:contactNumber"),
+                  size: 10
+                })
+              )
+              .max(
+                16,
+                t("app:fieldMaxSize", {
+                  field: t("app:contactNumber"),
+                  size: 16
+                })
+              )
+              .when("addAccount", {
+                is: () => addAccount,
+                then: Yup.string().required(
+                  t("app:fieldRequired", { field: t("app:contactNumber") })
+                )
+              }),
+            addInfo: Yup.string()
+              .min(
+                10,
+                t("app:fieldMinSize", { field: t("app:addInfo"), size: 10 })
+              )
+              .max(
+                500,
+                t("app:fieldMaxSize", { field: t("app:addInfo"), size: 500 })
+              ),
+            amount: Yup.string()
+              .min(
+                2,
+                t("app:fieldMinSize", {
+                  field: t("app:amount"),
+                  size: 2
+                })
+              )
+              .max(
+                7,
+                t("app:fieldMaxSize", {
+                  field: t("app:amount"),
+                  size: 7
+                })
+              )
+              .required(t("app:fieldRequired", { field: t("app:amount") })),
+            notes: Yup.string()
+              .min(
+                10,
+                t("app:fieldMinSize", { field: t("app:notes"), size: 10 })
+              )
+              .max(
+                500,
+                t("app:fieldMaxSize", { field: t("app:notes"), size: 500 })
+              )
           })}
         >
           {props => {
@@ -274,102 +321,214 @@ export default ({ open, handleClose }) => {
                       {t("app:out")}
                     </Button>
                   </Grid>
-                  <Grid item xs={8} sm={8}>
+                  <Grid item xs={7} sm={7}>
                     <Autocomplete
-                      id="accountName"
+                      id="selectAccount"
                       options={top100Films}
-                      getOptionLabel={option => option.title}
+                      value={selectAccount}
+                      onChange={(event: any, newValue) => {
+                        if (newValue && newValue.inputValue) {
+                          handleAddAccount(true);
+                          handleSelectAccount({
+                            title: t("app:addAccount")
+                          });
+                          handleChange({
+                            target: {
+                              value: newValue.inputValue,
+                              name: "accountName"
+                            }
+                          });
+                        } else {
+                          handleAddAccount(false);
+                          handleSelectAccount(newValue);
+                          handleChange({
+                            target: {
+                              value: newValue === null ? "" : newValue,
+                              name: "accountName"
+                            }
+                          });
+                        }
+                      }}
+                      filterOptions={(options, params) => {
+                        const filtered = filter(options, params);
+
+                        if (params.inputValue !== "") {
+                          filtered.push({
+                            inputValue: params.inputValue,
+                            title: `${t("app:add")} "${params.inputValue}"`
+                          });
+                        }
+
+                        return filtered;
+                      }}
+                      getOptionLabel={option => {
+                        // e.g value selected with enter, right from the input
+                        if (typeof option === "string") {
+                          return option;
+                        }
+                        if (option.inputValue) {
+                          return option.inputValue;
+                        }
+                        return option.title;
+                      }}
+                      renderOption={option => option.title}
+                      freeSolo
+                      blurOnSelect
                       clearOnEscape
+                      disableOpenOnFocus
+                      disabled={addAccount}
                       renderInput={params => (
                         <TextField
                           {...params}
-                          label="Account Name"
+                          autoFocus
+                          label={t("app:selectAccount")}
                           variant="outlined"
                           fullWidth
+                          required
+                          helperText={
+                            !addAccount &&
+                            errors.accountName &&
+                            touched.accountName &&
+                            errors.accountName
+                          }
+                          error={
+                            !addAccount &&
+                            errors.accountName &&
+                            touched.accountName
+                          }
+                          disabled={addAccount}
                         />
                       )}
                     />
                   </Grid>
+                  <Grid item xs={5} sm={5}>
+                    <TextField
+                      name="invoiceNumber"
+                      variant="outlined"
+                      fullWidth
+                      id="invoiceNumber"
+                      value={invoiceNumber}
+                      label={t("app:invoiceNumber")}
+                    />
+                  </Grid>
+                  {addAccount && (
+                    <>
+                      <Grid item xs={7} sm={7}>
+                        <TextField
+                          name="accountName"
+                          variant="outlined"
+                          autoFocus
+                          required
+                          fullWidth
+                          id="accountName"
+                          label={t("app:accountName")}
+                          value={values.accountName}
+                          onChange={handleInputChange}
+                          onBlur={handleBlur}
+                          helperText={
+                            errors.accountName &&
+                            touched.accountName &&
+                            errors.accountName
+                          }
+                          error={errors.accountName && touched.accountName}
+                          inputProps={{ pattern: ALPHA_SPACE_DOT }}
+                        />
+                      </Grid>
+                      <Grid item xs={5} sm={5}>
+                        <TextField
+                          name="city"
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="city"
+                          label={t("app:city")}
+                          value={values.city}
+                          onChange={handleInputChange}
+                          onBlur={handleBlur}
+                          helperText={
+                            errors.city && touched.city && errors.city
+                          }
+                          error={errors.city && touched.city}
+                          inputProps={{ pattern: ALPHA_SPACE }}
+                        />
+                      </Grid>
+                      <Grid item xs={4} sm={4}>
+                        <TextField
+                          name="contactNumber"
+                          variant="outlined"
+                          required
+                          fullWidth
+                          id="contactNumber"
+                          label={t("app:contactNumber")}
+                          value={values.contactNumber}
+                          onChange={handleInputChange}
+                          onBlur={handleBlur}
+                          helperText={
+                            errors.contactNumber &&
+                            touched.contactNumber &&
+                            errors.contactNumber
+                          }
+                          error={errors.contactNumber && touched.contactNumber}
+                          inputProps={{ pattern: CONTACT_NUMBER }}
+                        />
+                      </Grid>
+                      <Grid item xs={8} sm={8}>
+                        <TextField
+                          name="addInfo"
+                          id="addInfo"
+                          label={t("app:addInfo")}
+                          multiline
+                          required={false}
+                          fullWidth
+                          rows="3"
+                          variant="outlined"
+                          value={values.addInfo}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          helperText={
+                            errors.addInfo && touched.addInfo && errors.addInfo
+                          }
+                          error={errors.addInfo && touched.addInfo}
+                        />
+                      </Grid>
+                    </>
+                  )}
                   <Grid item xs={4} sm={4}>
                     <TextField
-                      name="recordNo"
-                      variant="standard"
-                      fullWidth
-                      id="recordNo"
-                      value="10001"
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={12}>
-                    <TextField
-                      name="firmName"
+                      name="amount"
                       variant="outlined"
                       required
                       fullWidth
-                      id="firmName"
-                      label={t("app:firmName")}
-                      value={values.firmName}
+                      id="amount"
+                      label={t("app:amount")}
+                      value={values.amount}
                       onChange={handleInputChange}
                       onBlur={handleBlur}
                       helperText={
-                        errors.firmName && touched.firmName && errors.firmName
+                        errors.amount && touched.amount && errors.amount
                       }
-                      error={errors.firmName && touched.firmName}
-                      inputProps={{ pattern: ALPHA_SPACE_DOT }}
+                      error={errors.amount && touched.amount}
+                      inputProps={{ pattern: NUMERIC }}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={12}>
+                  <Grid item xs={8} sm={8}>
                     <TextField
-                      name="firstName"
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="firstName"
-                      label={t("app:city")}
-                      value={values.firstName}
-                      onChange={handleInputChange}
-                      onBlur={handleBlur}
-                      helperText={
-                        errors.firstName &&
-                        touched.firstName &&
-                        errors.firstName
-                      }
-                      error={errors.firstName && touched.firstName}
-                      inputProps={{ pattern: ALPHA_SPACE_DOT }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={12}>
-                    <TextField
-                      name="lastName"
-                      variant="outlined"
-                      required
-                      fullWidth
-                      id="lastName"
-                      label={t("app:contactNumber")}
-                      value={values.lastName}
-                      onChange={handleInputChange}
-                      onBlur={handleBlur}
-                      helperText={
-                        errors.lastName && touched.lastName && errors.lastName
-                      }
-                      error={errors.lastName && touched.lastName}
-                      inputProps={{ pattern: ALPHA_SPACE_DOT }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={12}>
-                    <TextField
-                      name="addDetails"
-                      id="addDetails"
-                      label={t("app:addDetails")}
+                      name="notes"
+                      id="notes"
+                      label={t("app:notes")}
                       multiline
+                      required={false}
                       fullWidth
                       rows="3"
                       variant="outlined"
+                      value={values.notes}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      helperText={errors.notes && touched.notes && errors.notes}
+                      error={errors.notes && touched.notes}
                     />
                   </Grid>
                 </Grid>
-                <div style={{ maxWidth: "100%" }}>
-                  <BillTable />
-                </div>
                 <Grid
                   container
                   item
@@ -393,7 +552,6 @@ export default ({ open, handleClose }) => {
                     color="primary"
                     className={classes.btn}
                     disabled={isSubmitting}
-                    onClick={handleClose}
                   >
                     {t("app:save")}
                   </Button>
