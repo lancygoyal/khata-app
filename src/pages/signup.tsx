@@ -18,6 +18,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { encryptPassword } from "../utils/common";
 import { ALPHA_SPACE_DOT } from "../constants/regex";
+import uniqid from "uniqid";
 
 const styles = theme =>
   createStyles({
@@ -91,6 +92,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
             ) => {
               setSubmitting(true);
               createAccount({
+                id: uniqid(),
                 firmName,
                 firstName,
                 lastName,

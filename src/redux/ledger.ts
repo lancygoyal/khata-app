@@ -3,14 +3,14 @@ const initialState = [];
 export type LedgerState = Readonly<typeof initialState>;
 
 export const Types = {
-  ADD_BILL: "ADD_BILL",
+  ADD_INVOICE: "ADD_INVOICE",
   RESET: "RESET"
 };
 
 // REDUCERS
 export default (state: LedgerState = initialState, action): LedgerState => {
   switch (action.type) {
-    case Types.ADD_BILL:
+    case Types.ADD_INVOICE:
       return [...state, action.payload];
     case Types.RESET:
       return initialState;
@@ -20,6 +20,6 @@ export default (state: LedgerState = initialState, action): LedgerState => {
 };
 
 // ACTIONS
-export const addBill = payload => {
-  return { type: Types.ADD_BILL, payload };
+export const addInvoice = payload => {
+  return { type: Types.ADD_INVOICE, payload };
 };

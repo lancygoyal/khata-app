@@ -10,6 +10,11 @@ import WbSunny from "@material-ui/icons/WbSunny";
 import Grid from "@material-ui/core/Grid";
 import Records from "../components/daybook/records";
 import AddDialog from "../components/daybook/addDialog";
+import { addAccount, addInvoice } from "../redux";
+import uniqid from "uniqid";
+import find from "lodash/find";
+import filter from "lodash/filter";
+import { TYPES } from "../constants/app";
 
 const styles = theme =>
   createStyles({
@@ -48,7 +53,7 @@ const styles = theme =>
     }
   });
 
-interface HomeProps
+interface DaybookProps
   extends WithStyles,
     WithTranslation,
     StateProps,
@@ -56,11 +61,11 @@ interface HomeProps
   history: any;
 }
 
-interface HomeState {
+interface DaybookState {
   addDialog: boolean;
 }
 
-class Home extends React.Component<HomeProps, HomeState> {
+class Daybook extends React.Component<DaybookProps, DaybookState> {
   state = {
     addDialog: false
   };
@@ -71,8 +76,50 @@ class Home extends React.Component<HomeProps, HomeState> {
     }));
   };
 
+  handleSave = data => {
+    const { addAccount, addInvoice, user } = this.props;
+    const {
+      invoiceNumber,
+      values: { accountName, city, contactNumber, addInfo, amount, notes },
+      selectAccount,
+      type,
+      more
+    } = data;
+    const dateNow = Date.now();
+    const accountId = uniqid();
+
+    if (data.addAccount) {
+      const account = {
+        id: accountId,
+        accountName,
+        city,
+        contactNumber,
+        addInfo,
+        hasBankDetails: false,
+        createAt: dateNow,
+        createdBy: user.id
+      };
+      addAccount(account);
+    }
+    const invoice = {
+      id: uniqid(),
+      invoiceNumber,
+      accountId: data.addAccount ? accountId : selectAccount.id,
+      amount,
+      notes,
+      type,
+      hasInvoiceDtls: false,
+      hasTax: false,
+      mode: "CASH",
+      createAt: dateNow,
+      createdBy: user.id
+    };
+    addInvoice(invoice);
+    !more && this.handleAddDialog();
+  };
+
   render() {
-    const { classes, t } = this.props;
+    const { classes, t, accounts, ledgerIn, ledgerOut } = this.props;
     const { addDialog } = this.state;
 
     return (
@@ -101,7 +148,7 @@ class Home extends React.Component<HomeProps, HomeState> {
               {t("app:in")}
             </Typography>
             <div className={classes.inOut}>
-              <Records />
+              <Records data={ledgerIn} />
             </div>
           </Grid>
           <Grid item xs={6}>
@@ -114,7 +161,7 @@ class Home extends React.Component<HomeProps, HomeState> {
               {t("app:out")}
             </Typography>
             <div className={classes.inOut}>
-              <Records />
+              <Records data={ledgerOut} />
             </div>
           </Grid>
         </Grid>
@@ -128,17 +175,31 @@ class Home extends React.Component<HomeProps, HomeState> {
         </Fab>
         <AddDialog
           key={"add-dialog-" + addDialog}
+          invoiceNumber={10001}
           open={addDialog}
-          handleClose={this.handleAddDialog}
+          accounts={accounts}
+          onClose={this.handleAddDialog}
+          saveData={this.handleSave}
         />
       </div>
     );
   }
 }
 
-const mapStateToProps = () => ({});
+const mapStateToProps = ({ accounts, ledger, app: { user } }) => ({
+  accounts,
+  ledgerIn: filter(ledger, ["type", TYPES.IN]).map(data => ({
+    ...data,
+    account: find(accounts, ["id", data.accountId])
+  })),
+  ledgerOut: filter(ledger, ["type", TYPES.OUT]).map(data => ({
+    ...data,
+    account: find(accounts, ["id", data.accountId])
+  })),
+  user
+});
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { addAccount, addInvoice };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
@@ -146,4 +207,4 @@ type DispatchProps = typeof mapDispatchToProps;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(styles)(withTranslation()(Home)));
+)(withStyles(styles)(withTranslation()(Daybook)));

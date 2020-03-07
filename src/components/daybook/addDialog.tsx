@@ -7,7 +7,13 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { useTranslation } from "react-i18next";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Grid, Theme, makeStyles, createStyles } from "@material-ui/core";
+import {
+  Grid,
+  Theme,
+  makeStyles,
+  createStyles,
+  IconButton
+} from "@material-ui/core";
 import {
   ALPHA_SPACE_DOT,
   ALPHA_SPACE,
@@ -17,10 +23,17 @@ import {
 import Autocomplete, {
   createFilterOptions
 } from "@material-ui/lab/Autocomplete";
+import Close from "@material-ui/icons/Close";
+import { TYPES } from "../../constants/app";
 
 const filter = createFilterOptions();
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    dialogTitle: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center"
+    },
     form: {
       width: "100%"
     },
@@ -43,135 +56,49 @@ const useStyles = makeStyles((theme: Theme) =>
     btn: {
       margin: "2%",
       marginTop: 20,
-      width: "46%"
+      width: "25%"
     }
   })
 );
 
-const top100Films = [
-  { title: "The Shawshank Redemption", year: 1994 },
-  { title: "The Godfather", year: 1972 },
-  { title: "The Godfather: Part II", year: 1974 },
-  { title: "The Dark Knight", year: 2008 },
-  { title: "12 Angry Men", year: 1957 },
-  { title: "Schindler's List", year: 1993 },
-  { title: "Pulp Fiction", year: 1994 },
-  { title: "The Lord of the Rings: The Return of the King", year: 2003 },
-  { title: "The Good, the Bad and the Ugly", year: 1966 },
-  { title: "Fight Club", year: 1999 },
-  { title: "The Lord of the Rings: The Fellowship of the Ring", year: 2001 },
-  { title: "Star Wars: Episode V - The Empire Strikes Back", year: 1980 },
-  { title: "Forrest Gump", year: 1994 },
-  { title: "Inception", year: 2010 },
-  { title: "The Lord of the Rings: The Two Towers", year: 2002 },
-  { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
-  { title: "Goodfellas", year: 1990 },
-  { title: "The Matrix", year: 1999 },
-  { title: "Seven Samurai", year: 1954 },
-  { title: "Star Wars: Episode IV - A New Hope", year: 1977 },
-  { title: "City of God", year: 2002 },
-  { title: "Se7en", year: 1995 },
-  { title: "The Silence of the Lambs", year: 1991 },
-  { title: "It's a Wonderful Life", year: 1946 },
-  { title: "Life Is Beautiful", year: 1997 },
-  { title: "The Usual Suspects", year: 1995 },
-  { title: "Léon: The Professional", year: 1994 },
-  { title: "Spirited Away", year: 2001 },
-  { title: "Saving Private Ryan", year: 1998 },
-  { title: "Once Upon a Time in the West", year: 1968 },
-  { title: "American History X", year: 1998 },
-  { title: "Interstellar", year: 2014 },
-  { title: "Casablanca", year: 1942 },
-  { title: "City Lights", year: 1931 },
-  { title: "Psycho", year: 1960 },
-  { title: "The Green Mile", year: 1999 },
-  { title: "The Intouchables", year: 2011 },
-  { title: "Modern Times", year: 1936 },
-  { title: "Raiders of the Lost Ark", year: 1981 },
-  { title: "Rear Window", year: 1954 },
-  { title: "The Pianist", year: 2002 },
-  { title: "The Departed", year: 2006 },
-  { title: "Terminator 2: Judgment Day", year: 1991 },
-  { title: "Back to the Future", year: 1985 },
-  { title: "Whiplash", year: 2014 },
-  { title: "Gladiator", year: 2000 },
-  { title: "Memento", year: 2000 },
-  { title: "The Prestige", year: 2006 },
-  { title: "The Lion King", year: 1994 },
-  { title: "Apocalypse Now", year: 1979 },
-  { title: "Alien", year: 1979 },
-  { title: "Sunset Boulevard", year: 1950 },
-  {
-    title:
-      "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb",
-    year: 1964
-  },
-  { title: "The Great Dictator", year: 1940 },
-  { title: "Cinema Paradiso", year: 1988 },
-  { title: "The Lives of Others", year: 2006 },
-  { title: "Grave of the Fireflies", year: 1988 },
-  { title: "Paths of Glory", year: 1957 },
-  { title: "Django Unchained", year: 2012 },
-  { title: "The Shining", year: 1980 },
-  { title: "WALL·E", year: 2008 },
-  { title: "American Beauty", year: 1999 },
-  { title: "The Dark Knight Rises", year: 2012 },
-  { title: "Princess Mononoke", year: 1997 },
-  { title: "Aliens", year: 1986 },
-  { title: "Oldboy", year: 2003 },
-  { title: "Once Upon a Time in America", year: 1984 },
-  { title: "Witness for the Prosecution", year: 1957 },
-  { title: "Das Boot", year: 1981 },
-  { title: "Citizen Kane", year: 1941 },
-  { title: "North by Northwest", year: 1959 },
-  { title: "Vertigo", year: 1958 },
-  { title: "Star Wars: Episode VI - Return of the Jedi", year: 1983 },
-  { title: "Reservoir Dogs", year: 1992 },
-  { title: "Braveheart", year: 1995 },
-  { title: "M", year: 1931 },
-  { title: "Requiem for a Dream", year: 2000 },
-  { title: "Amélie", year: 2001 },
-  { title: "A Clockwork Orange", year: 1971 },
-  { title: "Like Stars on Earth", year: 2007 },
-  { title: "Taxi Driver", year: 1976 },
-  { title: "Lawrence of Arabia", year: 1962 },
-  { title: "Double Indemnity", year: 1944 },
-  { title: "Eternal Sunshine of the Spotless Mind", year: 2004 },
-  { title: "Amadeus", year: 1984 },
-  { title: "To Kill a Mockingbird", year: 1962 },
-  { title: "Toy Story 3", year: 2010 },
-  { title: "Logan", year: 2017 },
-  { title: "Full Metal Jacket", year: 1987 },
-  { title: "Dangal", year: 2016 },
-  { title: "The Sting", year: 1973 },
-  { title: "2001: A Space Odyssey", year: 1968 },
-  { title: "Singin' in the Rain", year: 1952 },
-  { title: "Toy Story", year: 1995 },
-  { title: "Bicycle Thieves", year: 1948 },
-  { title: "The Kid", year: 1921 },
-  { title: "Inglourious Basterds", year: 2009 },
-  { title: "Snatch", year: 2000 },
-  { title: "3 Idiots", year: 2009 },
-  { title: "Monty Python and the Holy Grail", year: 1975 }
-];
-
-export default ({ open, handleClose }) => {
+export default ({
+  open,
+  invoiceNumber,
+  accounts,
+  onClose,
+  saveData
+}) => {
   const classes = useStyles();
   const [selectAccount, handleSelectAccount] = React.useState(null);
   const [addAccount, handleAddAccount] = React.useState(false);
-  const [type, setType] = React.useState("in");
-  const [invoiceNumber, setInvoiceNumber] = React.useState("00001");
+  const [type, setType] = React.useState(TYPES.IN);
+  const [more, setMore] = React.useState(false);
   const { t } = useTranslation();
+
+  const reset = () => {
+    handleSelectAccount(null);
+    handleAddAccount(false);
+    setType(TYPES.IN);
+  };
 
   return (
     <Dialog
       open={open}
-      onClose={handleClose}
+      onClose={onClose}
       aria-labelledby="enter-password-title"
       disableBackdropClick={true}
       maxWidth="md"
     >
-      <DialogTitle id="enter-password-title">{t("app:addRecord")}</DialogTitle>
+      <DialogTitle
+        id="enter-password-title"
+        disableTypography
+        className={classes.dialogTitle}
+      >
+        <h2 style={{ margin: 0 }}>{t("app:addRecord")}</h2>
+        <IconButton style={{ padding: 0 }} onClick={onClose}>
+          <Close />
+        </IconButton>
+      </DialogTitle>
       <DialogContent style={{ maxWidth: "700px", maxHeight: "700px" }}>
         <Formik
           initialValues={{
@@ -182,12 +109,23 @@ export default ({ open, handleClose }) => {
             amount: "",
             notes: ""
           }}
-          onSubmit={(
-            { accountName, city, contactNumber, addInfo, amount, notes },
-            { setSubmitting }
-          ) => {
+          onSubmit={(values, { setSubmitting, resetForm }) => {
             setSubmitting(true);
-            handleClose();
+            saveData({
+              invoiceNumber,
+              values,
+              selectAccount,
+              addAccount,
+              type,
+              more
+            });
+            if (more) {
+              setTimeout(() => {
+                resetForm();
+                reset();
+                setSubmitting(false);
+              }, 1000);
+            }
           }}
           validationSchema={Yup.object().shape({
             accountName: Yup.string()
@@ -279,6 +217,7 @@ export default ({ open, handleClose }) => {
               isSubmitting,
               handleChange,
               handleBlur,
+              resetForm,
               handleSubmit
             } = props;
 
@@ -287,6 +226,16 @@ export default ({ open, handleClose }) => {
               pattern && value
                 ? RegExp(pattern).test(value) && handleChange(evt)
                 : handleChange(evt);
+            };
+
+            const handleResetForm = () => {
+              resetForm();
+              reset();
+            };
+
+            const handleSave = (evt, flag = false) => {
+              setMore(flag);
+              handleSubmit(evt);
             };
 
             return (
@@ -304,9 +253,11 @@ export default ({ open, handleClose }) => {
                       variant="contained"
                       color="primary"
                       className={
-                        type === "in" ? classes.tabBtnActive : classes.tabBtn
+                        type === TYPES.IN
+                          ? classes.tabBtnActive
+                          : classes.tabBtn
                       }
-                      onClick={() => setType("in")}
+                      onClick={() => setType(TYPES.IN)}
                     >
                       {t("app:in")}
                     </Button>
@@ -314,9 +265,11 @@ export default ({ open, handleClose }) => {
                       variant="contained"
                       color="primary"
                       className={
-                        type === "out" ? classes.tabBtnActive : classes.tabBtn
+                        type === TYPES.OUT
+                          ? classes.tabBtnActive
+                          : classes.tabBtn
                       }
-                      onClick={() => setType("out")}
+                      onClick={() => setType(TYPES.OUT)}
                     >
                       {t("app:out")}
                     </Button>
@@ -324,13 +277,14 @@ export default ({ open, handleClose }) => {
                   <Grid item xs={7} sm={7}>
                     <Autocomplete
                       id="selectAccount"
-                      options={top100Films}
+                      options={accounts}
                       value={selectAccount}
                       onChange={(event: any, newValue) => {
                         if (newValue && newValue.inputValue) {
                           handleAddAccount(true);
                           handleSelectAccount({
-                            title: t("app:addAccount")
+                            inputValue: newValue.inputValue,
+                            accountName: t("app:addAccount")
                           });
                           handleChange({
                             target: {
@@ -343,7 +297,8 @@ export default ({ open, handleClose }) => {
                           handleSelectAccount(newValue);
                           handleChange({
                             target: {
-                              value: newValue === null ? "" : newValue,
+                              value:
+                                newValue === null ? "" : newValue.accountName,
                               name: "accountName"
                             }
                           });
@@ -355,7 +310,9 @@ export default ({ open, handleClose }) => {
                         if (params.inputValue !== "") {
                           filtered.push({
                             inputValue: params.inputValue,
-                            title: `${t("app:add")} "${params.inputValue}"`
+                            accountName: `${t("app:add")} "${
+                              params.inputValue
+                            }"`
                           });
                         }
 
@@ -367,11 +324,15 @@ export default ({ open, handleClose }) => {
                           return option;
                         }
                         if (option.inputValue) {
-                          return option.inputValue;
+                          return option.accountName;
                         }
-                        return option.title;
+                        return `${option.accountName}, ${option.city} (${option.contactNumber})`;
                       }}
-                      renderOption={option => option.title}
+                      renderOption={option =>
+                        option.inputValue
+                          ? option.accountName
+                          : `${option.accountName}, ${option.city} (${option.contactNumber})`
+                      }
                       freeSolo
                       blurOnSelect
                       clearOnEscape
@@ -542,18 +503,27 @@ export default ({ open, handleClose }) => {
                     color="primary"
                     className={classes.btn}
                     disabled={isSubmitting}
-                    onClick={handleClose}
+                    onClick={handleResetForm}
                   >
-                    {t("app:close")}
+                    {t("app:reset")}
                   </Button>
                   <Button
-                    type="submit"
                     variant="contained"
                     color="primary"
                     className={classes.btn}
                     disabled={isSubmitting}
+                    onClick={evt => handleSave(evt)}
                   >
                     {t("app:save")}
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.btn}
+                    disabled={isSubmitting}
+                    onClick={evt => handleSave(evt, true)}
+                  >
+                    {t("app:saveMore")}
                   </Button>
                 </Grid>
               </form>

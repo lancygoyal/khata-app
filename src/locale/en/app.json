@@ -36,5 +36,7 @@
   "notes": "Notes",
   "add": "Add",
   "account": "Account",
-  "addAccount": "Adding New Account"
+  "addAccount": "Adding New Account",
+  "reset": "reset",
+  "saveMore": "Save More"
 }
