@@ -1,13 +1,18 @@
-import React from "react";
-import { withStyles, WithStyles, createStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import { connect } from "react-redux";
-import { withTranslation, WithTranslation } from "react-i18next";
-import MaterialTable from "material-table";
-import find from "lodash/find";
+import { Grid, TextField } from "@material-ui/core";
+import Paper from "@material-ui/core/Paper";
+import { createStyles, withStyles, WithStyles } from "@material-ui/core/styles";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import filter from "lodash/filter";
-import { TYPES } from "../constants/app";
+import find from "lodash/find";
+import uniqBy from "lodash/uniqBy";
+import map from "lodash/map";
+import MaterialTable from "material-table";
 import moment from "moment";
+import React from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
+import { connect } from "react-redux";
+import { TYPES } from "../constants/app";
+import Humanize from "humanize-plus";
 
 const styles = theme => createStyles({});
 
@@ -19,19 +24,117 @@ interface BooksProps
   history: any;
 }
 
-interface BooksState {}
+const Books: React.FC<BooksProps> = ({
+  classes,
+  t,
+  cities,
+  accounts,
+  ledger
+}) => {
+  const [city, selectCity] = React.useState(null);
+  const [account, selectAccount] = React.useState(null);
 
-class Books extends React.Component<BooksProps, BooksState> {
-  render() {
-    const { classes, t, ledger } = this.props;
-
-    return (
-      <div style={{ padding: 25, paddingBottom: 70 }}>
+  return (
+    <div style={{ padding: 25, paddingBottom: 70 }}>
+      <Paper>
+        <Grid container spacing={2} style={{ padding: 10 }}>
+          <Grid item xs={6} sm={6}>
+            <Autocomplete
+              id="city"
+              options={cities}
+              blurOnSelect
+              clearOnEscape
+              disableOpenOnFocus
+              autoHighlight
+              autoSelect
+              getOptionLabel={option => Humanize.capitalizeAll(option)}
+              value={city}
+              onChange={(event, newValue) => {
+                selectCity(newValue);
+                account && selectAccount(null);
+              }}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  autoFocus
+                  label="City"
+                  variant="outlined"
+                  fullWidth
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={6} sm={6}>
+            <Autocomplete
+              id="account"
+              options={
+                city
+                  ? filter(
+                      accounts,
+                      o => o.city.toLowerCase() === city.toLowerCase()
+                    )
+                  : []
+              }
+              blurOnSelect
+              clearOnEscape
+              disableOpenOnFocus
+              autoHighlight
+              autoSelect
+              getOptionLabel={(option: any) =>
+                Humanize.capitalizeAll(option.accountName)
+              }
+              value={account}
+              onChange={(event, newValue) => {
+                selectAccount(newValue);
+              }}
+              disabled={!city}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  label="Account"
+                  variant="outlined"
+                  fullWidth
+                />
+              )}
+            />
+          </Grid>
+          {account && (
+            <>
+              <Grid item xs={6} sm={6}>
+                <TextField
+                  variant="filled"
+                  fullWidth
+                  label={t("app:contactNumber")}
+                  value={account.contactNumber}
+                />
+              </Grid>
+              <Grid item xs={6} sm={6}>
+                <TextField
+                  variant="filled"
+                  fullWidth
+                  label={"Balance"}
+                  value={account.contactNumber}
+                />
+              </Grid>
+              {account.addInfo && (
+                <Grid item xs={12} sm={12}>
+                  <TextField
+                    variant="filled"
+                    fullWidth
+                    multiline
+                    rows="3"
+                    label={t("app:addInfo")}
+                    value={account.addInfo}
+                  />
+                </Grid>
+              )}
+            </>
+          )}
+        </Grid>
         <MaterialTable
           columns={[
-            { title: "Account Name", field: "account.accountName" },
-            { title: "City", field: "account.city" },
-            { title: "Contact Number", field: "account.contactNumber" },
+            { title: "Invoice Number", field: "invoiceNumber" },
+            { title: "Notes", field: "notes" },
             {
               title: "Date",
               field: "createAt",
@@ -51,19 +154,26 @@ class Books extends React.Component<BooksProps, BooksState> {
                 rowData.type === TYPES.OUT && rowData.amount
             }
           ]}
-          data={ledger}
+          options={{
+            sorting: false,
+            paging: false
+          }}
+          components={{
+            Toolbar: props => <div />,
+            Container: props => <div>{props.children}</div>
+          }}
+          data={account ? filter(ledger, ["accountId", account.id]) : []}
           title="Ledger Book"
         />
-      </div>
-    );
-  }
-}
+      </Paper>
+    </div>
+  );
+};
 
 const mapStateToProps = ({ accounts, ledger }) => ({
-  ledger: filter(ledger).map(data => ({
-    ...data,
-    account: find(accounts, ["id", data.accountId])
-  }))
+  cities: map(uniqBy(accounts, "city"), "city"),
+  accounts,
+  ledger
 });
 
 const mapDispatchToProps = {};

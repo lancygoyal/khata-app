@@ -11,7 +11,7 @@ import { Grid } from "@material-ui/core";
 import EnhancedEncryptionIcon from "@material-ui/icons/EnhancedEncryption";
 import LockIcon from "@material-ui/icons/Lock";
 import { withTranslation, WithTranslation } from "react-i18next";
-import EnterPassword from "../components/dialogs/enterPassword";
+import EnterPassword from "../components/user/enterPassword";
 
 const styles = theme =>
   createStyles({

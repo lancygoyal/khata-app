@@ -119,7 +119,14 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
   };
 
   render() {
-    const { classes, t, accounts, ledgerIn, ledgerOut } = this.props;
+    const {
+      classes,
+      t,
+      accounts,
+      invoiceNumber,
+      ledgerIn,
+      ledgerOut
+    } = this.props;
     const { addDialog } = this.state;
 
     return (
@@ -175,7 +182,7 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
         </Fab>
         <AddDialog
           key={"add-dialog-" + addDialog}
-          invoiceNumber={10001}
+          invoiceNumber={invoiceNumber}
           open={addDialog}
           accounts={accounts}
           onClose={this.handleAddDialog}
@@ -188,6 +195,8 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
 
 const mapStateToProps = ({ accounts, ledger, app: { user } }) => ({
   accounts,
+  invoiceNumber:
+    ledger.length > 0 ? ledger[ledger.length - 1].invoiceNumber + 1 : 10001,
   ledgerIn: filter(
     ledger,
     o =>

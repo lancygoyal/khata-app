@@ -62,13 +62,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default ({
-  open,
-  invoiceNumber,
-  accounts,
-  onClose,
-  saveData
-}) => {
+export default ({ open, invoiceNumber, accounts, onClose, saveData }) => {
   const classes = useStyles();
   const [selectAccount, handleSelectAccount] = React.useState(null);
   const [addAccount, handleAddAccount] = React.useState(false);
@@ -327,17 +321,23 @@ export default ({
                         if (option.inputValue) {
                           return option.accountName;
                         }
-                        return Humanize.capitalizeAll(`${option.accountName}, ${option.city} (${option.contactNumber})`);
+                        return Humanize.capitalizeAll(
+                          `${option.accountName}, ${option.city} (${option.contactNumber})`
+                        );
                       }}
                       renderOption={option =>
                         option.inputValue
                           ? option.accountName
-                          : Humanize.capitalizeAll(`${option.accountName}, ${option.city} (${option.contactNumber})`)
+                          : Humanize.capitalizeAll(
+                              `${option.accountName}, ${option.city} (${option.contactNumber})`
+                            )
                       }
                       freeSolo
                       blurOnSelect
                       clearOnEscape
                       disableOpenOnFocus
+                      autoHighlight
+                      autoSelect
                       disabled={addAccount}
                       renderInput={params => (
                         <TextField
