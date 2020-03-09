@@ -5,7 +5,11 @@ export const APP_STORE_KEY = "khata_app_walle";
 export const MASTER = "lancygoyal@khata.app";
 export const LANGS = {
   EN: "en",
-  PA: "pa-in"
+  PA: "pa"
+};
+export const LOCALE = {
+  [LANGS.EN]: "en",
+  [LANGS.PA]: "pa-in"
 };
 export const TYPES = {
   IN: "in",

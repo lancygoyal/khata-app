@@ -11,7 +11,7 @@ import moment from "moment";
 import IdleTimer from "react-idle-timer";
 import { logout } from "./redux";
 import "moment/locale/pa-in";
-import { APP_IDLE_TIME } from "./constants/app";
+import { APP_IDLE_TIME, LOCALE } from "./constants/app";
 
 const { store, persistor } = initializeStore();
 
@@ -27,7 +27,7 @@ class App extends React.Component<AppProps> {
 
   handleChange = () => {
     this.props.i18n.changeLanguage(store.getState().app.locale);
-    moment.locale(store.getState().app.locale);
+    moment.locale(LOCALE[store.getState().app.locale]);
   };
 
   componentWillUnmount() {

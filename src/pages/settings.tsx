@@ -8,6 +8,8 @@ import FormLabel from "@material-ui/core/FormLabel";
 import { connect } from "react-redux";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { setLocale } from "../redux";
+import { LANGS } from "../constants/app";
+import { Paper } from "@material-ui/core";
 
 const styles = theme =>
   createStyles({
@@ -31,19 +33,29 @@ const Settings: React.FC<SettingsProps> = ({ classes, t, app, setLocale }) => {
 
   return (
     <div style={{ padding: 25, paddingBottom: 70 }}>
-      <FormControl component="fieldset" className={classes.formControl}>
-        <FormLabel component="legend">Select Language</FormLabel>
-        <RadioGroup
-          aria-label="language"
-          name="language"
-          value={app.locale}
-          onChange={handleChange}
-          row
-        >
-          <FormControlLabel value="en" control={<Radio />} label="English" />
-          <FormControlLabel value="pa-in" control={<Radio />} label="ਪੰਜਾਬੀ" />
-        </RadioGroup>
-      </FormControl>
+      <Paper>
+        <FormControl component="fieldset" className={classes.formControl}>
+          <FormLabel component="legend">Select Language</FormLabel>
+          <RadioGroup
+            aria-label="language"
+            name="language"
+            value={app.locale}
+            onChange={handleChange}
+            row
+          >
+            <FormControlLabel
+              value={LANGS.EN}
+              control={<Radio />}
+              label="English"
+            />
+            <FormControlLabel
+              value={LANGS.PA}
+              control={<Radio />}
+              label="ਪੰਜਾਬੀ"
+            />
+          </RadioGroup>
+        </FormControl>
+      </Paper>
     </div>
   );
 };

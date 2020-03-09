@@ -17,7 +17,7 @@ const resources = {
 
 i18n.use(initReactI18next).init({
   resources,
-  lng: LANGS.EN,
+  lng: LANGS.PA,
   // keySeparator: false, // we do not use keys in form messages.welcome
   interpolation: {
     escapeValue: false
