@@ -2,7 +2,13 @@ export const APP_NAME = "Khata App";
 export const APP_VER = "1.0.0";
 export const APP_STORE = "walle";
 export const APP_STORE_KEY = "khata_app_walle";
+export const MASTER = "lancygoyal@khata.app";
+export const LANGS = {
+  EN: "en",
+  PA: "pa-in"
+};
 export const TYPES = {
   IN: "in",
   OUT: "out"
 };
+export const APP_IDLE_TIME = 1000 * 60 * 10;

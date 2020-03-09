@@ -1,7 +1,9 @@
+import { LANGS } from "../constants/app";
+
 const initialState = {
   user: {},
   isLogin: false,
-  locale: "en"
+  locale: LANGS.EN
 };
 
 export type AppState = Readonly<typeof initialState>;

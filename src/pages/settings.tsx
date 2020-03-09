@@ -1,12 +1,22 @@
 import React from "react";
 import { withStyles, WithStyles, createStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
 import { connect } from "react-redux";
 import { withTranslation, WithTranslation } from "react-i18next";
+import { setLocale } from "../redux";
 
-const styles = theme => createStyles({});
+const styles = theme =>
+  createStyles({
+    formControl: {
+      margin: theme.spacing(3)
+    }
+  });
 
-interface HomeProps
+interface SettingsProps
   extends WithStyles,
     WithTranslation,
     StateProps,
@@ -14,26 +24,33 @@ interface HomeProps
   history: any;
 }
 
-interface HomeState {
-  showPassword: boolean;
-}
+const Settings: React.FC<SettingsProps> = ({ classes, t, app, setLocale }) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLocale((event.target as HTMLInputElement).value);
+  };
 
-class Home extends React.Component<HomeProps, HomeState> {
-  render() {
-    return (
-      <Container component="main" maxWidth="xs">
-        Settings
-        Backup
-        Add Account
-        Langauga
-      </Container>
-    );
-  }
-}
+  return (
+    <div style={{ padding: 25, paddingBottom: 70 }}>
+      <FormControl component="fieldset" className={classes.formControl}>
+        <FormLabel component="legend">Select Language</FormLabel>
+        <RadioGroup
+          aria-label="language"
+          name="language"
+          value={app.locale}
+          onChange={handleChange}
+          row
+        >
+          <FormControlLabel value="en" control={<Radio />} label="English" />
+          <FormControlLabel value="pa-in" control={<Radio />} label="ਪੰਜਾਬੀ" />
+        </RadioGroup>
+      </FormControl>
+    </div>
+  );
+};
 
-const mapStateToProps = () => ({});
+const mapStateToProps = ({ app }) => ({ app });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { setLocale };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
@@ -41,4 +58,4 @@ type DispatchProps = typeof mapDispatchToProps;
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(styles)(withTranslation()(Home)));
+)(withStyles(styles)(withTranslation()(Settings)));
