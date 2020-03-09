@@ -1,3 +1,3 @@
 export { addAccount } from "./accounts";
 export { setLocale } from "./app";
-export { addInvoice } from "./ledger";
+export { addInvoice, removeInvoice } from "./ledger";

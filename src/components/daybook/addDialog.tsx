@@ -55,23 +55,33 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.background.default
     },
     btn: {
-      margin: "2%",
+      marginBottom: "2%",
+      marginLeft: "2%",
       marginTop: 20,
       width: "25%"
     }
   })
 );
 
-export default ({ open, invoiceNumber, accounts, onClose, saveData }) => {
+export default ({
+  open,
+  invoiceNumber,
+  accounts,
+  onClose,
+  saveData,
+  directAdd = false
+}) => {
   const classes = useStyles();
-  const [selectAccount, handleSelectAccount] = React.useState(null);
+  const [selectAccount, handleSelectAccount] = React.useState(
+    directAdd ? accounts[0] : null
+  );
   const [addAccount, handleAddAccount] = React.useState(false);
   const [type, setType] = React.useState(TYPES.IN);
   const [more, setMore] = React.useState(false);
   const { t } = useTranslation();
 
   const reset = () => {
-    handleSelectAccount(null);
+    !directAdd && handleSelectAccount(null);
     handleAddAccount(false);
     setType(TYPES.IN);
   };
@@ -132,9 +142,12 @@ export default ({ open, invoiceNumber, accounts, onClose, saveData }) => {
                 40,
                 t("app:fieldMaxSize", { field: t("app:accountName"), size: 40 })
               )
-              .required(
-                t("app:fieldRequired", { field: t("app:accountName") })
-              ),
+              .when("directAdd", {
+                is: () => !directAdd,
+                then: Yup.string().required(
+                  t("app:fieldRequired", { field: t("app:accountName") })
+                )
+              }),
             city: Yup.string()
               .min(2, t("app:fieldMinSize", { field: t("app:city"), size: 2 }))
               .max(
@@ -338,7 +351,7 @@ export default ({ open, invoiceNumber, accounts, onClose, saveData }) => {
                       disableOpenOnFocus
                       autoHighlight
                       autoSelect
-                      disabled={addAccount}
+                      disabled={directAdd || addAccount}
                       renderInput={params => (
                         <TextField
                           {...params}
@@ -496,18 +509,20 @@ export default ({ open, invoiceNumber, accounts, onClose, saveData }) => {
                   item
                   xs={12}
                   sm={12}
-                  justify="center"
+                  justify="flex-end"
                   alignItems="center"
                 >
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.btn}
-                    disabled={isSubmitting}
-                    onClick={handleResetForm}
-                  >
-                    {t("app:reset")}
-                  </Button>
+                  {!directAdd && (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className={classes.btn}
+                      disabled={isSubmitting}
+                      onClick={handleResetForm}
+                    >
+                      {t("app:reset")}
+                    </Button>
+                  )}
                   <Button
                     variant="contained"
                     color="primary"

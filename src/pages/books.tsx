@@ -1,18 +1,25 @@
-import { Grid, TextField } from "@material-ui/core";
+import { Grid, TextField, Tooltip } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
 import { createStyles, withStyles, WithStyles } from "@material-ui/core/styles";
+import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import Humanize from "humanize-plus";
 import filter from "lodash/filter";
-import find from "lodash/find";
-import uniqBy from "lodash/uniqBy";
 import map from "lodash/map";
+import reduce from "lodash/reduce";
+import uniqBy from "lodash/uniqBy";
 import MaterialTable from "material-table";
 import moment from "moment";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { connect } from "react-redux";
+import Confirm from "../components/confirm";
+import AddDialog from "../components/daybook/addDialog";
 import { TYPES } from "../constants/app";
-import Humanize from "humanize-plus";
+import { addInvoice, removeInvoice } from "../redux";
+import { jsonToXLS } from "../utils/common";
+import uniqid from "uniqid";
 
 const styles = theme => createStyles({});
 
@@ -25,20 +32,62 @@ interface BooksProps
 }
 
 const Books: React.FC<BooksProps> = ({
-  classes,
   t,
+  user,
   cities,
   accounts,
-  ledger
+  addInvoice,
+  removeInvoice,
+  invoiceNumber
 }) => {
   const [city, selectCity] = React.useState(null);
   const [account, selectAccount] = React.useState(null);
+  const [addBill, handleAddBill] = React.useState(null);
+  const [deleteBill, handleDeleteBill] = React.useState(null);
+  const accountsByCity = city
+    ? filter(accounts, o => o.city.toLowerCase() === city.toLowerCase())
+    : [];
+  const exportAccountsByCity = () => {
+    const data = accountsByCity.map(o => ({
+      [t("app:accountName")]: Humanize.capitalizeAll(o.accountName),
+      [t("app:contactNumber")]: o.contactNumber,
+      [`${t("app:total")} ${t("app:in")}`]: o.amtIn,
+      [`${t("app:total")} ${t("app:out")}`]: o.amtOut,
+      [t("app:balance")]: o.balance
+    }));
+    jsonToXLS(data, city.toUpperCase());
+  };
+  const handleSave = data => {
+    const {
+      invoiceNumber,
+      selectAccount,
+      values: { amount, notes },
+      type,
+      more
+    } = data;
+    const dateNow = Date.now();
+    const invoice = {
+      id: uniqid(),
+      invoiceNumber,
+      accountId: selectAccount.id,
+      amount,
+      notes,
+      type,
+      hasInvoiceDtls: false,
+      hasTax: false,
+      mode: "CASH",
+      createAt: dateNow,
+      createdBy: user.id
+    };
+    addInvoice(invoice);
+    !more && handleAddBill(null);
+  };
 
   return (
     <div style={{ padding: 25, paddingBottom: 70 }}>
       <Paper>
-        <Grid container spacing={2} style={{ padding: 10 }}>
-          <Grid item xs={6} sm={6}>
+        <Grid container spacing={2} style={{ padding: 20 }}>
+          <Grid item xs={5} sm={5}>
             <Autocomplete
               id="city"
               options={cities}
@@ -57,7 +106,7 @@ const Books: React.FC<BooksProps> = ({
                 <TextField
                   {...params}
                   autoFocus
-                  label="City"
+                  label={t("app:city")}
                   variant="outlined"
                   fullWidth
                 />
@@ -67,14 +116,7 @@ const Books: React.FC<BooksProps> = ({
           <Grid item xs={6} sm={6}>
             <Autocomplete
               id="account"
-              options={
-                city
-                  ? filter(
-                      accounts,
-                      o => o.city.toLowerCase() === city.toLowerCase()
-                    )
-                  : []
-              }
+              options={accountsByCity}
               blurOnSelect
               clearOnEscape
               disableOpenOnFocus
@@ -91,92 +133,202 @@ const Books: React.FC<BooksProps> = ({
               renderInput={params => (
                 <TextField
                   {...params}
-                  label="Account"
+                  label={t("app:account")}
                   variant="outlined"
                   fullWidth
                 />
               )}
             />
           </Grid>
-          {account && (
-            <>
-              <Grid item xs={6} sm={6}>
-                <TextField
-                  variant="filled"
-                  fullWidth
-                  label={t("app:contactNumber")}
-                  value={account.contactNumber}
-                />
-              </Grid>
-              <Grid item xs={6} sm={6}>
-                <TextField
-                  variant="filled"
-                  fullWidth
-                  label={"Balance"}
-                  value={account.contactNumber}
-                />
-              </Grid>
-              {account.addInfo && (
-                <Grid item xs={12} sm={12}>
-                  <TextField
-                    variant="filled"
-                    fullWidth
-                    multiline
-                    rows="3"
-                    label={t("app:addInfo")}
-                    value={account.addInfo}
-                  />
-                </Grid>
-              )}
-            </>
-          )}
+          <Grid container item xs={1} sm={1} justify="center">
+            {city ? (
+              <Tooltip title={t("app:saveFile")}>
+                <IconButton aria-label="export" onClick={exportAccountsByCity}>
+                  <SaveAltIcon />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              <IconButton aria-label="export">
+                <SaveAltIcon />
+              </IconButton>
+            )}
+          </Grid>
         </Grid>
         <MaterialTable
           columns={[
-            { title: "Invoice Number", field: "invoiceNumber" },
-            { title: "Notes", field: "notes" },
             {
-              title: "Date",
-              field: "createAt",
+              title: t("app:accountName"),
+              field: "accountName",
               render: (rowData: any) =>
-                moment(rowData.createAt).format("Do MMM YYYY")
+                Humanize.capitalizeAll(rowData.accountName)
             },
             {
-              title: "In",
-              field: "amount",
-              render: (rowData: any) =>
-                rowData.type === TYPES.IN && rowData.amount
+              title: t("app:contactNumber"),
+              field: "contactNumber"
             },
             {
-              title: "Out",
-              field: "amount",
+              title: t("app:addInfo"),
+              field: "addInfo",
               render: (rowData: any) =>
-                rowData.type === TYPES.OUT && rowData.amount
+                rowData.addInfo ? rowData.addInfo : <>&mdash;</>
+            },
+            {
+              title: `${t("app:total")} ${t("app:in")}`,
+              field: "amtIn",
+              render: (rowData: any) => <>&#8377; {rowData.amtIn}</>
+            },
+            {
+              title: `${t("app:total")} ${t("app:out")}`,
+              field: "amtOut",
+              render: (rowData: any) => <>&#8377; {rowData.amtOut}</>
+            },
+            {
+              title: t("app:balance"),
+              field: "balance",
+              render: (rowData: any) => <>&#8377; {rowData.balance}</>
             }
           ]}
           options={{
             sorting: false,
-            paging: false
+            paging: false,
+            draggable: false,
+            toolbar: false
           }}
           components={{
-            Toolbar: props => <div />,
             Container: props => <div>{props.children}</div>
           }}
-          data={account ? filter(ledger, ["accountId", account.id]) : []}
-          title="Ledger Book"
+          data={
+            account
+              ? filter(accountsByCity, ["id", account.id])
+              : accountsByCity
+          }
+          detailPanel={(rowData: any) => {
+            return (
+              <MaterialTable
+                columns={[
+                  {
+                    title: t("app:invoiceNumber"),
+                    field: "invoiceNumber",
+                    searchable: true
+                  },
+                  {
+                    title: t("app:notes"),
+                    field: "notes",
+                    render: (rowData: any) =>
+                      rowData.notes ? rowData.notes : <>&mdash;</>,
+                    searchable: true
+                  },
+                  {
+                    title: t("app:date"),
+                    field: "createAt",
+                    render: (rowData: any) =>
+                      moment(rowData.createAt).format("Do MMM YYYY"),
+                    searchable: false
+                  },
+                  {
+                    title: t("app:in"),
+                    field: "amount",
+                    render: (rowData: any) =>
+                      rowData.type === TYPES.IN ? (
+                        <>&#8377; {rowData.amount}</>
+                      ) : (
+                        <>&mdash;</>
+                      ),
+                    searchable: true
+                  },
+                  {
+                    title: t("app:out"),
+                    field: "amount",
+                    render: (rowData: any) =>
+                      rowData.type === TYPES.OUT ? (
+                        <>&#8377; {rowData.amount}</>
+                      ) : (
+                        <>&mdash;</>
+                      ),
+                    searchable: true
+                  }
+                ]}
+                data={rowData.accLedger}
+                title={`${rowData.accountName} ${t("app:ledger")}`}
+                options={{
+                  sorting: false,
+                  paging: false,
+                  // padding: "dense",
+                  draggable: false,
+                  actionsColumnIndex: -1
+                }}
+                actions={[
+                  rowData => ({
+                    icon: "delete",
+                    tooltip: t("app:removeInvoice"),
+                    onClick: (event, rowData) => handleDeleteBill(rowData)
+                  }),
+                  {
+                    icon: "add",
+                    tooltip: t("app:addRecord"),
+                    isFreeAction: true,
+                    onClick: event => handleAddBill(rowData)
+                  }
+                ]}
+              />
+            );
+          }}
+          onRowClick={(event, rowData, togglePanel) => togglePanel()}
+        />
+        <Confirm
+          key={"delete-dialog-" + Boolean(deleteBill)}
+          open={Boolean(deleteBill)}
+          handlePrimary={() => {
+            removeInvoice(deleteBill.id);
+            handleDeleteBill(null);
+          }}
+          handleSecondary={() => handleDeleteBill(null)}
+          title={t("app:removeInvoice")}
+          desc={t("app:SureDelete")}
+          primaryBtnTxt={t("app:yes")}
+          secondaryBtnTxt={t("app:no")}
+        />
+        <AddDialog
+          key={"add-dialog-" + Boolean(addBill)}
+          invoiceNumber={invoiceNumber}
+          open={Boolean(addBill)}
+          accounts={[addBill]}
+          onClose={() => handleAddBill(null)}
+          saveData={handleSave}
+          directAdd
         />
       </Paper>
     </div>
   );
 };
 
-const mapStateToProps = ({ accounts, ledger }) => ({
+const mapStateToProps = ({ accounts, ledger, app: { user } }) => ({
   cities: map(uniqBy(accounts, "city"), "city"),
-  accounts,
-  ledger
+  accounts: map(accounts, o => {
+    const accLedger = filter(ledger, ["accountId", o.id]);
+    const amtIn = reduce(
+      filter(accLedger, ["type", TYPES.IN]),
+      (sum, n) => {
+        return Number(sum) + Number(n.amount);
+      },
+      0
+    );
+    const amtOut = reduce(
+      filter(accLedger, ["type", TYPES.OUT]),
+      (sum, n) => {
+        return Number(sum) + Number(n.amount);
+      },
+      0
+    );
+    const balance = amtOut - amtIn;
+    return { ...o, accLedger, amtIn, amtOut, balance };
+  }),
+  user,
+  invoiceNumber:
+    ledger.length > 0 ? ledger[ledger.length - 1].invoiceNumber + 1 : 10001
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { addInvoice, removeInvoice };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

@@ -23,6 +23,7 @@
   "out": "Out",
   "addRecord": "Add Record",
   "city": "City",
+  "total": "Total",
   "contactNumber": "Contact Number",
   "addDetails": "Additional Details",
   "save": "Save",
@@ -37,6 +38,13 @@
   "add": "Add",
   "account": "Account",
   "addAccount": "Adding New Account",
-  "reset": "reset",
-  "saveMore": "Save More"
+  "reset": "Reset",
+  "saveMore": "Save More",
+  "balance": "Balance",
+  "date": "Date",
+  "removeInvoice": "Delete Invoice",
+  "SureDelete": "Are you sure, you want to delete?",
+  "yes": "Yes",
+  "no": "No",
+  "saveFile": "Save File"
 }

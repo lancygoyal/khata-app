@@ -22,6 +22,7 @@
     "crypto-js": "^4.0.0",
     "electron-is-dev": "^1.1.0",
     "electron-store": "^5.1.1",
+    "file-saver": "^2.0.2",
     "formik": "^2.1.4",
     "humanize-plus": "^1.8.2",
     "i18next": "^19.3.2",
@@ -42,6 +43,7 @@
     "redux-persist-electron-storage": "^2.1.0",
     "redux-thunk": "^2.3.0",
     "uniqid": "^5.2.0",
+    "xlsx": "^0.15.5",
     "yup": "^0.28.1"
   },
   "scripts": {
