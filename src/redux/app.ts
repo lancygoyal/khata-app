@@ -38,8 +38,8 @@ export const login = payload => {
   return { type: Types.LOGIN, payload };
 };
 
-export const logout = payload => {
-  return { type: Types.LOGOUT, payload };
+export const logout = () => {
+  return { type: Types.LOGOUT };
 };
 
 export const setLocale = payload => {

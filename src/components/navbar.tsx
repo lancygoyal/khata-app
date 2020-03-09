@@ -7,10 +7,11 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
 import Avatar from "@material-ui/core/Avatar";
 import { deepOrange } from "@material-ui/core/colors";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Typography } from "@material-ui/core";
 import { useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { logout } from "../redux";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,11 +38,13 @@ const useStyles = makeStyles((theme: Theme) =>
 const Navbar = ({ collapsed, data }) => {
   const classes = useStyles();
   const { user } = useSelector((state: any) => state.app);
+  const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
   const { t } = useTranslation();
-  const handleListItemClick = (path: string) => {
+  const handleListItemClick = (path: string, title: string) => {
     history.push(path);
+    title === "logout" && dispatch(logout());
   };
 
   return (
@@ -65,7 +68,7 @@ const Navbar = ({ collapsed, data }) => {
             key={idx}
             button
             selected={location.pathname === nav.path}
-            onClick={_ => handleListItemClick(nav.path)}
+            onClick={_ => handleListItemClick(nav.path, nav.title)}
           >
             <ListItemIcon>
               <nav.icon />

@@ -12,6 +12,7 @@
   "fieldMaxSize": "{{field}} is too long - should be {{size}} chars maximum.",
   "passwordMatch": "Passwords must match",
   "login": "Login",
+  "logout": "Logout",
   "enterPwd": "Enter Password",
   "invalidPwd": "Invalid Password",
   "close": "Close",
@@ -46,5 +47,6 @@
   "SureDelete": "Are you sure, you want to delete?",
   "yes": "Yes",
   "no": "No",
-  "saveFile": "Save File"
+  "saveFile": "Save File",
+  "ledger": "Ledger"
 }
