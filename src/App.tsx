@@ -57,7 +57,7 @@ class App extends React.Component<AppProps> {
   }
 
   onIdle = () => {
-    alert("User Logged Out!");
+    store.getState().app.isLogin && alert("User Logged Out!");
     console.log("last active", this.idleTimer.getLastActiveTime());
     store.getState().app.isLogin && store.dispatch(logout());
   };
