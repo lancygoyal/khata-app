@@ -48,5 +48,8 @@
   "yes": "Yes",
   "no": "No",
   "saveFile": "Save File",
-  "ledger": "Ledger"
+  "ledger": "Ledger",
+  "selectLang": "Select Language",
+  "backup": "Backup",
+  "restore": "Restore"
 }

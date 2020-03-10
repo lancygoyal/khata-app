@@ -1,6 +1,7 @@
 import sha256 from "crypto-js/sha256";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
+import moment from "moment";
 
 export const encryptPassword = message => sha256(message).toString();
 
@@ -15,4 +16,14 @@ export const jsonToXLS = (data, fileName) => {
 
   const blobData = new Blob([excelBuffer], { type: fileType });
   FileSaver.saveAs(blobData, fileName + "-" + Date.now() + fileExtension);
+};
+
+export const formatDate = (date = Date.now()) => {
+  const dateObj = new Date(date);
+  const momentDate = moment()
+    .format("dddd, Do MMMM YYYY")
+    .split(" ");
+  return `${momentDate[0]} ${dateObj.getDate()} ${
+    momentDate[2]
+  } ${dateObj.getFullYear()}`;
 };

@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { setLocale } from "../redux";
 import { LANGS } from "../constants/app";
-import { Paper, Divider } from "@material-ui/core";
+import { Paper, Divider, Button, Grid } from "@material-ui/core";
 
 const styles = theme =>
   createStyles({
@@ -35,7 +35,7 @@ const Settings: React.FC<SettingsProps> = ({ classes, t, app, setLocale }) => {
     <div style={{ padding: 25, paddingBottom: 70 }}>
       <Paper>
         <FormControl component="fieldset" className={classes.formControl}>
-          <FormLabel component="legend">Select Language</FormLabel>
+          <FormLabel component="legend">{t("app:selectLang")}</FormLabel>
           <RadioGroup
             aria-label="language"
             name="language"
@@ -56,28 +56,32 @@ const Settings: React.FC<SettingsProps> = ({ classes, t, app, setLocale }) => {
           </RadioGroup>
         </FormControl>
       </Paper>
-      <Divider/>
-      <Paper>
+      <Divider />
+      <Paper style={{ marginTop: 10 }}>
         <FormControl component="fieldset" className={classes.formControl}>
-          <FormLabel component="legend">Backup/Restore</FormLabel>
-          <RadioGroup
-            aria-label="language"
-            name="language"
-            value={app.locale}
-            onChange={handleChange}
-            row
+          <FormLabel component="legend">
+            {t("app:backup")}/{t("app:restore")}
+          </FormLabel>
+          <Grid
+            container
+            item
+            xs={12}
+            sm={12}
+            justify="center"
+            alignItems="center"
+            style={{ marginTop: 10 }}
           >
-            <FormControlLabel
-              value={LANGS.EN}
-              control={<Radio />}
-              label="English"
-            />
-            <FormControlLabel
-              value={LANGS.PA}
-              control={<Radio />}
-              label="ਪੰਜਾਬੀ"
-            />
-          </RadioGroup>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ marginRight: 10 }}
+            >
+              {t("app:backup")}
+            </Button>
+            <Button variant="contained" color="primary">
+              {t("app:restore")}
+            </Button>
+          </Grid>
         </FormControl>
       </Paper>
     </div>

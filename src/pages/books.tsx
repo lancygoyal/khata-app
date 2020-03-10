@@ -10,7 +10,6 @@ import map from "lodash/map";
 import reduce from "lodash/reduce";
 import uniqBy from "lodash/uniqBy";
 import MaterialTable from "material-table";
-import moment from "moment";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { connect } from "react-redux";
@@ -18,7 +17,7 @@ import Confirm from "../components/confirm";
 import AddDialog from "../components/daybook/addDialog";
 import { TYPES } from "../constants/app";
 import { addInvoice, removeInvoice } from "../redux";
-import { jsonToXLS } from "../utils/common";
+import { jsonToXLS, formatDate } from "../utils/common";
 import uniqid from "uniqid";
 
 const styles = theme => createStyles({});
@@ -221,8 +220,7 @@ const Books: React.FC<BooksProps> = ({
                   {
                     title: t("app:date"),
                     field: "createAt",
-                    render: (rowData: any) =>
-                      moment(rowData.createAt).format("Do MMM YYYY"),
+                    render: (rowData: any) => formatDate(rowData.createAt),
                     searchable: false
                   },
                   {

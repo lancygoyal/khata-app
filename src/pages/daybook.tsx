@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { withTranslation, WithTranslation } from "react-i18next";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
-import moment from "moment";
 import { Typography } from "@material-ui/core";
 import WbSunny from "@material-ui/icons/WbSunny";
 import Grid from "@material-ui/core/Grid";
@@ -15,6 +14,7 @@ import uniqid from "uniqid";
 import find from "lodash/find";
 import filter from "lodash/filter";
 import { TYPES } from "../constants/app";
+import { formatDate } from "../utils/common";
 
 const styles = theme =>
   createStyles({
@@ -138,7 +138,7 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
           color="secondary"
         >
           <WbSunny style={{ top: "5px", position: "relative" }} />{" "}
-          {moment().format("dddd, Do MMMM YYYY")}
+          {formatDate()}
         </Typography>
         <Grid container spacing={0} className={classes.inOutRoot}>
           <Grid
