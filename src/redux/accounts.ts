@@ -1,10 +1,11 @@
+import { RESET, RESTORE } from "../constants/app";
+
 const initialState = [];
 
 export type AccountsState = Readonly<typeof initialState>;
 
 export const Types = {
-  ADD_ACCOUNT: "ADD_ACCOUNT",
-  RESET: "RESET"
+  ADD_ACCOUNT: "ADD_ACCOUNT"
 };
 
 // REDUCERS
@@ -12,8 +13,10 @@ export default (state: AccountsState = initialState, action): AccountsState => {
   switch (action.type) {
     case Types.ADD_ACCOUNT:
       return [...state, action.payload];
-    case Types.RESET:
+    case RESET:
       return initialState;
+    case RESTORE:
+      return action.payload["accounts"];
     default:
       return state;
   }

@@ -1,4 +1,5 @@
 import reject from "lodash/reject";
+import { RESET, RESTORE } from "../constants/app";
 
 const initialState = [];
 
@@ -6,8 +7,7 @@ export type LedgerState = Readonly<typeof initialState>;
 
 export const Types = {
   ADD_INVOICE: "ADD_INVOICE",
-  REMOVE_INVOICE: "REMOVE_INVOICE",
-  RESET: "RESET"
+  REMOVE_INVOICE: "REMOVE_INVOICE"
 };
 
 // REDUCERS
@@ -17,8 +17,10 @@ export default (state: LedgerState = initialState, action): LedgerState => {
       return [...state, action.payload];
     case Types.REMOVE_INVOICE:
       return reject(state, ["id", action.payload.id]);
-    case Types.RESET:
+    case RESET:
       return initialState;
+    case RESTORE:
+      return action.payload["ledger"];
     default:
       return state;
   }

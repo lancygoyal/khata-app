@@ -1,4 +1,4 @@
-import { LANGS } from "../constants/app";
+import { LANGS, RESTORE, RESET } from "../constants/app";
 
 const initialState = {
   user: {},
@@ -11,8 +11,7 @@ export type AppState = Readonly<typeof initialState>;
 export const Types = {
   LOGIN: "LOGIN",
   LOGOUT: "LOGOUT",
-  SET_LOCALE: "SET_LOCALE",
-  RESET: "RESET"
+  SET_LOCALE: "SET_LOCALE"
 };
 
 // REDUCERS
@@ -28,8 +27,10 @@ export default (state: AppState = initialState, action): AppState => {
       return { ...state, user: {}, isLogin: false };
     case Types.SET_LOCALE:
       return { ...state, locale: action.payload };
-    case Types.RESET:
+    case RESET:
       return initialState;
+    case RESTORE:
+      return action.payload["app"];
     default:
       return state;
   }
