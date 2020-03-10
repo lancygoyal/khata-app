@@ -30,7 +30,7 @@ export default (state: AppState = initialState, action): AppState => {
     case RESET:
       return initialState;
     case RESTORE:
-      return action.payload["app"];
+      return initialState;
     default:
       return state;
   }

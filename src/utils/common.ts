@@ -1,9 +1,10 @@
-import sha256 from "crypto-js/sha256";
+import CryptoJS from "crypto-js";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import moment from "moment";
+import { APP_STORE_KEY } from "../constants/app";
 
-export const encryptPassword = message => sha256(message).toString();
+export const encryptPassword = message => CryptoJS.SHA256(message).toString();
 
 export const jsonToXLS = (data, fileName) => {
   const fileType =
@@ -26,4 +27,26 @@ export const formatDate = (date = Date.now()) => {
   return `${momentDate[0]} ${dateObj.getDate()} ${
     momentDate[2]
   } ${dateObj.getFullYear()}`;
+};
+
+export const encryptData = data =>
+  CryptoJS.AES.encrypt(JSON.stringify(data), APP_STORE_KEY).toString();
+
+export const decryptData = data =>
+  JSON.parse(
+    CryptoJS.AES.decrypt(data, APP_STORE_KEY).toString(CryptoJS.enc.Utf8)
+  );
+
+export const backupData = data => {
+  const blob = new Blob([encryptData(data)], {
+    type: "text/plain;charset=utf-8"
+  });
+  FileSaver.saveAs(blob, "khata-app-backup-" + Date.now() + ".ka");
+};
+
+export const restoreData = data => {
+  const blob = new Blob([encryptData(data)], {
+    type: "text/plain;charset=utf-8"
+  });
+  FileSaver.saveAs(blob, "khata-app-backup-" + Date.now() + ".ka");
 };
