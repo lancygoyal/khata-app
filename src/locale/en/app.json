@@ -51,5 +51,7 @@
   "ledger": "Ledger",
   "selectLang": "Select Language",
   "backup": "Backup",
-  "restore": "Restore"
+  "restore": "Restore",
+  "emptyDataSourceMessage": "No records to display",
+  "search": "Search"
 }

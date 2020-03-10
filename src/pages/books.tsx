@@ -193,6 +193,15 @@ const Books: React.FC<BooksProps> = ({
             draggable: false,
             toolbar: false
           }}
+          localization={{
+            body: {
+              emptyDataSourceMessage: t("app:emptyDataSourceMessage")
+            },
+            toolbar: {
+              searchTooltip: t("app:search"),
+              searchPlaceholder: t("app:search")
+            }
+          }}
           components={{
             Container: props => <div>{props.children}</div>
           }}
@@ -254,6 +263,15 @@ const Books: React.FC<BooksProps> = ({
                   // padding: "dense",
                   draggable: false,
                   actionsColumnIndex: -1
+                }}
+                localization={{
+                  body: {
+                    emptyDataSourceMessage: t("app:emptyDataSourceMessage")
+                  },
+                  toolbar: {
+                    searchTooltip: t("app:search"),
+                    searchPlaceholder: t("app:search")
+                  }
                 }}
                 actions={[
                   rowData => ({
