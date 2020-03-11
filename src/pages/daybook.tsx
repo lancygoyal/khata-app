@@ -9,12 +9,12 @@ import WbSunny from "@material-ui/icons/WbSunny";
 import Grid from "@material-ui/core/Grid";
 import Records from "../components/daybook/records";
 import AddDialog from "../components/daybook/addDialog";
-import { addAccount, addInvoice } from "../redux";
+import { addAccount, addInvoice, setPath } from "../redux";
 import uniqid from "uniqid";
 import find from "lodash/find";
 import filter from "lodash/filter";
 import { TYPES } from "../constants/app";
-import { formatDate } from "../utils/common";
+import { formatDate, getFolderPath } from "../utils/common";
 
 const styles = theme =>
   createStyles({
@@ -68,6 +68,15 @@ interface DaybookState {
 class Daybook extends React.Component<DaybookProps, DaybookState> {
   state = {
     addDialog: false
+  };
+
+  componentDidMount = () => {
+    setTimeout(() => {
+      const { setPath, path, t } = this.props;
+      if (!path) {
+        setPath(getFolderPath(t("app:backupFolderPath")));
+      }
+    }, 5000);
   };
 
   handleAddDialog = () => {
@@ -193,7 +202,7 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
   }
 }
 
-const mapStateToProps = ({ accounts, ledger, app: { user } }) => ({
+const mapStateToProps = ({ accounts, ledger, app: { user, path } }) => ({
   accounts,
   invoiceNumber:
     ledger.length > 0 ? ledger[ledger.length - 1].invoiceNumber + 1 : 10001,
@@ -217,10 +226,11 @@ const mapStateToProps = ({ accounts, ledger, app: { user } }) => ({
     ...data,
     account: find(accounts, ["id", data.accountId])
   })),
-  user
+  user,
+  path
 });
 
-const mapDispatchToProps = { addAccount, addInvoice };
+const mapDispatchToProps = { addAccount, addInvoice, setPath };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

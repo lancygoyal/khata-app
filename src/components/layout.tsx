@@ -76,13 +76,13 @@ class Layout extends React.Component<LayoutProps> {
     const { store, history } = this.props;
     if (store.getState().app.isLogin) {
       console.log("last active", this.idleTimer.getLastActiveTime());
+      history.replace("/");
+      store.dispatch(logout());
       dialog.showMessageBoxSync({
         type: "info",
         title: "See you soon!",
         message: "User logged-out successfully!"
       });
-      store.dispatch(logout());
-      history.replace("/");
     }
   };
 }

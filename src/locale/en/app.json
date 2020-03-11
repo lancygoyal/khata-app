@@ -53,5 +53,6 @@
   "backup": "Backup",
   "restore": "Restore",
   "emptyDataSourceMessage": "No records to display",
-  "search": "Search"
+  "search": "Search",
+  "backupFolderPath": "Please select folder for data backup."
 }

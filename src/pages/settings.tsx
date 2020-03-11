@@ -7,10 +7,11 @@ import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import { connect } from "react-redux";
 import { withTranslation, WithTranslation } from "react-i18next";
-import { setLocale, restoreState } from "../redux";
+import { setLocale, setPath } from "../redux";
 import { LANGS } from "../constants/app";
 import { Paper, Button, Grid } from "@material-ui/core";
-import { decryptData, backupData } from "../utils/common";
+import { backupData, getFolderPath } from "../utils/common";
+import Restore from "../components/user/restoreData";
 
 const styles = theme =>
   createStyles({
@@ -33,28 +34,19 @@ const Settings: React.FC<SettingsProps> = ({
   store,
   app,
   setLocale,
-  restoreState
+  setPath
 }) => {
-  let fileRestoreInput = null;
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLocale((event.target as HTMLInputElement).value);
   };
 
   const backupFile = () => {
-    backupData(store);
-  };
-
-  const uploadFile = e => {
-    const files = e.target.files;
-    if (files && files[0]) {
-      const reader = new FileReader();
-      reader.onload = e => {
-        const output = e.target.result;
-        restoreState(decryptData(output));
-      };
-      reader.readAsText(files[0]);
+    let { path } = app;
+    if (!path) {
+      path = getFolderPath(t("app:backupFolderPath"));
+      setPath(path);
     }
+    backupData(store, path, t("app:backupFolderPath"));
   };
 
   return (
@@ -104,20 +96,7 @@ const Settings: React.FC<SettingsProps> = ({
             >
               {t("app:backup")}
             </Button>
-            <input
-              id={"fileRestoreInput"}
-              ref={e => (fileRestoreInput = e)}
-              type="file"
-              onChange={uploadFile}
-              style={{ display: "none" }}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => fileRestoreInput.click()}
-            >
-              {t("app:restore")}
-            </Button>
+            <Restore />
           </Grid>
         </FormControl>
       </Paper>
@@ -127,7 +106,7 @@ const Settings: React.FC<SettingsProps> = ({
 
 const mapStateToProps = store => ({ store, app: store.app });
 
-const mapDispatchToProps = { setLocale, restoreState };
+const mapDispatchToProps = { setLocale, setPath };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

@@ -1,9 +1,9 @@
 import CryptoJS from "crypto-js";
-import { writeFileSync } from "fs";
+import { writeFileSync, existsSync, mkdirSync } from "fs";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import moment from "moment";
-import { APP_STORE_KEY } from "../constants/app";
+import { APP_STORE_KEY, APP_NAME } from "../constants/app";
 import { remote } from "electron";
 
 export const dialog = remote.dialog;
@@ -41,15 +41,29 @@ export const decryptData = data =>
     CryptoJS.AES.decrypt(data, APP_STORE_KEY).toString(CryptoJS.enc.Utf8)
   );
 
-export const backupData = (data, folderPath = "") => {
-  const kaFolderPath = folderPath
-    ? folderPath
-    : dialog.showOpenDialogSync({
-        properties: ["openDirectory"]
-      })[0];
+export const getFolderPath = (message = "Please select folder.") => {
+  dialog.showMessageBoxSync({
+    type: "info",
+    title: APP_NAME,
+    message
+  });
+  const folderPath = dialog.showOpenDialogSync({
+    properties: ["openDirectory"]
+  });
+  return folderPath ? folderPath[0] : null;
+};
 
-  writeFileSync(
-    kaFolderPath + "/" + "khata-app-backup-" + Date.now() + ".ka",
-    encryptData(data)
-  );
+export const backupData = (data, folderPath = "", message) => {
+  const kaFolderPath = folderPath ? folderPath : getFolderPath(message);
+  if (kaFolderPath) {
+    !existsSync(kaFolderPath) && mkdirSync(kaFolderPath);
+    writeFileSync(
+      kaFolderPath +
+        "/" +
+        "khata-app-backup-" +
+        new Date().toLocaleDateString().replace("/", "") +
+        ".ka",
+      encryptData(data)
+    );
+  }
 };

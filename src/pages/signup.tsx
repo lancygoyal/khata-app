@@ -19,6 +19,7 @@ import * as Yup from "yup";
 import { encryptPassword } from "../utils/common";
 import { ALPHA_SPACE_DOT } from "../constants/regex";
 import uniqid from "uniqid";
+import Restore from "../components/user/restoreData";
 
 const styles = theme =>
   createStyles({
@@ -306,6 +307,7 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
             }}
           </Formik>
         </div>
+        <Restore style={{ width: "100%" }} />
       </Container>
     );
   }
