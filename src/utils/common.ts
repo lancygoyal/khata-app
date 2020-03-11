@@ -61,7 +61,10 @@ export const backupData = (data, folderPath = "", message) => {
       kaFolderPath +
         "/" +
         "khata-app-backup-" +
-        new Date().toLocaleDateString().replace("/", "") +
+        new Date()
+          .toLocaleDateString()
+          .split("/")
+          .join("") +
         ".ka",
       encryptData(data)
     );
