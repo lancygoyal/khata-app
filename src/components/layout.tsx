@@ -12,6 +12,10 @@ import {
 } from "@mui-treasury/layout";
 import theme from "../config/theme";
 import navbarData from "../config/navbar";
+import IdleTimer from "react-idle-timer";
+import { APP_IDLE_TIME } from "../constants/app";
+import { logout } from "../redux";
+import { dialog } from "../utils/common";
 
 const config = {
   sidebar: {
@@ -29,31 +33,58 @@ const config = {
 
 interface LayoutProps extends WithStyles {
   history: any;
+  store: any;
 }
 
 class Layout extends React.Component<LayoutProps> {
+  idleTimer;
+
   render() {
     const { children } = this.props;
     return (
-      <Root theme={theme} config={config}>
-        {({ sidebarStyles, collapsed }) => (
-          <>
-            <CssBaseline />
-            <Sidebar>
-              <div className={sidebarStyles.container}>
-                <Navbar collapsed={collapsed} data={navbarData} />
-              </div>
-              <CollapseBtn className={sidebarStyles.collapseBtn}>
-                <CollapseIcon />
-              </CollapseBtn>
-            </Sidebar>
-            <Content>{children}</Content>
-            <Footer />
-          </>
-        )}
-      </Root>
+      <IdleTimer
+        ref={ref => {
+          this.idleTimer = ref;
+        }}
+        element={document}
+        onIdle={this.onIdle}
+        debounce={250}
+        timeout={APP_IDLE_TIME}
+      >
+        <Root theme={theme} config={config}>
+          {({ sidebarStyles, collapsed }) => (
+            <>
+              <CssBaseline />
+              <Sidebar>
+                <div className={sidebarStyles.container}>
+                  <Navbar collapsed={collapsed} data={navbarData} />
+                </div>
+                <CollapseBtn className={sidebarStyles.collapseBtn}>
+                  <CollapseIcon />
+                </CollapseBtn>
+              </Sidebar>
+              <Content>{children}</Content>
+              <Footer />
+            </>
+          )}
+        </Root>
+      </IdleTimer>
     );
   }
+
+  onIdle = () => {
+    const { store, history } = this.props;
+    if (store.getState().app.isLogin) {
+      console.log("last active", this.idleTimer.getLastActiveTime());
+      dialog.showMessageBoxSync({
+        type: "info",
+        title: "See you soon!",
+        message: "User logged-out successfully!"
+      });
+      store.dispatch(logout());
+      history.replace("/");
+    }
+  };
 }
 
 export default Layout;

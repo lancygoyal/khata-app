@@ -15,7 +15,7 @@ export default ({
     render={(props: any) => {
       if (type === "private")
         return store.getState().app.isLogin ? (
-          <Layout {...props}>
+          <Layout store={store} {...props}>
             <Component {...props} />
           </Layout>
         ) : (
@@ -26,7 +26,7 @@ export default ({
             }}
           />
         );
-      if (type === "signin")
+      else if (type === "signin")
         return !isEmpty(store.getState().users) ? (
           <Component {...props} />
         ) : (
@@ -37,7 +37,7 @@ export default ({
             }}
           />
         );
-      if (type === "signup")
+      else if (type === "signup")
         return isEmpty(store.getState().users) ? (
           <Component {...props} />
         ) : (

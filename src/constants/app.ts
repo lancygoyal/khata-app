@@ -15,6 +15,6 @@ export const TYPES = {
   IN: "in",
   OUT: "out"
 };
-export const APP_IDLE_TIME = 1000 * 60 * 10;
+export const APP_IDLE_TIME = 1000 * 60 * 15;
 export const RESET = "RESET";
 export const RESTORE = "RESTORE";

@@ -36,9 +36,15 @@ const Settings: React.FC<SettingsProps> = ({
   restoreState
 }) => {
   let fileRestoreInput = null;
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLocale((event.target as HTMLInputElement).value);
   };
+
+  const backupFile = () => {
+    backupData(store);
+  };
+
   const uploadFile = e => {
     const files = e.target.files;
     if (files && files[0]) {
@@ -94,7 +100,7 @@ const Settings: React.FC<SettingsProps> = ({
               variant="contained"
               color="primary"
               style={{ marginRight: 10 }}
-              onClick={() => backupData(store)}
+              onClick={backupFile}
             >
               {t("app:backup")}
             </Button>
