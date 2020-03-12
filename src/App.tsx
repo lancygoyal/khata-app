@@ -10,7 +10,7 @@ import Loader from "./components/loader";
 import moment from "moment";
 import "moment/locale/pa-in";
 import { LOCALE } from "./constants/app";
-import { backupData } from "./utils/common";
+import { backupData, setBackupTime } from "./utils/common";
 
 const { store, persistor } = initializeStore();
 
@@ -34,6 +34,7 @@ class App extends React.Component<AppProps> {
     if (path) {
       console.log("****** Data Backup ******", path);
       backupData(state, path, t("app:backupFolderPath"));
+      setBackupTime();
     }
   };
 

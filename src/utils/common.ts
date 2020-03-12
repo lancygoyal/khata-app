@@ -70,3 +70,11 @@ export const backupData = (data, folderPath = "", message) => {
     );
   }
 };
+
+export const setBackupTime = () =>
+  localStorage.setItem("backupAt", String(Date.now()));
+
+export const getBackupTime = () =>
+  localStorage.getItem("backupAt")
+    ? " - " + moment(Number(localStorage.getItem("backupAt"))).fromNow()
+    : "";

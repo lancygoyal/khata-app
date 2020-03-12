@@ -6,6 +6,7 @@
   "lastName": "Last Name",
   "password": "Password",
   "confirmPassword": "Confirm Password",
+  "oldPassword": "Old Password",
   "createAccount": "Create Account",
   "fieldRequired": "{{field}} is required.",
   "fieldMinSize": "{{field}} is too short - should be {{size}} chars minimum.",
@@ -54,5 +55,9 @@
   "restore": "Restore",
   "emptyDataSourceMessage": "No records to display",
   "search": "Search",
-  "backupFolderPath": "Please select folder for data backup."
+  "backupFolderPath": "Please select folder for data backup.",
+  "cngPwd": "Change Password",
+  "pwdNotMatch": "New password should not match with old password.",
+  "pwdChanged": "Password changed successfully.",
+  "oldPwdNotMatch": "Old password is not correct."
 }
