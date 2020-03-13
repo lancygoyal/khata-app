@@ -2,8 +2,8 @@ const { app, BrowserWindow, ipcMain, Menu } = require("electron");
 const path = require("path");
 const isDev = require("electron-is-dev");
 
+app.allowRendererProcessReuse = true;
 let mainWindow;
-
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 960,
