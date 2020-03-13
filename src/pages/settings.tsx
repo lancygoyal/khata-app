@@ -70,8 +70,11 @@ const Settings: React.FC<SettingsProps> = ({
       path = getFolderPath(t("app:backupFolderPath"));
       setPath(path);
     }
-    backupData(store, path, t("app:backupFolderPath"));
-    setBackupTime();
+    if (path) {
+      console.log("****** Data Backup ******", path);
+      backupData(store, path, t("app:backupFolderPath"));
+      setBackupTime();
+    }
   };
 
   return (

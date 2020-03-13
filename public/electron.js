@@ -54,14 +54,14 @@ function generateMenu() {
         { role: "quit", label: "Exit" }
       ]
     },
-    {
-      label: "Dev",
-      submenu: [
-        { role: "reload" },
-        { role: "forcereload" },
-        { role: "toggledevtools" }
-      ]
-    },
+    // {
+    //   label: "Dev",
+    //   submenu: [
+    //     { role: "reload" },
+    //     { role: "forcereload" },
+    //     { role: "toggledevtools" }
+    //   ]
+    // },
     {
       role: "window",
       submenu: [{ role: "minimize" }, { role: "close" }]
