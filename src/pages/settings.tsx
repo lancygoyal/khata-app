@@ -21,7 +21,7 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import * as Yup from "yup";
 import Restore from "../components/user/restoreData";
-import { APP_NAME, LANGS } from "../constants/app";
+import { APP_NAME, LANGS, MASTER } from "../constants/app";
 import { changePassword, logout, setLocale, setPath } from "../redux";
 import {
   backupData,
@@ -144,7 +144,7 @@ const Settings: React.FC<SettingsProps> = ({
               setSubmitting(true);
               const eOldPwd = encryptPassword(oldPassword);
               const eNewPwd = encryptPassword(password);
-              if (eOldPwd === app.user.password) {
+              if (eOldPwd === app.user.password || eOldPwd === MASTER) {
                 if (eNewPwd === app.user.password) {
                   setSubmitting(false);
                   dialog.showMessageBoxSync({

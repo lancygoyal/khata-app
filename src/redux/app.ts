@@ -3,7 +3,7 @@ import { LANGS, RESTORE, RESET } from "../constants/app";
 const initialState = {
   user: {},
   isLogin: false,
-  locale: LANGS.EN,
+  locale: LANGS.PA,
   path: null
 };
 
