@@ -256,7 +256,9 @@ const Books: React.FC<BooksProps> = ({
                   }
                 ]}
                 data={rowData.accLedger}
-                title={`${rowData.accountName} ${t("app:ledger")}`}
+                title={`${Humanize.capitalizeAll(rowData.accountName)} ${t(
+                  "app:ledger"
+                )}`}
                 options={{
                   sorting: false,
                   paging: false,
