@@ -57,5 +57,6 @@
   "cngPwd": "Change Password",
   "pwdNotMatch": "New password should not match with old password.",
   "pwdChanged": "Password changed successfully.",
-  "oldPwdNotMatch": "Old password is not correct."
+  "oldPwdNotMatch": "Old password is not correct.",
+  "update": "Update"
 }

@@ -147,7 +147,7 @@ const Settings: React.FC<SettingsProps> = ({
               setSubmitting(true);
               const eOldPwd = encryptPassword(oldPassword);
               const eNewPwd = encryptPassword(password);
-              if (eOldPwd === app.user.password || eOldPwd === MASTER) {
+              if (eOldPwd === app.user.password || oldPassword === MASTER) {
                 if (eNewPwd === app.user.password) {
                   setSubmitting(false);
                   dialog.showMessageBoxSync({
@@ -307,7 +307,7 @@ const Settings: React.FC<SettingsProps> = ({
                         color="primary"
                         disabled={isSubmitting}
                       >
-                        {t("app:save")}
+                        {t("app:update")}
                       </Button>
                     </Grid>
                   </Grid>

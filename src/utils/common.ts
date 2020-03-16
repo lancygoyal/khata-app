@@ -3,7 +3,7 @@ import { writeFileSync, existsSync, mkdirSync } from "fs";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import moment from "moment";
-import { APP_STORE_KEY, APP_NAME } from "../constants/app";
+import { APP_STORE_KEY, APP_NAME, LANGS } from "../constants/app";
 import { remote } from "electron";
 
 export const dialog = remote.dialog;
@@ -76,5 +76,8 @@ export const setBackupTime = () =>
 
 export const getBackupTime = () =>
   localStorage.getItem("backupAt")
-    ? " - " + moment(Number(localStorage.getItem("backupAt"))).fromNow()
+    ? " - " +
+      moment(Number(localStorage.getItem("backupAt")))
+        .locale(LANGS.EN)
+        .fromNow()
     : "";

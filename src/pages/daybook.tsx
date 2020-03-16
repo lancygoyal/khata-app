@@ -43,7 +43,7 @@ const styles = theme =>
       borderBottomWidth: 1
     },
     inOutRoot: {
-      marginTop: "50px",
+      marginTop: "5vh",
       height: "90vh"
     },
     inOut: {
@@ -101,7 +101,7 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
       const account = {
         id: accountId,
         accountName,
-        city,
+        city: city.toLowerCase(),
         contactNumber,
         addInfo,
         hasBankDetails: false,
