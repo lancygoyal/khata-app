@@ -93,6 +93,16 @@
     "mac": {
       "category": "public.app-category.utilities"
     },
+    "publish": {
+      "provider": "github",
+      "repo": "khata-app",
+      "owner": "lancygoyal",
+      "host": "github.com",
+      "protocol": "https",
+      "releaseType": "draft",
+      "token": "bd12b2e817c5578d2ab2cd5538b26c7ba6dd7574",
+      "private": true
+    },
     "files": [
       "build/**/*",
       "node_modules/**/*",
