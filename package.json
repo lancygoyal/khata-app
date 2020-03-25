@@ -56,7 +56,8 @@
     "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "npm run build",
-    "electron-pack": "electron-builder build -mw --x64 --c.extraMetadata.main=build/electron.js"
+    "electron-pack": "electron-builder build -mw --x64 --c.extraMetadata.main=build/electron.js",
+    "electron-pack-win": "electron-builder build -w --c.extraMetadata.main=build/electron.js"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -93,6 +94,24 @@
     "mac": {
       "category": "public.app-category.utilities"
     },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "msi",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+    },
     "files": [
       "build/**/*",
       "node_modules/**/*",
@@ -105,6 +124,6 @@
       "buildResources": "build",
       "output": "release"
     },
-    "asar": true
+    "asar": false
   }
 }
