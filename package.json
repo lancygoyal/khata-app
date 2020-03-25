@@ -99,19 +99,12 @@
         {
           "target": "nsis",
           "arch": [
-            "x64",
-            "ia32"
-          ]
-        },
-        {
-          "target": "msi",
-          "arch": [
-            "x64",
-            "ia32"
+            "x64"
           ]
         }
       ]
     },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "useZip": true } ,
     "files": [
       "build/**/*",
       "node_modules/**/*",
@@ -124,6 +117,6 @@
       "buildResources": "build",
       "output": "release"
     },
-    "asar": false
+    "asar": true
   }
 }
