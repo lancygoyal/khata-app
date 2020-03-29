@@ -24,8 +24,8 @@ class App extends React.Component<AppProps> {
 
   handleChange = () => {
     const { i18n } = this.props;
-    i18n.changeLanguage(store.getState().app.locale);
-    moment.locale(LOCALE[store.getState().app.locale]);
+    i18n.changeLanguage(store.getState().setting.locale);
+    moment.locale(LOCALE[store.getState().setting.locale]);
   };
 
   componentWillUnmount() {

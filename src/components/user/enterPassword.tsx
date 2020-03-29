@@ -39,7 +39,7 @@ export default ({ open, data, handleOpen, handleClose }) => {
       disableBackdropClick={true}
     >
       <DialogTitle id="enter-password-title">{t("app:login")}</DialogTitle>
-      <DialogContent style={{ width: "400px" }}>
+      <DialogContent style={{ maxWidth: "400px" }}>
         <TextField
           autoFocus
           margin="dense"

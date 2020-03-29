@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
       borderTopWidth: 1,
       borderTopStyle: "solid",
       borderTopRightRadius: 3,
-      width: 100
+      width: "100%"
     },
     listBody: {
       borderLeftWidth: 1,

@@ -51,6 +51,7 @@ const Settings: React.FC<SettingsProps> = ({
   history,
   store,
   app,
+  setting,
   setLocale,
   changePassword,
   logout
@@ -76,7 +77,7 @@ const Settings: React.FC<SettingsProps> = ({
           <RadioGroup
             aria-label="language"
             name="language"
-            value={app.locale}
+            value={setting.locale}
             onChange={handleChange}
             row
           >
@@ -118,7 +119,7 @@ const Settings: React.FC<SettingsProps> = ({
             </Button>
             <Restore />
           </Grid>
-          {app.path && <FormHelperText>{app.path}</FormHelperText>}
+          {setting.path && <FormHelperText>{setting.path}</FormHelperText>}
         </FormControl>
       </Paper>
       <Paper style={{ marginTop: 10 }}>
@@ -296,7 +297,11 @@ const Settings: React.FC<SettingsProps> = ({
   );
 };
 
-const mapStateToProps = store => ({ store, app: store.app });
+const mapStateToProps = store => ({
+  store,
+  app: store.app,
+  setting: store.setting
+});
 
 const mapDispatchToProps = { setLocale, setPath, changePassword, logout };
 

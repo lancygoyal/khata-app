@@ -98,7 +98,7 @@ class SignIn extends React.Component<SignInProps, SignInState> {
         </Typography>
         <Grid container alignItems="center" justify="center">
           {[...users].map((user, idx) => (
-            <Grid item xs={6} key={idx}>
+            <Grid item xs={12} sm={5} key={idx}>
               <Paper className={classes.paper}>
                 <Avatar alt={user.firmName} className={classes.avatar}>
                   {user.isMaster ? (

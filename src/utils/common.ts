@@ -41,15 +41,7 @@ export const backupData = data => {
   const blob = new Blob([encryptData(data)], {
     type: "text/plain;charset=utf-8"
   });
-  FileSaver.saveAs(
-    blob,
-    "khata-app-backup-" +
-      new Date()
-        .toLocaleDateString()
-        .split("/")
-        .join("") +
-      ".ka"
-  );
+  FileSaver.saveAs(blob, "khata-app-backup-" + Date.now() + ".ka");
 };
 
 export const setBackupTime = () =>

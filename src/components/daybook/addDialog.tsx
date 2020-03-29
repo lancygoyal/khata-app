@@ -41,17 +41,12 @@ const useStyles = makeStyles((theme: Theme) =>
     tabBtn: {
       width: "50%",
       borderRadius: 0,
-      borderBottomStyle: "solid",
-      borderBottomWidth: 5,
-      borderBottomColor: theme.palette.grey[700],
-      backgroundColor: theme.palette.grey[700]
+      backgroundColor: theme.palette.background.default,
+      color: theme.palette.primary.dark
     },
     tabBtnActive: {
       width: "50%",
       borderRadius: 0,
-      borderBottomStyle: "solid",
-      borderBottomWidth: 5,
-      borderBottomColor: theme.palette.background.default,
       color: theme.palette.background.default
     },
     btn: {
@@ -76,7 +71,7 @@ export default ({
     directAdd ? accounts[0] : null
   );
   const [addAccount, handleAddAccount] = React.useState(false);
-  const [type, setType] = React.useState(TYPES.IN);
+  const [type, setType] = React.useState(TYPES.OUT);
   const [more, setMore] = React.useState(false);
   const { t } = useTranslation();
 
@@ -174,17 +169,11 @@ export default ({
                   field: t("app:contactNumber"),
                   size: 16
                 })
-              )
-              .when("addAccount", {
-                is: () => addAccount,
-                then: Yup.string().required(
-                  t("app:fieldRequired", { field: t("app:contactNumber") })
-                )
-              }),
+              ),
             addInfo: Yup.string()
               .min(
-                10,
-                t("app:fieldMinSize", { field: t("app:addInfo"), size: 10 })
+                2,
+                t("app:fieldMinSize", { field: t("app:addInfo"), size: 2 })
               )
               .max(
                 500,
@@ -207,10 +196,7 @@ export default ({
               )
               .required(t("app:fieldRequired", { field: t("app:amount") })),
             notes: Yup.string()
-              .min(
-                10,
-                t("app:fieldMinSize", { field: t("app:notes"), size: 10 })
-              )
+              .min(2, t("app:fieldMinSize", { field: t("app:notes"), size: 2 }))
               .max(
                 500,
                 t("app:fieldMaxSize", { field: t("app:notes"), size: 500 })

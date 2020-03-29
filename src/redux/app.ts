@@ -1,19 +1,15 @@
-import { LANGS, RESTORE, RESET } from "../constants/app";
+import { RESTORE, RESET } from "../constants/app";
 
 const initialState = {
   user: {},
-  isLogin: false,
-  locale: LANGS.PA,
-  path: null
+  isLogin: false
 };
 
 export type AppState = Readonly<typeof initialState>;
 
 export const Types = {
   LOGIN: "LOGIN",
-  LOGOUT: "LOGOUT",
-  SET_LOCALE: "SET_LOCALE",
-  SET_PATH: "SET_PATH"
+  LOGOUT: "LOGOUT"
 };
 
 // REDUCERS
@@ -27,10 +23,6 @@ export default (state: AppState = initialState, action): AppState => {
       };
     case Types.LOGOUT:
       return { ...state, user: {}, isLogin: false };
-    case Types.SET_LOCALE:
-      return { ...state, locale: action.payload };
-    case Types.SET_PATH:
-      return { ...state, path: action.payload };
     case RESET:
       return initialState;
     case RESTORE:
@@ -47,12 +39,4 @@ export const login = payload => {
 
 export const logout = () => {
   return { type: Types.LOGOUT };
-};
-
-export const setLocale = payload => {
-  return { type: Types.SET_LOCALE, payload };
-};
-
-export const setPath = payload => {
-  return { type: Types.SET_PATH, payload };
 };
