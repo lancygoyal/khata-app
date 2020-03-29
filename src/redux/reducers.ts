@@ -1,11 +1,10 @@
 import { combineReducers } from "redux";
 import { persistReducer } from "redux-persist";
-import createElectronStorage from "redux-persist-electron-storage";
 import app, { AppState } from "./app";
 import users, { UsersState } from "./users";
 import accounts, { AccountsState } from "./accounts";
 import ledger, { LedgerState } from "./ledger";
-import electronStore from "../config/storage";
+import { storage, encryptor } from "./storage";
 
 export interface IRootState {
   readonly app: AppState;
@@ -18,16 +17,14 @@ const appPersistConfig =
   process.env.NODE_ENV === "development"
     ? {
         key: "app",
-        storage: createElectronStorage({
-          electronStore
-        })
+        storage: storage,
+        transforms: [encryptor]
       }
     : {
         key: "app",
-        storage: createElectronStorage({
-          electronStore
-        }),
-        whitelist: ["locale"]
+        storage: storage,
+        whitelist: ["locale"],
+        transforms: [encryptor]
       };
 
 const rootReducer = combineReducers<IRootState>({

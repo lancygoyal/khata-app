@@ -12,6 +12,7 @@ import { Typography } from "@material-ui/core";
 import { useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { logout } from "../redux";
+import { backupData, setBackupTime } from "../utils/common";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,14 +38,20 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Navbar = ({ collapsed, data }) => {
   const classes = useStyles();
-  const { user } = useSelector((state: any) => state.app);
+  const store = useSelector((state: any) => state);
+  const { user } = store.app;
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
   const { t } = useTranslation();
+
   const handleListItemClick = (path: string, title: string) => {
     history.push(path);
-    title === "logout" && dispatch(logout());
+    if (title === "logout") {
+      backupData(store);
+      setBackupTime();
+      dispatch(logout());
+    }
   };
 
   return (

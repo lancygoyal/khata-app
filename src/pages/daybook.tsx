@@ -14,7 +14,7 @@ import uniqid from "uniqid";
 import find from "lodash/find";
 import filter from "lodash/filter";
 import { TYPES } from "../constants/app";
-import { formatDate, getFolderPath } from "../utils/common";
+import { formatDate } from "../utils/common";
 
 const styles = theme =>
   createStyles({
@@ -68,15 +68,6 @@ interface DaybookState {
 class Daybook extends React.Component<DaybookProps, DaybookState> {
   state = {
     addDialog: false
-  };
-
-  componentDidMount = () => {
-    setTimeout(() => {
-      const { setPath, path, t } = this.props;
-      if (!path) {
-        setPath(getFolderPath(t("app:backupFolderPath")));
-      }
-    }, 5000);
   };
 
   handleAddDialog = () => {

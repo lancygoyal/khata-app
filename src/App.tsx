@@ -10,7 +10,6 @@ import Loader from "./components/loader";
 import moment from "moment";
 import "moment/locale/pa-in";
 import { LOCALE } from "./constants/app";
-import { backupData, setBackupTime } from "./utils/common";
 
 const { store, persistor } = initializeStore();
 
@@ -24,18 +23,9 @@ class App extends React.Component<AppProps> {
   }
 
   handleChange = () => {
-    const { i18n, t } = this.props;
+    const { i18n } = this.props;
     i18n.changeLanguage(store.getState().app.locale);
     moment.locale(LOCALE[store.getState().app.locale]);
-    const state = store.getState();
-    const {
-      app: { path }
-    } = state;
-    if (path) {
-      console.log("****** Data Backup ******", path);
-      backupData(state, path, t("app:backupFolderPath"));
-      setBackupTime();
-    }
   };
 
   componentWillUnmount() {

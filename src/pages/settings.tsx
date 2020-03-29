@@ -21,13 +21,11 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import * as Yup from "yup";
 import Restore from "../components/user/restoreData";
-import { APP_NAME, LANGS, MASTER } from "../constants/app";
+import { LANGS, MASTER } from "../constants/app";
 import { changePassword, logout, setLocale, setPath } from "../redux";
 import {
   backupData,
-  dialog,
   encryptPassword,
-  getFolderPath,
   setBackupTime,
   getBackupTime
 } from "../utils/common";
@@ -35,7 +33,6 @@ import {
 const styles = theme =>
   createStyles({
     formControl: {
-      width: "96%",
       margin: theme.spacing(3)
     }
   });
@@ -55,26 +52,20 @@ const Settings: React.FC<SettingsProps> = ({
   store,
   app,
   setLocale,
-  setPath,
   changePassword,
   logout
 }) => {
   const [showPassword, handleShowPassword] = React.useState(false);
+  const [backupTime, handleBackupTime] = React.useState(
+    localStorage.getItem("backupAt")
+  );
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLocale((event.target as HTMLInputElement).value);
   };
-
   const backupFile = () => {
-    let { path } = app;
-    if (!path) {
-      path = getFolderPath(t("app:backupFolderPath"));
-      setPath(path);
-    }
-    if (path) {
-      console.log("****** Data Backup ******", path);
-      backupData(store, path, t("app:backupFolderPath"));
-      setBackupTime();
-    }
+    backupData(store);
+    setBackupTime();
+    handleBackupTime(String(Date.now()));
   };
 
   return (
@@ -105,7 +96,8 @@ const Settings: React.FC<SettingsProps> = ({
       <Paper style={{ marginTop: 10 }}>
         <FormControl component="fieldset" className={classes.formControl}>
           <FormLabel component="legend">
-            {t("app:backup")}/{t("app:restore")}
+            {t("app:backup")}/{t("app:restore")}{" "}
+            {backupTime && getBackupTime(backupTime)}
           </FormLabel>
           <Grid
             container
@@ -126,12 +118,7 @@ const Settings: React.FC<SettingsProps> = ({
             </Button>
             <Restore />
           </Grid>
-          {app.path && (
-            <FormHelperText>
-              {app.path}
-              {getBackupTime()}
-            </FormHelperText>
-          )}
+          {app.path && <FormHelperText>{app.path}</FormHelperText>}
         </FormControl>
       </Paper>
       <Paper style={{ marginTop: 10 }}>
@@ -150,29 +137,17 @@ const Settings: React.FC<SettingsProps> = ({
               if (eOldPwd === app.user.password || oldPassword === MASTER) {
                 if (eNewPwd === app.user.password) {
                   setSubmitting(false);
-                  dialog.showMessageBoxSync({
-                    type: "info",
-                    title: APP_NAME,
-                    message: t("app:pwdNotMatch")
-                  });
+                  alert(t("app:pwdNotMatch"));
                   return;
                 }
                 changePassword({ ...app.user, newPwd: eNewPwd });
-                dialog.showMessageBoxSync({
-                  type: "info",
-                  title: APP_NAME,
-                  message: t("app:pwdChanged")
-                });
+                alert(t("app:pwdChanged"));
                 setSubmitting(false);
                 history.replace("/");
                 logout();
               } else {
                 setSubmitting(false);
-                dialog.showMessageBoxSync({
-                  type: "info",
-                  title: APP_NAME,
-                  message: t("app:oldPwdNotMatch")
-                });
+                alert(t("app:oldPwdNotMatch"));
               }
             }}
             validationSchema={Yup.object().shape({
@@ -222,7 +197,7 @@ const Settings: React.FC<SettingsProps> = ({
                     style={{ marginTop: 10 }}
                     spacing={2}
                   >
-                    <Grid item xs={4}>
+                    <Grid item xs={12} md={4}>
                       <TextField
                         variant="outlined"
                         required
@@ -242,7 +217,7 @@ const Settings: React.FC<SettingsProps> = ({
                         error={errors.oldPassword && touched.oldPassword}
                       />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={12} md={4}>
                       <TextField
                         variant="outlined"
                         required
@@ -260,7 +235,7 @@ const Settings: React.FC<SettingsProps> = ({
                         error={errors.password && touched.password}
                       />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={12} md={4}>
                       <TextField
                         variant="outlined"
                         required
@@ -300,7 +275,7 @@ const Settings: React.FC<SettingsProps> = ({
                         }
                       />
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={12} md={4}>
                       <Button
                         type="submit"
                         variant="contained"

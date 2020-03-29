@@ -1,12 +1,8 @@
 import CryptoJS from "crypto-js";
-import { writeFileSync, existsSync, mkdirSync } from "fs";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import moment from "moment";
-import { APP_STORE_KEY, APP_NAME, LANGS } from "../constants/app";
-import { remote } from "electron";
-
-export const dialog = remote.dialog;
+import { APP_STORE_KEY, LANGS } from "../constants/app";
 
 export const encryptPassword = message => CryptoJS.SHA256(message).toString();
 
@@ -41,43 +37,28 @@ export const decryptData = data =>
     CryptoJS.AES.decrypt(data, APP_STORE_KEY).toString(CryptoJS.enc.Utf8)
   );
 
-export const getFolderPath = (message = "Please select folder.") => {
-  dialog.showMessageBoxSync({
-    type: "info",
-    title: APP_NAME,
-    message
+export const backupData = data => {
+  const blob = new Blob([encryptData(data)], {
+    type: "text/plain;charset=utf-8"
   });
-  const folderPath = dialog.showOpenDialogSync({
-    properties: ["openDirectory"]
-  });
-  return folderPath ? folderPath[0] : null;
-};
-
-export const backupData = (data, folderPath = "", message) => {
-  const kaFolderPath = folderPath ? folderPath : getFolderPath(message);
-  if (kaFolderPath) {
-    !existsSync(kaFolderPath) && mkdirSync(kaFolderPath);
-    writeFileSync(
-      kaFolderPath +
-        "/" +
-        "khata-app-backup-" +
-        new Date()
-          .toLocaleDateString()
-          .split("/")
-          .join("") +
-        ".ka",
-      encryptData(data)
-    );
-  }
+  FileSaver.saveAs(
+    blob,
+    "khata-app-backup-" +
+      new Date()
+        .toLocaleDateString()
+        .split("/")
+        .join("") +
+      ".ka"
+  );
 };
 
 export const setBackupTime = () =>
   localStorage.setItem("backupAt", String(Date.now()));
 
-export const getBackupTime = () =>
-  localStorage.getItem("backupAt")
+export const getBackupTime = backupTime =>
+  backupTime
     ? " - " +
-      moment(Number(localStorage.getItem("backupAt")))
+      moment(Number(backupTime))
         .locale(LANGS.EN)
         .fromNow()
     : "";

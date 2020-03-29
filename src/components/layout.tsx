@@ -15,7 +15,6 @@ import navbarData from "../config/navbar";
 import IdleTimer from "react-idle-timer";
 import { APP_IDLE_TIME } from "../constants/app";
 import { logout } from "../redux";
-import { dialog } from "../utils/common";
 
 const config = {
   sidebar: {
@@ -78,11 +77,7 @@ class Layout extends React.Component<LayoutProps> {
       console.log("last active", this.idleTimer.getLastActiveTime());
       history.replace("/");
       store.dispatch(logout());
-      dialog.showMessageBoxSync({
-        type: "info",
-        title: "See you soon!",
-        message: "User logged-out successfully!"
-      });
+      alert("User logged-out successfully!");
     }
   };
 }
