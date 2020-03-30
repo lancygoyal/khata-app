@@ -1,31 +1,18 @@
-import React from "react";
+import { createStyles, FormControlLabel, Grid, IconButton, makeStyles, Radio, RadioGroup, Theme } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { useTranslation } from "react-i18next";
-import { Formik } from "formik";
-import * as Yup from "yup";
-import {
-  Grid,
-  Theme,
-  makeStyles,
-  createStyles,
-  IconButton
-} from "@material-ui/core";
-import {
-  ALPHA_SPACE_DOT,
-  ALPHA_SPACE,
-  CONTACT_NUMBER,
-  NUMERIC
-} from "../../constants/regex";
-import Autocomplete, {
-  createFilterOptions
-} from "@material-ui/lab/Autocomplete";
+import TextField from "@material-ui/core/TextField";
 import Close from "@material-ui/icons/Close";
-import { TYPES } from "../../constants/app";
+import Autocomplete, { createFilterOptions } from "@material-ui/lab/Autocomplete";
+import { Formik } from "formik";
 import Humanize from "humanize-plus";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import * as Yup from "yup";
+import { TYPES } from "../../constants/app";
+import { ALPHA_SPACE, ALPHA_SPACE_DOT, CONTACT_NUMBER, NUMERIC } from "../../constants/regex";
 
 const filter = createFilterOptions();
 const useStyles = makeStyles((theme: Theme) =>
@@ -47,7 +34,8 @@ const useStyles = makeStyles((theme: Theme) =>
     tabBtnActive: {
       width: "50%",
       borderRadius: 0,
-      color: theme.palette.background.default
+      color: theme.palette.background.default,
+      backgroundColor: "#1976d2"
     },
     btn: {
       marginBottom: "2%",
@@ -235,39 +223,6 @@ export default ({
             return (
               <form className={classes.form} onSubmit={handleSubmit} noValidate>
                 <Grid container spacing={2}>
-                  <Grid
-                    container
-                    item
-                    xs={12}
-                    sm={12}
-                    justify="center"
-                    alignItems="center"
-                  >
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={
-                        type === TYPES.IN
-                          ? classes.tabBtnActive
-                          : classes.tabBtn
-                      }
-                      onClick={() => setType(TYPES.IN)}
-                    >
-                      {t("app:in")}
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={
-                        type === TYPES.OUT
-                          ? classes.tabBtnActive
-                          : classes.tabBtn
-                      }
-                      onClick={() => setType(TYPES.OUT)}
-                    >
-                      {t("app:out")}
-                    </Button>
-                  </Grid>
                   <Grid item xs={7} sm={7}>
                     <Autocomplete
                       id="selectAccount"
@@ -495,6 +450,34 @@ export default ({
                   item
                   xs={12}
                   sm={12}
+                  alignItems="center"
+                  justify="flex-end"
+                >
+                  <RadioGroup
+                    aria-label="type"
+                    name="type"
+                    value={type}
+                    onChange={event => setType(event.target.value)}
+                    row
+                  >
+                    <FormControlLabel
+                      value={TYPES.OUT}
+                      control={<Radio />}
+                      label={t("app:out")}
+                    />
+                    <FormControlLabel
+                      value={TYPES.IN}
+                      control={<Radio />}
+                      label={t("app:in")}
+                    />
+                  </RadioGroup>
+                </Grid>
+
+                <Grid
+                  container
+                  item
+                  xs={12}
+                  sm={12}
                   justify="flex-end"
                   alignItems="center"
                 >
@@ -514,18 +497,18 @@ export default ({
                     color="primary"
                     className={classes.btn}
                     disabled={isSubmitting}
-                    onClick={evt => handleSave(evt)}
+                    onClick={evt => handleSave(evt, true)}
                   >
-                    {t("app:save")}
+                    {t("app:saveMore")}
                   </Button>
                   <Button
                     variant="contained"
                     color="primary"
                     className={classes.btn}
                     disabled={isSubmitting}
-                    onClick={evt => handleSave(evt, true)}
+                    onClick={evt => handleSave(evt)}
                   >
-                    {t("app:saveMore")}
+                    {t("app:save")}
                   </Button>
                 </Grid>
               </form>

@@ -48,9 +48,15 @@ const Navbar = ({ collapsed, data }) => {
   const handleListItemClick = (path: string, title: string) => {
     history.push(path);
     if (title === "logout") {
-      backupData(store);
-      setBackupTime();
-      dispatch(logout());
+      // eslint-disable-next-line no-restricted-globals
+      const takeBackup = confirm(t(`app:takeBackup`));
+      if (takeBackup) {
+        backupData(store);
+        setBackupTime();
+        dispatch(logout());
+      } else {
+        dispatch(logout());
+      }
     }
   };
 
