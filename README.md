@@ -49,4 +49,3 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 Modify
 XLS - entries
-No Serial Number
