@@ -19,7 +19,7 @@ export const jsonToXLS = (data, fileName) => {
   FileSaver.saveAs(blobData, fileName + "-" + Date.now() + fileExtension);
 };
 
-export const formatDate = (date = Date.now()) => {
+export const formatDate = (date) => {
   const dateObj = new Date(date);
   const momentDate = moment()
     .format("dddd, Do MMMM YYYY")

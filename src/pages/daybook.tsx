@@ -1,30 +1,35 @@
-import React from "react";
-import { withStyles, WithStyles, createStyles } from "@material-ui/core/styles";
-import { connect } from "react-redux";
-import { withTranslation, WithTranslation } from "react-i18next";
-import Fab from "@material-ui/core/Fab";
-import AddIcon from "@material-ui/icons/Add";
+import DateFnsUtils from "@date-io/date-fns";
 import { Typography } from "@material-ui/core";
-import WbSunny from "@material-ui/icons/WbSunny";
+import Fab from "@material-ui/core/Fab";
 import Grid from "@material-ui/core/Grid";
-import Records from "../components/daybook/records";
-import AddDialog from "../components/daybook/addDialog";
-import { addAccount, addInvoice, setPath } from "../redux";
-import uniqid from "uniqid";
-import find from "lodash/find";
+import { createStyles, withStyles, WithStyles } from "@material-ui/core/styles";
+import AddIcon from "@material-ui/icons/Add";
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
 import filter from "lodash/filter";
+import find from "lodash/find";
+import map from "lodash/map";
+import uniqBy from "lodash/uniqBy";
+import React from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
+import { connect } from "react-redux";
+import uniqid from "uniqid";
+import AddDialog from "../components/daybook/addDialog";
+import Records from "../components/daybook/records";
 import { TYPES } from "../constants/app";
-import { formatDate } from "../utils/common";
+import { addAccount, addInvoice, setPath } from "../redux";
 
-const styles = theme =>
+const styles = (theme) =>
   createStyles({
     root: {
-      padding: "10px 20px"
+      padding: "10px 20px",
     },
     date: {
       fontWeight: "bold",
       fontSize: 20,
-      float: "right"
+      float: "right",
     },
     speedDial: {
       position: "fixed",
@@ -40,17 +45,17 @@ const styles = theme =>
       fontSize: 16,
       padding: 3,
       borderBottomStyle: "solid",
-      borderBottomWidth: 1
+      borderBottomWidth: 1,
     },
     inOutRoot: {
       marginTop: "5vh",
-      height: "90vh"
+      height: "90vh",
     },
     inOut: {
       height: "80vh",
       overflowY: "scroll",
-      paddingRight: "10px"
-    }
+      paddingRight: "10px",
+    },
   });
 
 interface DaybookProps
@@ -63,27 +68,30 @@ interface DaybookProps
 
 interface DaybookState {
   addDialog: boolean;
+  date: Date;
 }
 
 class Daybook extends React.Component<DaybookProps, DaybookState> {
   state = {
-    addDialog: false
+    addDialog: false,
+    date: new Date(),
   };
 
   handleAddDialog = () => {
     this.setState(({ addDialog }) => ({
-      addDialog: !addDialog
+      addDialog: !addDialog,
     }));
   };
 
-  handleSave = data => {
+  handleSave = (data) => {
     const { addAccount, addInvoice, user } = this.props;
+    const { date } = this.state;
     const {
       invoiceNumber,
       values: { accountName, city, contactNumber, addInfo, amount, notes },
       selectAccount,
       type,
-      more
+      more,
     } = data;
     const dateNow = Date.now();
     const accountId = uniqid();
@@ -91,13 +99,13 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
     if (data.addAccount) {
       const account = {
         id: accountId,
-        accountName,
+        accountName: accountName.toLowerCase(),
         city: city.toLowerCase(),
         contactNumber,
         addInfo,
         hasBankDetails: false,
         createAt: dateNow,
-        createdBy: user.id
+        createdBy: user.id,
       };
       addAccount(account);
     }
@@ -111,23 +119,46 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
       hasInvoiceDtls: false,
       hasTax: false,
       mode: "CASH",
-      createAt: dateNow,
-      createdBy: user.id
+      createAt: new Date(date).getTime(),
+      addedAt: dateNow,
+      createdBy: user.id,
     };
     addInvoice(invoice);
     !more && this.handleAddDialog();
   };
 
+  getLedger = () => {
+    const { accounts, ledger } = this.props;
+    const { date } = this.state;
+
+    return {
+      ledgerIn: filter(
+        ledger,
+        (o) =>
+          o.type === TYPES.IN &&
+          new Date(o.createAt).toLocaleDateString() ===
+            new Date(date).toLocaleDateString()
+      ).map((data) => ({
+        ...data,
+        account: find(accounts, ["id", data.accountId]),
+      })),
+      ledgerOut: filter(
+        ledger,
+        (o) =>
+          o.type === TYPES.OUT &&
+          new Date(o.createAt).toLocaleDateString() ===
+            new Date(date).toLocaleDateString()
+      ).map((data) => ({
+        ...data,
+        account: find(accounts, ["id", data.accountId]),
+      })),
+    };
+  };
+
   render() {
-    const {
-      classes,
-      t,
-      accounts,
-      invoiceNumber,
-      ledgerIn,
-      ledgerOut
-    } = this.props;
-    const { addDialog } = this.state;
+    const { classes, t, accounts, cities, invoiceNumber } = this.props;
+    const { addDialog, date } = this.state;
+    const { ledgerIn, ledgerOut } = this.getLedger();
 
     return (
       <div className={classes.root}>
@@ -137,8 +168,19 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
           className={classes.date}
           color="secondary"
         >
-          <WbSunny style={{ top: "5px", position: "relative" }} />{" "}
-          {formatDate()}
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              variant="inline"
+              margin="normal"
+              id="date-picker-dialog"
+              format="dd, MMMM/yyyy"
+              value={date}
+              onChange={(val: Date) => this.setState({ date: val })}
+              KeyboardButtonProps={{
+                "aria-label": "change date",
+              }}
+            />
+          </MuiPickersUtilsProvider>
         </Typography>
         <Grid container spacing={0} className={classes.inOutRoot}>
           <Grid
@@ -187,6 +229,7 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
           accounts={accounts}
           onClose={this.handleAddDialog}
           saveData={this.handleSave}
+          cities={cities}
         />
       </div>
     );
@@ -194,31 +237,13 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
 }
 
 const mapStateToProps = ({ accounts, ledger, app: { user, path } }) => ({
+  cities: map(uniqBy(accounts, "city"), "city"),
   accounts,
+  ledger,
   invoiceNumber:
     ledger.length > 0 ? ledger[ledger.length - 1].invoiceNumber + 1 : 10001,
-  ledgerIn: filter(
-    ledger,
-    o =>
-      o.type === TYPES.IN &&
-      new Date(o.createAt).toLocaleDateString() ===
-        new Date().toLocaleDateString()
-  ).map(data => ({
-    ...data,
-    account: find(accounts, ["id", data.accountId])
-  })),
-  ledgerOut: filter(
-    ledger,
-    o =>
-      o.type === TYPES.OUT &&
-      new Date(o.createAt).toLocaleDateString() ===
-        new Date().toLocaleDateString()
-  ).map(data => ({
-    ...data,
-    account: find(accounts, ["id", data.accountId])
-  })),
   user,
-  path
+  path,
 });
 
 const mapDispatchToProps = { addAccount, addInvoice, setPath };

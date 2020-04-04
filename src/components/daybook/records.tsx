@@ -70,7 +70,7 @@ export default ({ data }) => {
                   color="textPrimary"
                 >
                   {Humanize.capitalizeAll(
-                    `${obj.account.city} (${obj.account.contactNumber})`
+                    `${obj.account.city}`
                   )}
                 </Typography>
                 {obj.notes && (

@@ -163,7 +163,9 @@ const Books: React.FC<BooksProps> = ({
             },
             {
               title: t("app:contactNumber"),
-              field: "contactNumber"
+              field: "contactNumber",
+              render: (rowData: any) =>
+                rowData.contactNumber ? rowData.contactNumber : <>&mdash;</>
             },
             {
               title: t("app:addInfo"),
@@ -311,6 +313,7 @@ const Books: React.FC<BooksProps> = ({
           invoiceNumber={invoiceNumber}
           open={Boolean(addBill)}
           accounts={[addBill]}
+          cities={cities}
           onClose={() => handleAddBill(null)}
           saveData={handleSave}
           directAdd

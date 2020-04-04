@@ -1,18 +1,34 @@
-import { createStyles, FormControlLabel, Grid, IconButton, makeStyles, Radio, RadioGroup, Theme } from "@material-ui/core";
+import {
+  createStyles,
+  FormControlLabel,
+  Grid,
+  IconButton,
+  makeStyles,
+  Radio,
+  RadioGroup,
+  Theme,
+} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import Close from "@material-ui/icons/Close";
-import Autocomplete, { createFilterOptions } from "@material-ui/lab/Autocomplete";
+import Autocomplete, {
+  createFilterOptions,
+} from "@material-ui/lab/Autocomplete";
 import { Formik } from "formik";
 import Humanize from "humanize-plus";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
 import { TYPES } from "../../constants/app";
-import { ALPHA_SPACE, ALPHA_SPACE_DOT, CONTACT_NUMBER, NUMERIC } from "../../constants/regex";
+import {
+  ALPHA_SPACE,
+  ALPHA_SPACE_DOT,
+  CONTACT_NUMBER,
+  NUMERIC,
+} from "../../constants/regex";
 
 const filter = createFilterOptions();
 const useStyles = makeStyles((theme: Theme) =>
@@ -20,29 +36,29 @@ const useStyles = makeStyles((theme: Theme) =>
     dialogTitle: {
       display: "flex",
       justifyContent: "space-between",
-      alignItems: "center"
+      alignItems: "center",
     },
     form: {
-      width: "100%"
+      width: "100%",
     },
     tabBtn: {
       width: "50%",
       borderRadius: 0,
       backgroundColor: theme.palette.background.default,
-      color: theme.palette.primary.dark
+      color: theme.palette.primary.dark,
     },
     tabBtnActive: {
       width: "50%",
       borderRadius: 0,
       color: theme.palette.background.default,
-      backgroundColor: "#1976d2"
+      backgroundColor: "#1976d2",
     },
     btn: {
       marginBottom: "2%",
       marginLeft: "2%",
       marginTop: 20,
-      width: "25%"
-    }
+      width: "25%",
+    },
   })
 );
 
@@ -50,9 +66,10 @@ export default ({
   open,
   invoiceNumber,
   accounts,
+  cities,
   onClose,
   saveData,
-  directAdd = false
+  directAdd = false,
 }) => {
   const classes = useStyles();
   const [selectAccount, handleSelectAccount] = React.useState(
@@ -95,7 +112,7 @@ export default ({
             contactNumber: "",
             addInfo: "",
             amount: "",
-            notes: ""
+            notes: "",
           }}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             setSubmitting(true);
@@ -105,7 +122,7 @@ export default ({
               selectAccount,
               addAccount,
               type,
-              more
+              more,
             });
             if (more) {
               setTimeout(() => {
@@ -129,7 +146,7 @@ export default ({
                 is: () => !directAdd,
                 then: Yup.string().required(
                   t("app:fieldRequired", { field: t("app:accountName") })
-                )
+                ),
               }),
             city: Yup.string()
               .min(2, t("app:fieldMinSize", { field: t("app:city"), size: 2 }))
@@ -141,21 +158,21 @@ export default ({
                 is: () => addAccount,
                 then: Yup.string().required(
                   t("app:fieldRequired", { field: t("app:city") })
-                )
+                ),
               }),
             contactNumber: Yup.string()
               .min(
                 10,
                 t("app:fieldMinSize", {
                   field: t("app:contactNumber"),
-                  size: 10
+                  size: 10,
                 })
               )
               .max(
                 16,
                 t("app:fieldMaxSize", {
                   field: t("app:contactNumber"),
-                  size: 16
+                  size: 16,
                 })
               ),
             addInfo: Yup.string()
@@ -172,14 +189,14 @@ export default ({
                 2,
                 t("app:fieldMinSize", {
                   field: t("app:amount"),
-                  size: 2
+                  size: 2,
                 })
               )
               .max(
                 7,
                 t("app:fieldMaxSize", {
                   field: t("app:amount"),
-                  size: 7
+                  size: 7,
                 })
               )
               .required(t("app:fieldRequired", { field: t("app:amount") })),
@@ -188,10 +205,10 @@ export default ({
               .max(
                 500,
                 t("app:fieldMaxSize", { field: t("app:notes"), size: 500 })
-              )
+              ),
           })}
         >
-          {props => {
+          {(props) => {
             const {
               values,
               touched,
@@ -200,10 +217,10 @@ export default ({
               handleChange,
               handleBlur,
               resetForm,
-              handleSubmit
+              handleSubmit,
             } = props;
 
-            const handleInputChange = evt => {
+            const handleInputChange = (evt) => {
               const { value = "", pattern = "" } = evt.target;
               pattern && value
                 ? RegExp(pattern).test(value) && handleChange(evt)
@@ -221,7 +238,7 @@ export default ({
             };
 
             return (
-              <form className={classes.form} onSubmit={handleSubmit} noValidate>
+              <form className={classes.form} noValidate>
                 <Grid container spacing={2}>
                   <Grid item xs={7} sm={7}>
                     <Autocomplete
@@ -233,26 +250,30 @@ export default ({
                           handleAddAccount(true);
                           handleSelectAccount({
                             inputValue: newValue.inputValue,
-                            accountName: t("app:addAccount")
+                            accountName: t("app:addAccount"),
                           });
                           handleChange({
                             target: {
                               value: newValue.inputValue,
-                              name: "accountName"
-                            }
+                              name: "accountName",
+                            },
                           });
                         } else {
+                          if (typeof newValue === "string") {
+                            return;
+                          }
                           handleAddAccount(false);
                           handleSelectAccount(newValue);
                           handleChange({
                             target: {
                               value:
                                 newValue === null ? "" : newValue.accountName,
-                              name: "accountName"
-                            }
+                              name: "accountName",
+                            },
                           });
                         }
                       }}
+                      onBlur={handleBlur}
                       filterOptions={(options, params) => {
                         const filtered = filter(options, params);
 
@@ -261,13 +282,13 @@ export default ({
                             inputValue: params.inputValue,
                             accountName: `${t("app:add")} "${
                               params.inputValue
-                            }"`
+                            }"`,
                           });
                         }
 
                         return filtered;
                       }}
-                      getOptionLabel={option => {
+                      getOptionLabel={(option) => {
                         // e.g value selected with enter, right from the input
                         if (typeof option === "string") {
                           return option;
@@ -276,24 +297,23 @@ export default ({
                           return option.accountName;
                         }
                         return Humanize.capitalizeAll(
-                          `${option.accountName}, ${option.city} (${option.contactNumber})`
+                          `${option.accountName}, ${option.city}`
                         );
                       }}
-                      renderOption={option =>
+                      renderOption={(option) =>
                         option.inputValue
                           ? option.accountName
                           : Humanize.capitalizeAll(
-                              `${option.accountName}, ${option.city} (${option.contactNumber})`
+                              `${option.accountName}, ${option.city}`
                             )
                       }
                       freeSolo
                       blurOnSelect
                       clearOnEscape
-                      disableOpenOnFocus
                       autoHighlight
                       autoSelect
                       disabled={directAdd || addAccount}
-                      renderInput={params => (
+                      renderInput={(params) => (
                         <TextField
                           {...params}
                           autoFocus
@@ -338,7 +358,7 @@ export default ({
                           fullWidth
                           id="accountName"
                           label={t("app:accountName")}
-                          value={values.accountName}
+                          value={Humanize.capitalizeAll(values.accountName)}
                           onChange={handleInputChange}
                           onBlur={handleBlur}
                           helperText={
@@ -351,28 +371,47 @@ export default ({
                         />
                       </Grid>
                       <Grid item xs={5} sm={5}>
-                        <TextField
-                          name="city"
-                          variant="outlined"
-                          required
-                          fullWidth
+                        <Autocomplete
                           id="city"
-                          label={t("app:city")}
-                          value={values.city}
-                          onChange={handleInputChange}
-                          onBlur={handleBlur}
-                          helperText={
-                            errors.city && touched.city && errors.city
+                          options={cities}
+                          freeSolo
+                          blurOnSelect
+                          clearOnEscape
+                          autoHighlight
+                          autoSelect
+                          getOptionLabel={(option) =>
+                            Humanize.capitalizeAll(option)
                           }
-                          error={errors.city && touched.city}
-                          inputProps={{ pattern: ALPHA_SPACE }}
+                          value={values.city}
+                          onChange={(event, newValue) => {
+                            handleInputChange({
+                              target: {
+                                value: newValue ? newValue : "",
+                                name: "city",
+                                pattern: ALPHA_SPACE,
+                              },
+                            });
+                          }}
+                          onBlur={handleBlur}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label={t("app:city")}
+                              variant="outlined"
+                              required
+                              fullWidth
+                              helperText={
+                                errors.city && touched.city && errors.city
+                              }
+                              error={errors.city && touched.city}
+                            />
+                          )}
                         />
                       </Grid>
                       <Grid item xs={4} sm={4}>
                         <TextField
                           name="contactNumber"
                           variant="outlined"
-                          required
                           fullWidth
                           id="contactNumber"
                           label={t("app:contactNumber")}
@@ -457,7 +496,7 @@ export default ({
                     aria-label="type"
                     name="type"
                     value={type}
-                    onChange={event => setType(event.target.value)}
+                    onChange={(event) => setType(event.target.value)}
                     row
                   >
                     <FormControlLabel
@@ -472,7 +511,6 @@ export default ({
                     />
                   </RadioGroup>
                 </Grid>
-
                 <Grid
                   container
                   item
@@ -497,7 +535,7 @@ export default ({
                     color="primary"
                     className={classes.btn}
                     disabled={isSubmitting}
-                    onClick={evt => handleSave(evt, true)}
+                    onClick={(evt) => handleSave(evt, true)}
                   >
                     {t("app:saveMore")}
                   </Button>
@@ -506,7 +544,7 @@ export default ({
                     color="primary"
                     className={classes.btn}
                     disabled={isSubmitting}
-                    onClick={evt => handleSave(evt)}
+                    onClick={(evt) => handleSave(evt)}
                   >
                     {t("app:save")}
                   </Button>
