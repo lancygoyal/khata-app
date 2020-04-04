@@ -14,6 +14,7 @@ import map from "lodash/map";
 import uniqBy from "lodash/uniqBy";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
+import KeyboardEventHandler from "react-keyboard-event-handler";
 import { connect } from "react-redux";
 import uniqid from "uniqid";
 import AddDialog from "../components/daybook/addDialog";
@@ -34,7 +35,7 @@ const styles = (theme) =>
     speedDial: {
       position: "fixed",
       bottom: theme.spacing(10),
-      right: theme.spacing(5)
+      right: theme.spacing(5),
     },
     title: {
       display: "flex",
@@ -85,13 +86,13 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
 
   handleSave = (data) => {
     const { addAccount, addInvoice, user } = this.props;
-    const { date } = this.state;
     const {
       invoiceNumber,
       values: { accountName, city, contactNumber, addInfo, amount, notes },
       selectAccount,
       type,
       more,
+      selectedDate,
     } = data;
     const dateNow = Date.now();
     const accountId = uniqid();
@@ -99,8 +100,8 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
     if (data.addAccount) {
       const account = {
         id: accountId,
-        accountName: accountName.toLowerCase(),
-        city: city.toLowerCase(),
+        accountName: accountName.toLowerCase().trim(),
+        city: city.toLowerCase().trim(),
         contactNumber,
         addInfo,
         hasBankDetails: false,
@@ -119,7 +120,7 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
       hasInvoiceDtls: false,
       hasTax: false,
       mode: "CASH",
-      createAt: new Date(date).getTime(),
+      createAt: new Date(selectedDate).getTime(),
       addedAt: dateNow,
       createdBy: user.id,
     };
@@ -171,10 +172,11 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDatePicker
               variant="inline"
-              margin="normal"
-              id="date-picker-dialog"
-              format="dd, MMMM/yyyy"
+              id="date-picker"
+              format="dd, MMMM yyyy"
               value={date}
+              animateYearScrolling
+              autoOk
               onChange={(val: Date) => this.setState({ date: val })}
               KeyboardButtonProps={{
                 "aria-label": "change date",
@@ -230,6 +232,11 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
           onClose={this.handleAddDialog}
           saveData={this.handleSave}
           cities={cities}
+          date={date}
+        />
+        <KeyboardEventHandler
+          handleKeys={["enter", "tab", "space"]}
+          onKeyEvent={this.handleAddDialog}
         />
       </div>
     );

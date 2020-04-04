@@ -20,7 +20,7 @@ import { addInvoice, removeInvoice } from "../redux";
 import { jsonToXLS, formatDate } from "../utils/common";
 import uniqid from "uniqid";
 
-const styles = theme => createStyles({});
+const styles = (theme) => createStyles({});
 
 interface BooksProps
   extends WithStyles,
@@ -37,32 +37,32 @@ const Books: React.FC<BooksProps> = ({
   accounts,
   addInvoice,
   removeInvoice,
-  invoiceNumber
+  invoiceNumber,
 }) => {
   const [city, selectCity] = React.useState(null);
   const [account, selectAccount] = React.useState(null);
   const [addBill, handleAddBill] = React.useState(null);
   const [deleteBill, handleDeleteBill] = React.useState(null);
   const accountsByCity = city
-    ? filter(accounts, o => o.city.toLowerCase() === city.toLowerCase())
+    ? filter(accounts, (o) => o.city.toLowerCase() === city.toLowerCase())
     : [];
   const exportAccountsByCity = () => {
-    const data = accountsByCity.map(o => ({
+    const data = accountsByCity.map((o) => ({
       [t("app:accountName")]: Humanize.capitalizeAll(o.accountName),
       [t("app:contactNumber")]: o.contactNumber,
       [`${t("app:total")} ${t("app:in")}`]: o.amtIn,
       [`${t("app:total")} ${t("app:out")}`]: o.amtOut,
-      [t("app:balance")]: o.balance
+      [t("app:balance")]: o.balance,
     }));
     jsonToXLS(data, city.toUpperCase());
   };
-  const handleSave = data => {
+  const handleSave = (data) => {
     const {
       invoiceNumber,
       selectAccount,
       values: { amount, notes },
       type,
-      more
+      more,
     } = data;
     const dateNow = Date.now();
     const invoice = {
@@ -76,7 +76,7 @@ const Books: React.FC<BooksProps> = ({
       hasTax: false,
       mode: "CASH",
       createAt: dateNow,
-      createdBy: user.id
+      createdBy: user.id,
     };
     addInvoice(invoice);
     !more && handleAddBill(null);
@@ -95,13 +95,13 @@ const Books: React.FC<BooksProps> = ({
               disableOpenOnFocus
               autoHighlight
               autoSelect
-              getOptionLabel={option => Humanize.capitalizeAll(option)}
+              getOptionLabel={(option) => Humanize.capitalizeAll(option)}
               value={city}
               onChange={(event, newValue) => {
                 selectCity(newValue);
                 account && selectAccount(null);
               }}
-              renderInput={params => (
+              renderInput={(params) => (
                 <TextField
                   {...params}
                   autoFocus
@@ -129,7 +129,7 @@ const Books: React.FC<BooksProps> = ({
                 selectAccount(newValue);
               }}
               disabled={!city}
-              renderInput={params => (
+              renderInput={(params) => (
                 <TextField
                   {...params}
                   label={t("app:account")}
@@ -159,53 +159,53 @@ const Books: React.FC<BooksProps> = ({
               title: t("app:accountName"),
               field: "accountName",
               render: (rowData: any) =>
-                Humanize.capitalizeAll(rowData.accountName)
+                Humanize.capitalizeAll(rowData.accountName),
             },
             {
               title: t("app:contactNumber"),
               field: "contactNumber",
               render: (rowData: any) =>
-                rowData.contactNumber ? rowData.contactNumber : <>&mdash;</>
+                rowData.contactNumber ? rowData.contactNumber : <>&mdash;</>,
             },
             {
               title: t("app:addInfo"),
               field: "addInfo",
               render: (rowData: any) =>
-                rowData.addInfo ? rowData.addInfo : <>&mdash;</>
+                rowData.addInfo ? rowData.addInfo : <>&mdash;</>,
             },
             {
               title: `${t("app:total")} ${t("app:in")}`,
               field: "amtIn",
-              render: (rowData: any) => <>&#8377; {rowData.amtIn}</>
+              render: (rowData: any) => <>&#8377; {rowData.amtIn}</>,
             },
             {
               title: `${t("app:total")} ${t("app:out")}`,
               field: "amtOut",
-              render: (rowData: any) => <>&#8377; {rowData.amtOut}</>
+              render: (rowData: any) => <>&#8377; {rowData.amtOut}</>,
             },
             {
               title: t("app:balance"),
               field: "balance",
-              render: (rowData: any) => <>&#8377; {rowData.balance}</>
-            }
+              render: (rowData: any) => <>&#8377; {rowData.balance}</>,
+            },
           ]}
           options={{
             sorting: false,
             paging: false,
             draggable: false,
-            toolbar: false
+            toolbar: false,
           }}
           localization={{
             body: {
-              emptyDataSourceMessage: t("app:emptyDataSourceMessage")
+              emptyDataSourceMessage: t("app:emptyDataSourceMessage"),
             },
             toolbar: {
               searchTooltip: t("app:search"),
-              searchPlaceholder: t("app:search")
-            }
+              searchPlaceholder: t("app:search"),
+            },
           }}
           components={{
-            Container: props => <div>{props.children}</div>
+            Container: (props) => <div>{props.children}</div>,
           }}
           data={
             account
@@ -217,22 +217,22 @@ const Books: React.FC<BooksProps> = ({
               <MaterialTable
                 columns={[
                   {
-                    title: t("app:invoiceNumber"),
-                    field: "invoiceNumber",
-                    searchable: true
-                  },
+                    title: t("app:date"),
+                    field: "createAt",
+                    render: (rowData: any) => formatDate(rowData.createAt),
+                    searchable: false,
+                  },                  
+                  // {
+                  //   title: t("app:invoiceNumber"),
+                  //   field: "invoiceNumber",
+                  //   searchable: true,
+                  // },
                   {
                     title: t("app:notes"),
                     field: "notes",
                     render: (rowData: any) =>
                       rowData.notes ? rowData.notes : <>&mdash;</>,
-                    searchable: true
-                  },
-                  {
-                    title: t("app:date"),
-                    field: "createAt",
-                    render: (rowData: any) => formatDate(rowData.createAt),
-                    searchable: false
+                    searchable: true,
                   },
                   {
                     title: t("app:in"),
@@ -243,7 +243,7 @@ const Books: React.FC<BooksProps> = ({
                       ) : (
                         <>&mdash;</>
                       ),
-                    searchable: true
+                    searchable: true,
                   },
                   {
                     title: t("app:out"),
@@ -254,8 +254,8 @@ const Books: React.FC<BooksProps> = ({
                       ) : (
                         <>&mdash;</>
                       ),
-                    searchable: true
-                  }
+                    searchable: true,
+                  },
                 ]}
                 data={rowData.accLedger}
                 title={`${Humanize.capitalizeAll(rowData.accountName)} ${t(
@@ -264,31 +264,36 @@ const Books: React.FC<BooksProps> = ({
                 options={{
                   sorting: false,
                   paging: false,
-                  // padding: "dense",
+                  padding: "dense",
                   draggable: false,
-                  actionsColumnIndex: -1
+                  actionsColumnIndex: -1,
                 }}
                 localization={{
                   body: {
-                    emptyDataSourceMessage: t("app:emptyDataSourceMessage")
+                    emptyDataSourceMessage: t("app:emptyDataSourceMessage"),
                   },
                   toolbar: {
                     searchTooltip: t("app:search"),
-                    searchPlaceholder: t("app:search")
-                  }
+                    searchPlaceholder: t("app:search"),
+                  },
                 }}
                 actions={[
-                  rowData => ({
+                  (rowData) => ({
+                    icon: "edit",
+                    tooltip: t("app:editInvoice"),
+                    onClick: (event, rowData) => handleDeleteBill(rowData),
+                  }),
+                  (rowData) => ({
                     icon: "delete",
                     tooltip: t("app:removeInvoice"),
-                    onClick: (event, rowData) => handleDeleteBill(rowData)
+                    onClick: (event, rowData) => handleDeleteBill(rowData),
                   }),
                   {
                     icon: "add",
                     tooltip: t("app:addRecord"),
                     isFreeAction: true,
-                    onClick: event => handleAddBill(rowData)
-                  }
+                    onClick: (event) => handleAddBill(rowData),
+                  },
                 ]}
               />
             );
@@ -325,7 +330,7 @@ const Books: React.FC<BooksProps> = ({
 
 const mapStateToProps = ({ accounts, ledger, app: { user } }) => ({
   cities: map(uniqBy(accounts, "city"), "city"),
-  accounts: map(accounts, o => {
+  accounts: map(accounts, (o) => {
     const accLedger = filter(ledger, ["accountId", o.id]);
     const amtIn = reduce(
       filter(accLedger, ["type", TYPES.IN]),
@@ -346,7 +351,7 @@ const mapStateToProps = ({ accounts, ledger, app: { user } }) => ({
   }),
   user,
   invoiceNumber:
-    ledger.length > 0 ? ledger[ledger.length - 1].invoiceNumber + 1 : 10001
+    ledger.length > 0 ? ledger[ledger.length - 1].invoiceNumber + 1 : 10001,
 });
 
 const mapDispatchToProps = { addInvoice, removeInvoice };

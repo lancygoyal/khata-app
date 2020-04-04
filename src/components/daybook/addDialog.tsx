@@ -29,6 +29,11 @@ import {
   CONTACT_NUMBER,
   NUMERIC,
 } from "../../constants/regex";
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 
 const filter = createFilterOptions();
 const useStyles = makeStyles((theme: Theme) =>
@@ -69,6 +74,7 @@ export default ({
   cities,
   onClose,
   saveData,
+  date = new Date(),
   directAdd = false,
 }) => {
   const classes = useStyles();
@@ -78,6 +84,7 @@ export default ({
   const [addAccount, handleAddAccount] = React.useState(false);
   const [type, setType] = React.useState(TYPES.OUT);
   const [more, setMore] = React.useState(false);
+  const [selectedDate, setSelectedDate] = React.useState<Date | null>(date);
   const { t } = useTranslation();
 
   const reset = () => {
@@ -123,6 +130,7 @@ export default ({
               addAccount,
               type,
               more,
+              selectedDate,
             });
             if (more) {
               setTimeout(() => {
@@ -338,14 +346,21 @@ export default ({
                     />
                   </Grid>
                   <Grid item xs={5} sm={5}>
-                    <TextField
-                      name="invoiceNumber"
-                      variant="outlined"
-                      fullWidth
-                      id="invoiceNumber"
-                      value={invoiceNumber}
-                      label={t("app:invoiceNumber")}
-                    />
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <KeyboardDatePicker
+                        variant="inline"
+                        inputVariant="outlined"
+                        id="add-dialoge-date-picker"
+                        format="dd, MMMM yyyy"
+                        value={selectedDate}
+                        animateYearScrolling
+                        autoOk
+                        onChange={setSelectedDate}
+                        KeyboardButtonProps={{
+                          "aria-label": "change date",
+                        }}
+                      />
+                    </MuiPickersUtilsProvider>
                   </Grid>
                   {addAccount && (
                     <>

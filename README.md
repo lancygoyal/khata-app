@@ -48,8 +48,5 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 ## Todo
 
 Modify
-City
-Keyboard
-Date Select
 XLS - entries
 No Serial Number
