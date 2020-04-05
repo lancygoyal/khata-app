@@ -14,11 +14,12 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: "100%",
-      maxWidth: 360
+      maxWidth: 360,
+      userSelect: "none",
     },
     inline: {
       display: "inline",
-      marginTop: 10
+      marginTop: 10,
     },
     rupees: {
       fontWeight: "bold",
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
       borderTopWidth: 1,
       borderTopStyle: "solid",
       borderTopRightRadius: 3,
-      width: "100%"
+      width: "100%",
     },
     listBody: {
       borderLeftWidth: 1,
@@ -36,8 +37,8 @@ const useStyles = makeStyles((theme: Theme) =>
       borderBottomStyle: "solid",
       borderBottomLeftRadius: 3,
       paddingLeft: 10,
-      paddingBottom: 5
-    }
+      paddingBottom: 5,
+    },
   })
 );
 
@@ -69,9 +70,7 @@ export default ({ data }) => {
                   className={classes.inline}
                   color="textPrimary"
                 >
-                  {Humanize.capitalizeAll(
-                    `${obj.account.city}`
-                  )}
+                  {Humanize.capitalizeAll(`${obj.account.city}`)}
                 </Typography>
                 {obj.notes && (
                   <Tooltip title={obj.notes}>

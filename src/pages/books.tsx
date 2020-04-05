@@ -6,8 +6,9 @@ import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Humanize from "humanize-plus";
 import filter from "lodash/filter";
-import map from "lodash/map";
 import reduce from "lodash/reduce";
+import map from "lodash/map";
+import sortBy from "lodash/sortBy";
 import uniqBy from "lodash/uniqBy";
 import MaterialTable from "material-table";
 import React from "react";
@@ -50,13 +51,37 @@ const Books: React.FC<BooksProps> = ({
     ? filter(accounts, (o) => o.city.toLowerCase() === city.toLowerCase())
     : [];
   const exportAccountsByCity = () => {
-    const data = accountsByCity.map((o) => ({
-      [t("app:accountName")]: Humanize.capitalizeAll(o.accountName),
-      [t("app:contactNumber")]: o.contactNumber,
-      [`${t("app:total")} ${t("app:in")}`]: o.amtIn,
-      [`${t("app:total")} ${t("app:out")}`]: o.amtOut,
-      [t("app:balance")]: o.balance,
-    }));
+    const data = [];
+    accountsByCity.forEach((o) => {
+      data.push({
+        [t("app:accountName")]: Humanize.capitalizeAll(o.accountName),
+        [t("app:contactNumber")]: o.contactNumber,
+        [`${t("app:total")} ${t("app:in")}`]: o.amtIn,
+        [`${t("app:total")} ${t("app:out")}`]: o.amtOut,
+        [t("app:balance")]: o.balance,
+      });
+      const size = o.accLedgerOut.length > 5 ? 5 : o.accLedgerOut.length;
+      size &&
+        data.push({
+          [t("app:accountName")]: "",
+          [t("app:contactNumber")]: t("app:date"),
+          [`${t("app:total")} ${t("app:in")}`]: "",
+          [`${t("app:total")} ${t("app:out")}`]: t("app:out"),
+          [t("app:balance")]: "",
+        });
+      for (let index = 0; index < size; index++) {
+        const newo = o.accLedgerOut[index];
+        data.push({
+          [t("app:accountName")]: "",
+          [t("app:contactNumber")]: formatDate(newo.createAt),
+          [`${t("app:total")} ${t("app:in")}`]:
+            newo.type === TYPES.IN ? newo.amount : "",
+          [`${t("app:total")} ${t("app:out")}`]:
+            newo.type === TYPES.OUT ? newo.amount : "",
+          [t("app:balance")]: "",
+        });
+      }
+    });
     jsonToXLS(data, city.toUpperCase());
   };
   const handleSave = (data) => {
@@ -94,7 +119,7 @@ const Books: React.FC<BooksProps> = ({
   };
 
   return (
-    <div style={{ padding: 25, paddingBottom: 70 }}>
+    <div style={{ padding: 25, paddingBottom: 70, userSelect: "none" }}>
       <Paper>
         <Grid container spacing={2} style={{ padding: 20 }}>
           <Grid item xs={5} sm={5}>
@@ -358,23 +383,33 @@ const Books: React.FC<BooksProps> = ({
 const mapStateToProps = ({ accounts, ledger, app: { user } }) => ({
   cities: map(uniqBy(accounts, "city"), "city"),
   accounts: map(accounts, (o) => {
-    const accLedger = filter(ledger, ["accountId", o.id]);
+    const accLedger = sortBy(filter(ledger, ["accountId", o.id]), ["createAt"]);
+    const accLedgerIn = filter(accLedger, ["type", TYPES.IN]);
+    const accLedgerOut = filter(accLedger, ["type", TYPES.OUT]);
     const amtIn = reduce(
-      filter(accLedger, ["type", TYPES.IN]),
+      accLedgerIn,
       (sum, n) => {
         return Number(sum) + Number(n.amount);
       },
       0
     );
     const amtOut = reduce(
-      filter(accLedger, ["type", TYPES.OUT]),
+      accLedgerOut,
       (sum, n) => {
         return Number(sum) + Number(n.amount);
       },
       0
     );
     const balance = amtOut - amtIn;
-    return { ...o, accLedger, amtIn, amtOut, balance };
+    return {
+      ...o,
+      accLedger,
+      accLedgerIn,
+      accLedgerOut,
+      amtIn,
+      amtOut,
+      balance,
+    };
   }),
   user,
   invoiceNumber:

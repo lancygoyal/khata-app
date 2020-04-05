@@ -26,6 +26,7 @@ const styles = (theme) =>
   createStyles({
     root: {
       padding: "10px 20px",
+      userSelect: "none",
     },
     date: {
       fontWeight: "bold",
