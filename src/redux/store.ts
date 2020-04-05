@@ -8,7 +8,7 @@ import { storage, encryptor } from "./storage";
 const persistConfig = {
   key: "root",
   storage: storage,
-  // blacklist: ["app"],
+  blacklist: ["app"],
   transforms: [encryptor]
 };
 
