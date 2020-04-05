@@ -4,7 +4,7 @@ import * as XLSX from "xlsx";
 import moment from "moment";
 import { APP_STORE_KEY, LANGS } from "../constants/app";
 
-export const encryptPassword = message => CryptoJS.SHA256(message).toString();
+export const encryptPassword = (message) => CryptoJS.SHA256(message).toString();
 
 export const jsonToXLS = (data, fileName) => {
   const fileType =
@@ -21,25 +21,23 @@ export const jsonToXLS = (data, fileName) => {
 
 export const formatDate = (date) => {
   const dateObj = new Date(date);
-  const momentDate = moment()
-    .format("dddd, Do MMMM YYYY")
-    .split(" ");
+  const momentDate = moment(date).format("dddd, Do MMMM YYYY").split(" ");
   return `${momentDate[0]} ${dateObj.getDate()} ${
     momentDate[2]
   } ${dateObj.getFullYear()}`;
 };
 
-export const encryptData = data =>
+export const encryptData = (data) =>
   CryptoJS.AES.encrypt(JSON.stringify(data), APP_STORE_KEY).toString();
 
-export const decryptData = data =>
+export const decryptData = (data) =>
   JSON.parse(
     CryptoJS.AES.decrypt(data, APP_STORE_KEY).toString(CryptoJS.enc.Utf8)
   );
 
-export const backupData = data => {
+export const backupData = (data) => {
   const blob = new Blob([encryptData(data)], {
-    type: "text/plain;charset=utf-8"
+    type: "text/plain;charset=utf-8",
   });
   FileSaver.saveAs(blob, "khata-app-backup-" + Date.now() + ".ka");
 };
@@ -47,10 +45,7 @@ export const backupData = data => {
 export const setBackupTime = () =>
   localStorage.setItem("backupAt", String(Date.now()));
 
-export const getBackupTime = backupTime =>
+export const getBackupTime = (backupTime) =>
   backupTime
-    ? " - " +
-      moment(Number(backupTime))
-        .locale(LANGS.EN)
-        .fromNow()
+    ? " - " + moment(Number(backupTime)).locale(LANGS.EN).fromNow()
     : "";

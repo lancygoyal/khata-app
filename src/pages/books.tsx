@@ -383,7 +383,9 @@ const Books: React.FC<BooksProps> = ({
 const mapStateToProps = ({ accounts, ledger, app: { user } }) => ({
   cities: map(uniqBy(accounts, "city"), "city"),
   accounts: map(accounts, (o) => {
-    const accLedger = sortBy(filter(ledger, ["accountId", o.id]), ["createAt"]);
+    const accLedger = sortBy(filter(ledger, ["accountId", o.id]), [
+      "createAt",
+    ]).reverse();
     const accLedgerIn = filter(accLedger, ["type", TYPES.IN]);
     const accLedgerOut = filter(accLedger, ["type", TYPES.OUT]);
     const amtIn = reduce(
