@@ -53,14 +53,15 @@ const Books: React.FC<BooksProps> = ({
   const exportAccountsByCity = () => {
     const data = [];
     accountsByCity.forEach((o) => {
-      data.push({
-        [t("app:accountName")]: Humanize.capitalizeAll(o.accountName),
-        [t("app:contactNumber")]: o.contactNumber,
-        [`${t("app:total")} ${t("app:in")}`]: o.amtIn,
-        [`${t("app:total")} ${t("app:out")}`]: o.amtOut,
-        [t("app:balance")]: o.balance,
-      });
       const size = o.accLedgerOut.length > 5 ? 5 : o.accLedgerOut.length;
+      size &&
+        data.push({
+          [t("app:accountName")]: Humanize.capitalizeAll(o.accountName),
+          [t("app:contactNumber")]: o.contactNumber,
+          [`${t("app:total")} ${t("app:in")}`]: o.amtIn,
+          [`${t("app:total")} ${t("app:out")}`]: o.amtOut,
+          [t("app:balance")]: o.balance,
+        });
       size &&
         data.push({
           [t("app:accountName")]: "",
@@ -232,7 +233,7 @@ const Books: React.FC<BooksProps> = ({
           }}
           localization={{
             body: {
-              emptyDataSourceMessage: t("app:emptyDataSourceMessage"),
+              emptyDataSourceMessage: !city ? t("app:selectCityMsg") : !account ? t("app:selectAccountMsg") : t("app:emptyDataSourceMessage"),
             },
             toolbar: {
               searchTooltip: t("app:search"),
@@ -242,11 +243,7 @@ const Books: React.FC<BooksProps> = ({
           components={{
             Container: (props) => <div>{props.children}</div>,
           }}
-          data={
-            account
-              ? filter(accountsByCity, ["id", account.id])
-              : accountsByCity
-          }
+          data={account ? filter(accountsByCity, ["id", account.id]) : []}
           detailPanel={(rowData: any) => {
             return (
               <MaterialTable

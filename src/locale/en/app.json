@@ -53,6 +53,8 @@
   "backup": "Backup",
   "restore": "Restore",
   "emptyDataSourceMessage": "No data found!",
+  "selectAccountMsg": "Please Select Account.",
+  "selectCityMsg": "Please Select City.",
   "search": "Search",
   "backupFolderPath": "Please select folder for data backup.",
   "cngPwd": "Change Password",

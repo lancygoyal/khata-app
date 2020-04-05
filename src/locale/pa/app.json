@@ -53,6 +53,8 @@
   "backup": "ਬੈਕਅਪ",
   "restore": "ਰੇਸਟੋਰ",
   "emptyDataSourceMessage": "ਕੋਈ ਡਾਟਾ ਨਹੀਂ ਮਿਲਿਆ!",
+  "selectAccountMsg": "ਕਿਰਪਾ ਕਰਕੇ ਖਾਤਾ ਚੁਣੋ!",
+  "selectCityMsg": "ਕਿਰਪਾ ਕਰਕੇ ਸ਼ਹਿਰ ਦੀ ਚੋਣ ਕਰੋ!",
   "search": "ਖੋਜ",
   "backupFolderPath": "ਡਾਟਾ ਬੈਕਅਪ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਫੋਲਡਰ ਦੀ ਚੋਣ ਕਰੋ.",
   "cngPwd": "ਪਾਸਵਰਡ ਬਦਲੋ",
