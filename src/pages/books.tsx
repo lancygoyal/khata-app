@@ -15,8 +15,9 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import Confirm from "../components/confirm";
 import AddDialog from "../components/daybook/addDialog";
+import UpdateDialog from "../components/daybook/updateDialog";
 import { TYPES } from "../constants/app";
-import { addInvoice, removeInvoice } from "../redux";
+import { addInvoice, updateInvoice, removeInvoice } from "../redux";
 import { jsonToXLS, formatDate } from "../utils/common";
 import uniqid from "uniqid";
 
@@ -36,12 +37,14 @@ const Books: React.FC<BooksProps> = ({
   cities,
   accounts,
   addInvoice,
+  updateInvoice,
   removeInvoice,
   invoiceNumber,
 }) => {
   const [city, selectCity] = React.useState(null);
   const [account, selectAccount] = React.useState(null);
   const [addBill, handleAddBill] = React.useState(null);
+  const [updateBill, handleUpdateBill] = React.useState(null);
   const [deleteBill, handleDeleteBill] = React.useState(null);
   const accountsByCity = city
     ? filter(accounts, (o) => o.city.toLowerCase() === city.toLowerCase())
@@ -81,6 +84,14 @@ const Books: React.FC<BooksProps> = ({
     addInvoice(invoice);
     !more && handleAddBill(null);
   };
+  const handleEdit = (data) => {
+    updateInvoice(updateBill.id, {
+      ...data.values,
+      type: data.type,
+      createAt: new Date(data.selectedDate).getTime(),
+    });
+    handleUpdateBill(null);
+  };
 
   return (
     <div style={{ padding: 25, paddingBottom: 70 }}>
@@ -92,7 +103,6 @@ const Books: React.FC<BooksProps> = ({
               options={cities}
               blurOnSelect
               clearOnEscape
-              disableOpenOnFocus
               autoHighlight
               autoSelect
               getOptionLabel={(option) => Humanize.capitalizeAll(option)}
@@ -221,7 +231,7 @@ const Books: React.FC<BooksProps> = ({
                     field: "createAt",
                     render: (rowData: any) => formatDate(rowData.createAt),
                     searchable: false,
-                  },                  
+                  },
                   // {
                   //   title: t("app:invoiceNumber"),
                   //   field: "invoiceNumber",
@@ -278,15 +288,19 @@ const Books: React.FC<BooksProps> = ({
                   },
                 }}
                 actions={[
-                  (rowData) => ({
+                  () => ({
                     icon: "edit",
                     tooltip: t("app:editInvoice"),
-                    onClick: (event, rowData) => handleDeleteBill(rowData),
+                    onClick: (event, data) =>
+                      handleUpdateBill({
+                        accountName: rowData.accountName,
+                        ...data,
+                      }),
                   }),
-                  (rowData) => ({
+                  () => ({
                     icon: "delete",
                     tooltip: t("app:removeInvoice"),
-                    onClick: (event, rowData) => handleDeleteBill(rowData),
+                    onClick: (event, data) => handleDeleteBill(data),
                   }),
                   {
                     icon: "add",
@@ -323,6 +337,19 @@ const Books: React.FC<BooksProps> = ({
           saveData={handleSave}
           directAdd
         />
+        {updateBill && (
+          <UpdateDialog
+            key={"update-dialog-" + Boolean(updateBill)}
+            invoiceNumber={invoiceNumber}
+            open={Boolean(updateBill)}
+            accountName={updateBill.accountName}
+            amount={updateBill.amount}
+            notes={updateBill.notes}
+            date={updateBill.createAt}
+            onClose={() => handleUpdateBill(null)}
+            saveData={handleEdit}
+          />
+        )}
       </Paper>
     </div>
   );
@@ -354,7 +381,7 @@ const mapStateToProps = ({ accounts, ledger, app: { user } }) => ({
     ledger.length > 0 ? ledger[ledger.length - 1].invoiceNumber + 1 : 10001,
 });
 
-const mapDispatchToProps = { addInvoice, removeInvoice };
+const mapDispatchToProps = { addInvoice, updateInvoice, removeInvoice };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
