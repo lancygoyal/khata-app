@@ -26,9 +26,9 @@ const styles = (theme) => createStyles({});
 
 interface BooksProps
   extends WithStyles,
-    WithTranslation,
-    StateProps,
-    DispatchProps {
+  WithTranslation,
+  StateProps,
+  DispatchProps {
   history: any;
 }
 
@@ -58,28 +58,20 @@ const Books: React.FC<BooksProps> = ({
         data.push({
           [t("app:accountName")]: Humanize.capitalizeAll(o.accountName),
           [t("app:contactNumber")]: o.contactNumber,
-          [`${t("app:total")} ${t("app:in")}`]: o.amtIn,
-          [`${t("app:total")} ${t("app:out")}`]: o.amtOut,
           [t("app:balance")]: o.balance,
         });
       size &&
         data.push({
           [t("app:accountName")]: "",
           [t("app:contactNumber")]: t("app:date"),
-          [`${t("app:total")} ${t("app:in")}`]: "",
-          [`${t("app:total")} ${t("app:out")}`]: t("app:out"),
-          [t("app:balance")]: "",
+          [t("app:balance")]: t("app:out"),
         });
       for (let index = 0; index < size; index++) {
         const newo = o.accLedgerOut[index];
         data.push({
           [t("app:accountName")]: "",
-          [t("app:contactNumber")]: formatDate(newo.createAt),
-          [`${t("app:total")} ${t("app:in")}`]:
-            newo.type === TYPES.IN ? newo.amount : "",
-          [`${t("app:total")} ${t("app:out")}`]:
-            newo.type === TYPES.OUT ? newo.amount : "",
-          [t("app:balance")]: "",
+          [t("app:contactNumber")]: formatDate(newo.createAt, false),
+          [t("app:balance")]: Number(newo.amount),
         });
       }
     });
@@ -183,10 +175,10 @@ const Books: React.FC<BooksProps> = ({
                 </IconButton>
               </Tooltip>
             ) : (
-              <IconButton aria-label="export">
-                <SaveAltIcon />
-              </IconButton>
-            )}
+                <IconButton aria-label="export">
+                  <SaveAltIcon />
+                </IconButton>
+              )}
           </Grid>
         </Grid>
         <MaterialTable
@@ -233,7 +225,11 @@ const Books: React.FC<BooksProps> = ({
           }}
           localization={{
             body: {
-              emptyDataSourceMessage: !city ? t("app:selectCityMsg") : !account ? t("app:selectAccountMsg") : t("app:emptyDataSourceMessage"),
+              emptyDataSourceMessage: !city
+                ? t("app:selectCityMsg")
+                : !account
+                  ? t("app:selectAccountMsg")
+                  : t("app:emptyDataSourceMessage"),
             },
             toolbar: {
               searchTooltip: t("app:search"),
@@ -273,8 +269,8 @@ const Books: React.FC<BooksProps> = ({
                       rowData.type === TYPES.IN ? (
                         <>&#8377; {rowData.amount}</>
                       ) : (
-                        <>&mdash;</>
-                      ),
+                          <>&mdash;</>
+                        ),
                     searchable: true,
                   },
                   {
@@ -284,8 +280,8 @@ const Books: React.FC<BooksProps> = ({
                       rowData.type === TYPES.OUT ? (
                         <>&#8377; {rowData.amount}</>
                       ) : (
-                        <>&mdash;</>
-                      ),
+                          <>&mdash;</>
+                        ),
                     searchable: true,
                   },
                 ]}
@@ -299,6 +295,9 @@ const Books: React.FC<BooksProps> = ({
                   padding: "dense",
                   draggable: false,
                   actionsColumnIndex: -1,
+                  // exportAllData: true,
+                  // exportButton: true,
+                  // exportFileName: Humanize.capitalizeAll(rowData.accountName),
                 }}
                 localization={{
                   body: {

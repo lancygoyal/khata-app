@@ -1,16 +1,16 @@
-import React from "react";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import { Typography } from "@material-ui/core";
+import Avatar from "@material-ui/core/Avatar";
+import { deepOrange } from "@material-ui/core/colors";
+import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import Divider from "@material-ui/core/Divider";
-import Avatar from "@material-ui/core/Avatar";
-import { deepOrange } from "@material-ui/core/colors";
-import { useSelector, useDispatch } from "react-redux";
-import { Typography } from "@material-ui/core";
-import { useHistory, useLocation } from "react-router-dom";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import React from "react";
 import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory, useLocation } from "react-router-dom";
 import { logout } from "../redux";
 import { backupData, setBackupTime } from "../utils/common";
 
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       width: "100%",
       maxWidth: 360,
-      backgroundColor: theme.palette.background.paper
+      backgroundColor: theme.palette.background.paper,
     },
     user: {
       display: "flex",
@@ -27,12 +27,12 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: "center",
       justifyContent: "flex-start",
       padding: "20px 10px",
-      minWidth: 250
+      minWidth: 250,
     },
     avatar: {
       color: theme.palette.getContrastText(deepOrange[500]),
-      backgroundColor: deepOrange[500]
-    }
+      backgroundColor: deepOrange[500],
+    },
   })
 );
 
@@ -46,7 +46,15 @@ const Navbar = ({ collapsed, data }) => {
   const { t } = useTranslation();
 
   const handleListItemClick = (path: string, title: string) => {
-    history.push(path);
+    if (title === "backup") {
+      // eslint-disable-next-line no-restricted-globals
+      const takeBackup = confirm(t(`app:takeBackup`));
+      if (takeBackup) {
+        backupData(store);
+        setBackupTime();
+      }
+      return;
+    }
     if (title === "logout") {
       // eslint-disable-next-line no-restricted-globals
       const takeBackup = confirm(t(`app:takeBackup`));
@@ -57,7 +65,10 @@ const Navbar = ({ collapsed, data }) => {
       } else {
         dispatch(logout());
       }
+      history.push("/signin");
+      return;
     }
+    history.push(path);
   };
 
   return (
@@ -81,7 +92,7 @@ const Navbar = ({ collapsed, data }) => {
             key={idx}
             button
             selected={location.pathname === nav.path}
-            onClick={_ => handleListItemClick(nav.path, nav.title)}
+            onClick={(_) => handleListItemClick(nav.path, nav.title)}
           >
             <ListItemIcon>
               <nav.icon />

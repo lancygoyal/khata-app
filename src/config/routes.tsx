@@ -1,11 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import EnRoute from "../components/enRoute";
+import Books from "../pages/books";
+import Daybook from "../pages/daybook";
+import Settings from "../pages/settings";
 import SignIn from "../pages/signin";
 import SignUp from "../pages/signup";
-import Daybook from "../pages/daybook";
-import Books from "../pages/books";
-import Settings from "../pages/settings";
 
 const Routes = [
   { path: "/", component: Daybook, type: "private" },
@@ -13,7 +13,7 @@ const Routes = [
   { path: "/books", component: Books, type: "private" },
   { path: "/settings", component: Settings, type: "private" },
   { path: "/signup", component: SignUp, type: "signup" },
-  { path: "/signin", component: SignIn, type: "signin", to: "/signup" }
+  { path: "/signin", component: SignIn, type: "signin", to: "/signup" },
 ];
 
 const Routers = ({ store }) => (

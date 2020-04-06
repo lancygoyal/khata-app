@@ -16,18 +16,17 @@ export const jsonToXLS = (data, fileName) => {
   const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
 
   const blobData = new Blob([excelBuffer], { type: fileType });
-  FileSaver.saveAs(
-    blobData,
-    fileName + "-" + new Date().toLocaleDateString() + fileExtension
-  );
+  FileSaver.saveAs(blobData, fileName + "-" + Date.now() + fileExtension);
 };
 
-export const formatDate = (date) => {
+export const formatDate = (date, showDay = true) => {
   const dateObj = new Date(date);
   const momentDate = moment(date).format("dddd, Do MMMM YYYY").split(" ");
-  return `${momentDate[0]} ${dateObj.getDate()} ${
-    momentDate[2]
-  } ${dateObj.getFullYear()}`;
+  return showDay
+    ? `${momentDate[0]} ${dateObj.getDate()} ${
+        momentDate[2]
+      } ${dateObj.getFullYear()}`
+    : `${dateObj.getDate()} ${momentDate[2]} ${dateObj.getFullYear()}`;
 };
 
 export const encryptData = (data) =>
@@ -42,10 +41,7 @@ export const backupData = (data) => {
   const blob = new Blob([encryptData(data)], {
     type: "text/plain;charset=utf-8",
   });
-  FileSaver.saveAs(
-    blob,
-    "khata-app-backup-" + new Date().toLocaleDateString() + ".ka"
-  );
+  FileSaver.saveAs(blob, "khata-app-backup-" + Date.now() + ".ka");
 };
 
 export const setBackupTime = () =>
