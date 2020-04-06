@@ -367,6 +367,7 @@ const Books: React.FC<BooksProps> = ({
             amount={updateBill.amount}
             notes={updateBill.notes}
             date={updateBill.createAt}
+            invType={updateBill.type}
             onClose={() => handleUpdateBill(null)}
             saveData={handleEdit}
           />

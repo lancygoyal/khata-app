@@ -64,12 +64,13 @@ export default ({
   accountName = "",
   amount = "",
   notes = "",
+  invType = TYPES.OUT,
   onClose,
   saveData,
   date = new Date(),
 }) => {
   const classes = useStyles();
-  const [type, setType] = React.useState(TYPES.OUT);
+  const [type, setType] = React.useState(invType);
   const [selectedDate, setSelectedDate] = React.useState<Date | null>(date);
   const { t } = useTranslation();
 
