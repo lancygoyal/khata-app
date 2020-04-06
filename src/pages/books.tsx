@@ -50,6 +50,8 @@ const Books: React.FC<BooksProps> = ({
   const accountsByCity = city
     ? filter(accounts, (o) => o.city.toLowerCase() === city.toLowerCase())
     : [];
+  const accountList = account ? filter(accountsByCity, ["id", account.id]) : [];
+
   const exportAccountsByCity = () => {
     const data = [];
     accountsByCity.forEach((o) => {
@@ -239,102 +241,97 @@ const Books: React.FC<BooksProps> = ({
           components={{
             Container: (props) => <div>{props.children}</div>,
           }}
-          data={account ? filter(accountsByCity, ["id", account.id]) : []}
-          detailPanel={(rowData: any) => {
-            return (
-              <MaterialTable
-                columns={[
-                  {
-                    title: t("app:date"),
-                    field: "createAt",
-                    render: (rowData: any) => formatDate(rowData.createAt),
-                    searchable: false,
-                  },
-                  // {
-                  //   title: t("app:invoiceNumber"),
-                  //   field: "invoiceNumber",
-                  //   searchable: true,
-                  // },
-                  {
-                    title: t("app:notes"),
-                    field: "notes",
-                    render: (rowData: any) =>
-                      rowData.notes ? rowData.notes : <>&mdash;</>,
-                    searchable: true,
-                  },
-                  {
-                    title: t("app:in"),
-                    field: "amount",
-                    render: (rowData: any) =>
-                      rowData.type === TYPES.IN ? (
-                        <>&#8377; {rowData.amount}</>
-                      ) : (
-                          <>&mdash;</>
-                        ),
-                    searchable: true,
-                  },
-                  {
-                    title: t("app:out"),
-                    field: "amount",
-                    render: (rowData: any) =>
-                      rowData.type === TYPES.OUT ? (
-                        <>&#8377; {rowData.amount}</>
-                      ) : (
-                          <>&mdash;</>
-                        ),
-                    searchable: true,
-                  },
-                ]}
-                data={rowData.accLedger}
-                title={`${Humanize.capitalizeAll(rowData.accountName)} ${t(
-                  "app:ledger"
-                )}`}
-                options={{
-                  sorting: false,
-                  paging: false,
-                  padding: "dense",
-                  draggable: false,
-                  actionsColumnIndex: -1,
-                  // exportAllData: true,
-                  // exportButton: true,
-                  // exportFileName: Humanize.capitalizeAll(rowData.accountName),
-                }}
-                localization={{
-                  body: {
-                    emptyDataSourceMessage: t("app:emptyDataSourceMessage"),
-                  },
-                  toolbar: {
-                    searchTooltip: t("app:search"),
-                    searchPlaceholder: t("app:search"),
-                  },
-                }}
-                actions={[
-                  () => ({
-                    icon: "edit",
-                    tooltip: t("app:editInvoice"),
-                    onClick: (event, data) =>
-                      handleUpdateBill({
-                        accountName: rowData.accountName,
-                        ...data,
-                      }),
-                  }),
-                  () => ({
-                    icon: "delete",
-                    tooltip: t("app:removeInvoice"),
-                    onClick: (event, data) => handleDeleteBill(data),
-                  }),
-                  {
-                    icon: "add",
-                    tooltip: t("app:addRecord"),
-                    isFreeAction: true,
-                    onClick: (event) => handleAddBill(rowData),
-                  },
-                ]}
-              />
-            );
-          }}
-          onRowClick={(event, rowData, togglePanel) => togglePanel()}
+          data={accountList}
         />
+        {accountList[0] && <MaterialTable
+          columns={[
+            {
+              title: t("app:date"),
+              field: "createAt",
+              render: (rowData: any) => formatDate(rowData.createAt),
+              searchable: false,
+            },
+            // {
+            //   title: t("app:invoiceNumber"),
+            //   field: "invoiceNumber",
+            //   searchable: true,
+            // },
+            {
+              title: t("app:notes"),
+              field: "notes",
+              render: (rowData: any) =>
+                rowData.notes ? rowData.notes : <>&mdash;</>,
+              searchable: true,
+            },
+            {
+              title: t("app:in"),
+              field: "amount",
+              render: (rowData: any) =>
+                rowData.type === TYPES.IN ? (
+                  <>&#8377; {rowData.amount}</>
+                ) : (
+                    <>&mdash;</>
+                  ),
+              searchable: true,
+            },
+            {
+              title: t("app:out"),
+              field: "amount",
+              render: (rowData: any) =>
+                rowData.type === TYPES.OUT ? (
+                  <>&#8377; {rowData.amount}</>
+                ) : (
+                    <>&mdash;</>
+                  ),
+              searchable: true,
+            },
+          ]}
+          data={accountList[0].accLedger}
+          title={`${Humanize.capitalizeAll(accountList[0].accountName)} ${t(
+            "app:ledger"
+          )}`}
+          options={{
+            sorting: false,
+            paging: false,
+            padding: "dense",
+            draggable: false,
+            actionsColumnIndex: -1,
+            // exportAllData: true,
+            // exportButton: true,
+            // exportFileName: Humanize.capitalizeAll(rowData.accountName),
+          }}
+          localization={{
+            body: {
+              emptyDataSourceMessage: t("app:emptyDataSourceMessage"),
+            },
+            toolbar: {
+              searchTooltip: t("app:search"),
+              searchPlaceholder: t("app:search"),
+            },
+          }}
+          actions={[
+            () => ({
+              icon: "edit",
+              tooltip: t("app:editInvoice"),
+              onClick: (event, data) =>
+                handleUpdateBill({
+                  accountName: accountList[0].accountName,
+                  ...data,
+                }),
+            }),
+            () => ({
+              icon: "delete",
+              tooltip: t("app:removeInvoice"),
+              onClick: (event, data) => handleDeleteBill(data),
+            }),
+            {
+              icon: "add",
+              tooltip: t("app:addRecord"),
+              isFreeAction: true,
+              onClick: (event) => handleAddBill(accountList[0]),
+            },
+          ]}
+        />}
         <Confirm
           key={"delete-dialog-" + Boolean(deleteBill)}
           open={Boolean(deleteBill)}
