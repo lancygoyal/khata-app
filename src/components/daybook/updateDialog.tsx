@@ -186,7 +186,7 @@ export default ({
                         variant="inline"
                         inputVariant="outlined"
                         id="add-dialoge-date-picker"
-                        format="dd, MMMM yyyy"
+                        format="dd-MM-yyyy"
                         value={selectedDate}
                         animateYearScrolling
                         autoOk
@@ -250,14 +250,14 @@ export default ({
                     row
                   >
                     <FormControlLabel
-                      value={TYPES.OUT}
-                      control={<Radio />}
-                      label={t("app:out")}
-                    />
-                    <FormControlLabel
                       value={TYPES.IN}
                       control={<Radio />}
                       label={t("app:in")}
+                    />
+                    <FormControlLabel
+                      value={TYPES.OUT}
+                      control={<Radio />}
+                      label={t("app:out")}
                     />
                   </RadioGroup>
                 </Grid>

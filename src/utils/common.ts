@@ -19,14 +19,8 @@ export const jsonToXLS = (data, fileName) => {
   FileSaver.saveAs(blobData, fileName + "-" + Date.now() + fileExtension);
 };
 
-export const formatDate = (date, showDay = true) => {
-  const dateObj = new Date(date);
-  const momentDate = moment(date).format("dddd, Do MMMM YYYY").split(" ");
-  return showDay
-    ? `${momentDate[0]} ${dateObj.getDate()} ${
-        momentDate[2]
-      } ${dateObj.getFullYear()}`
-    : `${dateObj.getDate()} ${momentDate[2]} ${dateObj.getFullYear()}`;
+export const formatDate = (date) => {
+  return moment(date).locale(LANGS.EN).format("DD-MM-YYYY");
 };
 
 export const encryptData = (data) =>

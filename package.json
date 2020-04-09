@@ -1,7 +1,7 @@
 {
   "name": "khata-app",
   "description": "Khata App - Manage Your Business.",
-  "version": "1.2.0",
+  "version": "1.0.0",
   "private": true,
   "homepage": ".",
   "main": "public/electron.js",

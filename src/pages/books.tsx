@@ -72,7 +72,7 @@ const Books: React.FC<BooksProps> = ({
         const newo = o.accLedgerOut[index];
         data.push({
           [t("app:accountName")]: "",
-          [t("app:contactNumber")]: formatDate(newo.createAt, false),
+          [t("app:contactNumber")]: formatDate(newo.createAt),
           [t("app:balance")]: Number(newo.amount),
         });
       }

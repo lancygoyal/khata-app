@@ -174,7 +174,7 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
             <KeyboardDatePicker
               variant="inline"
               id="date-picker"
-              format="dd, MMMM yyyy"
+              format="dd-MM-yyyy"
               value={date}
               animateYearScrolling
               autoOk
