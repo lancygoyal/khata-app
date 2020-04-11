@@ -3,7 +3,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { APP_NAME, APP_VER } from "../constants/app";
 
-const fmtMSS = s => (s - (s %= 60)) / 60 + (9 < s ? ":" : ":0") + s;
+export const fmtMSS = (s) => (s - (s %= 60)) / 60 + (9 < s ? ":" : ":0") + s;
 
 const Copyright = () => {
   const [time, setTime] = React.useState(0);
@@ -16,8 +16,6 @@ const Copyright = () => {
 
   return (
     <Typography variant="body2" color="secondary">
-      {fmtMSS(time)}
-      {" | "}
       {APP_NAME}
       {" - v"}
       {APP_VER}
@@ -27,7 +25,7 @@ const Copyright = () => {
   );
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   footer: {
     position: "fixed",
     right: 0,
@@ -39,8 +37,8 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     height: 39,
     paddingRight: 10,
-    userSelect: "none"
-  }
+    userSelect: "none",
+  },
 }));
 
 const Footer = () => {
