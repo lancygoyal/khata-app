@@ -1,7 +1,7 @@
-import React from "react";
-import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import { APP_NAME, APP_VER } from "../constants/app";
+import Typography from "@material-ui/core/Typography";
+import React from "react";
+import { APP_VER } from "../constants/app";
 
 export const fmtMSS = (s) => (s - (s %= 60)) / 60 + (9 < s ? ":" : ":0") + s;
 
@@ -16,8 +16,7 @@ const Copyright = () => {
 
   return (
     <Typography variant="body2" color="secondary">
-      {APP_NAME}
-      {" - v"}
+      {"v"}
       {APP_VER}
       {" | © "}
       <span>Lancy Goyal</span> {new Date().getFullYear()}
