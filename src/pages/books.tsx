@@ -250,6 +250,7 @@ const Books: React.FC<BooksProps> = ({
               field: "createAt",
               render: (rowData: any) => formatDate(rowData.createAt),
               searchable: false,
+              sorting: true,
             },
             // {
             //   title: t("app:invoiceNumber"),
@@ -262,6 +263,7 @@ const Books: React.FC<BooksProps> = ({
               render: (rowData: any) =>
                 rowData.notes ? rowData.notes : <>&mdash;</>,
               searchable: true,
+              sorting: false,
             },
             {
               title: t("app:in"),
@@ -273,6 +275,7 @@ const Books: React.FC<BooksProps> = ({
                     <>&mdash;</>
                   ),
               searchable: true,
+              sorting: false,
             },
             {
               title: t("app:out"),
@@ -284,6 +287,7 @@ const Books: React.FC<BooksProps> = ({
                     <>&mdash;</>
                   ),
               searchable: true,
+              sorting: false,
             },
           ]}
           data={accountList[0].accLedger}
@@ -291,8 +295,8 @@ const Books: React.FC<BooksProps> = ({
             "app:ledger"
           )}`}
           options={{
-            sorting: false,
-            paging: false,
+            sorting: true,
+            paging: true,
             padding: "dense",
             draggable: false,
             actionsColumnIndex: -1,

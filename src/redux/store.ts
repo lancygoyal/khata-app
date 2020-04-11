@@ -5,12 +5,19 @@ import thunkMiddleware from "redux-thunk";
 import rootReducer, { IRootState } from "./reducers";
 import { storage, encryptor } from "./storage";
 
-const persistConfig = {
-  key: "root",
-  storage: storage,
-  blacklist: ["app"],
-  transforms: [encryptor]
-};
+const isDev = process.env.NODE_ENV === "development";
+const persistConfig = isDev
+  ? {
+      key: "root",
+      storage: storage,
+      transforms: [encryptor],
+    }
+  : {
+      key: "root",
+      storage: storage,
+      blacklist: ["app"],
+      transforms: [encryptor],
+    };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
@@ -18,7 +25,7 @@ export default (initialState?: IRootState) => {
   const store = createStore(
     persistedReducer,
     initialState,
-    process.env.NODE_ENV === "development"
+    isDev
       ? composeWithDevTools(applyMiddleware(thunkMiddleware))
       : compose(applyMiddleware(thunkMiddleware))
   );
