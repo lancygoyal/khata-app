@@ -18,8 +18,6 @@ const Copyright = () => {
     <Typography variant="body2" color="secondary">
       {"v"}
       {APP_VER}
-      {" | © "}
-      <span>Lancy Goyal</span> {new Date().getFullYear()}
     </Typography>
   );
 };
