@@ -16,9 +16,15 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import Confirm from "../components/confirm";
 import AddDialog from "../components/daybook/addDialog";
+import UpdateAccount from "../components/accounts/updateAccount";
 import UpdateDialog from "../components/daybook/updateDialog";
 import { TYPES } from "../constants/app";
-import { addInvoice, updateInvoice, removeInvoice } from "../redux";
+import {
+  updateAccount,
+  addInvoice,
+  updateInvoice,
+  removeInvoice,
+} from "../redux";
 import { jsonToXLS, formatDate } from "../utils/common";
 import uniqid from "uniqid";
 
@@ -26,9 +32,9 @@ const styles = (theme) => createStyles({});
 
 interface BooksProps
   extends WithStyles,
-  WithTranslation,
-  StateProps,
-  DispatchProps {
+    WithTranslation,
+    StateProps,
+    DispatchProps {
   history: any;
 }
 
@@ -37,6 +43,7 @@ const Books: React.FC<BooksProps> = ({
   user,
   cities,
   accounts,
+  updateAccount,
   addInvoice,
   updateInvoice,
   removeInvoice,
@@ -45,6 +52,7 @@ const Books: React.FC<BooksProps> = ({
   const [city, selectCity] = React.useState(null);
   const [account, selectAccount] = React.useState(null);
   const [addBill, handleAddBill] = React.useState(null);
+  const [updateAccountState, handleUpdateAccount] = React.useState(null);
   const [updateBill, handleUpdateBill] = React.useState(null);
   const [deleteBill, handleDeleteBill] = React.useState(null);
   const accountsByCity = city
@@ -112,6 +120,10 @@ const Books: React.FC<BooksProps> = ({
     });
     handleUpdateBill(null);
   };
+  const editAccount = (data) => {
+    updateAccount(updateAccountState.id, data);
+    handleUpdateAccount(null);
+  };
 
   return (
     <div style={{ padding: 25, paddingBottom: 70, userSelect: "none" }}>
@@ -177,10 +189,10 @@ const Books: React.FC<BooksProps> = ({
                 </IconButton>
               </Tooltip>
             ) : (
-                <IconButton aria-label="export">
-                  <SaveAltIcon />
-                </IconButton>
-              )}
+              <IconButton aria-label="export">
+                <SaveAltIcon />
+              </IconButton>
+            )}
           </Grid>
         </Grid>
         <MaterialTable
@@ -224,14 +236,15 @@ const Books: React.FC<BooksProps> = ({
             paging: false,
             draggable: false,
             toolbar: false,
+            actionsColumnIndex: -1,
           }}
           localization={{
             body: {
               emptyDataSourceMessage: !city
                 ? t("app:selectCityMsg")
                 : !account
-                  ? t("app:selectAccountMsg")
-                  : t("app:emptyDataSourceMessage"),
+                ? t("app:selectAccountMsg")
+                : t("app:emptyDataSourceMessage"),
             },
             toolbar: {
               searchTooltip: t("app:search"),
@@ -242,100 +255,112 @@ const Books: React.FC<BooksProps> = ({
             Container: (props) => <div>{props.children}</div>,
           }}
           data={accountList}
-        />
-        {accountList[0] && <MaterialTable
-          columns={[
-            {
-              title: t("app:date"),
-              field: "createAt",
-              render: (rowData: any) => formatDate(rowData.createAt),
-              searchable: false,
-              sorting: true,
-            },
-            // {
-            //   title: t("app:invoiceNumber"),
-            //   field: "invoiceNumber",
-            //   searchable: true,
-            // },
-            {
-              title: t("app:notes"),
-              field: "notes",
-              render: (rowData: any) =>
-                rowData.notes ? rowData.notes : <>&mdash;</>,
-              searchable: true,
-              sorting: false,
-            },
-            {
-              title: t("app:in"),
-              field: "amount",
-              render: (rowData: any) =>
-                rowData.type === TYPES.IN ? (
-                  <>&#8377; {rowData.amount}</>
-                ) : (
-                    <>&mdash;</>
-                  ),
-              searchable: true,
-              sorting: false,
-            },
-            {
-              title: t("app:out"),
-              field: "amount",
-              render: (rowData: any) =>
-                rowData.type === TYPES.OUT ? (
-                  <>&#8377; {rowData.amount}</>
-                ) : (
-                    <>&mdash;</>
-                  ),
-              searchable: true,
-              sorting: false,
-            },
-          ]}
-          data={accountList[0].accLedger}
-          title={`${Humanize.capitalizeAll(accountList[0].accountName)} ${t(
-            "app:ledger"
-          )}`}
-          options={{
-            sorting: true,
-            paging: true,
-            padding: "dense",
-            draggable: false,
-            actionsColumnIndex: -1,
-            // exportAllData: true,
-            // exportButton: true,
-            // exportFileName: Humanize.capitalizeAll(rowData.accountName),
-          }}
-          localization={{
-            body: {
-              emptyDataSourceMessage: t("app:emptyDataSourceMessage"),
-            },
-            toolbar: {
-              searchTooltip: t("app:search"),
-              searchPlaceholder: t("app:search"),
-            },
-          }}
           actions={[
             () => ({
               icon: "edit",
-              tooltip: t("app:editInvoice"),
+              tooltip: t("app:edit"),
               onClick: (event, data) =>
-                handleUpdateBill({
-                  accountName: accountList[0].accountName,
+                handleUpdateAccount({
                   ...data,
                 }),
             }),
-            () => ({
-              icon: "delete",
-              tooltip: t("app:removeInvoice"),
-              onClick: (event, data) => handleDeleteBill(data),
-            }),
-            {
-              icon: "add",
-              tooltip: t("app:addRecord"),
-              isFreeAction: true,
-              onClick: (event) => handleAddBill(accountList[0]),
-            },
           ]}
-        />}
+        />
+        {accountList[0] && (
+          <MaterialTable
+            columns={[
+              {
+                title: t("app:date"),
+                field: "createAt",
+                render: (rowData: any) => formatDate(rowData.createAt),
+                searchable: false,
+                sorting: true,
+              },
+              // {
+              //   title: t("app:invoiceNumber"),
+              //   field: "invoiceNumber",
+              //   searchable: true,
+              // },
+              {
+                title: t("app:notes"),
+                field: "notes",
+                render: (rowData: any) =>
+                  rowData.notes ? rowData.notes : <>&mdash;</>,
+                searchable: true,
+                sorting: false,
+              },
+              {
+                title: t("app:in"),
+                field: "amount",
+                render: (rowData: any) =>
+                  rowData.type === TYPES.IN ? (
+                    <>&#8377; {rowData.amount}</>
+                  ) : (
+                    <>&mdash;</>
+                  ),
+                searchable: true,
+                sorting: false,
+              },
+              {
+                title: t("app:out"),
+                field: "amount",
+                render: (rowData: any) =>
+                  rowData.type === TYPES.OUT ? (
+                    <>&#8377; {rowData.amount}</>
+                  ) : (
+                    <>&mdash;</>
+                  ),
+                searchable: true,
+                sorting: false,
+              },
+            ]}
+            data={accountList[0].accLedger}
+            title={`${Humanize.capitalizeAll(accountList[0].accountName)} ${t(
+              "app:ledger"
+            )}`}
+            options={{
+              sorting: true,
+              paging: true,
+              padding: "dense",
+              draggable: false,
+              actionsColumnIndex: -1,
+              // exportAllData: true,
+              // exportButton: true,
+              // exportFileName: Humanize.capitalizeAll(rowData.accountName),
+            }}
+            localization={{
+              body: {
+                emptyDataSourceMessage: t("app:emptyDataSourceMessage"),
+              },
+              toolbar: {
+                searchTooltip: t("app:search"),
+                searchPlaceholder: t("app:search"),
+              },
+            }}
+            actions={[
+              () => ({
+                icon: "edit",
+                tooltip: t("app:edit"),
+                onClick: (event, data) =>
+                  handleUpdateBill({
+                    accountName: accountList[0].accountName,
+                    ...data,
+                  }),
+              }),
+              () => ({
+                icon: "delete",
+                tooltip: t("app:removeInvoice"),
+                onClick: (event, data) => handleDeleteBill(data),
+              }),
+              {
+                icon: "add",
+                tooltip: t("app:addRecord"),
+                isFreeAction: true,
+                onClick: (event) => handleAddBill(accountList[0]),
+              },
+            ]}
+          />
+        )}
         <Confirm
           key={"delete-dialog-" + Boolean(deleteBill)}
           open={Boolean(deleteBill)}
@@ -345,7 +370,7 @@ const Books: React.FC<BooksProps> = ({
           }}
           handleSecondary={() => handleDeleteBill(null)}
           title={t("app:removeInvoice")}
-          desc={t("app:SureDelete")}
+          desc={t("app:sureDelete")}
           primaryBtnTxt={t("app:yes")}
           secondaryBtnTxt={t("app:no")}
         />
@@ -371,6 +396,19 @@ const Books: React.FC<BooksProps> = ({
             invType={updateBill.type}
             onClose={() => handleUpdateBill(null)}
             saveData={handleEdit}
+          />
+        )}
+        {updateAccountState && (
+          <UpdateAccount
+            key={"update-account-" + Boolean(updateAccountState)}
+            open={Boolean(updateAccountState)}
+            accountName={updateAccountState.accountName}
+            city={updateAccountState.city}
+            contactNumber={updateAccountState.contactNumber}
+            addInfo={updateAccountState.addInfo}
+            cities={cities}
+            onClose={() => handleUpdateAccount(null)}
+            saveData={editAccount}
           />
         )}
       </Paper>
@@ -416,7 +454,12 @@ const mapStateToProps = ({ accounts, ledger, app: { user } }) => ({
     ledger.length > 0 ? ledger[ledger.length - 1].invoiceNumber + 1 : 10001,
 });
 
-const mapDispatchToProps = { addInvoice, updateInvoice, removeInvoice };
+const mapDispatchToProps = {
+  updateAccount,
+  addInvoice,
+  updateInvoice,
+  removeInvoice,
+};
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

@@ -87,7 +87,7 @@ export default ({
         disableTypography
         className={classes.dialogTitle}
       >
-        <h2 style={{ margin: 0 }}>{t("app:ledger")} {t("app:editInvoice")}</h2>
+        <h2 style={{ margin: 0 }}>{t("app:ledger")} {t("app:edit")}</h2>
         <IconButton style={{ padding: 0 }} onClick={onClose}>
           <Close />
         </IconButton>
@@ -276,7 +276,7 @@ export default ({
                     className={classes.btn}
                     disabled={isSubmitting}
                   >
-                    {t("app:editInvoice")}
+                    {t("app:edit")}
                   </Button>
                 </Grid>
               </form>
