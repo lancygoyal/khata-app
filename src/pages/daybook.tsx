@@ -11,7 +11,6 @@ import {
 import filter from "lodash/filter";
 import find from "lodash/find";
 import map from "lodash/map";
-import uniqBy from "lodash/uniqBy";
 import sortBy from "lodash/sortBy";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
@@ -22,6 +21,7 @@ import AddDialog from "../components/daybook/addDialog";
 import Records from "../components/daybook/records";
 import { TYPES } from "../constants/app";
 import { addAccount, addInvoice, setPath } from "../redux";
+import { getCities } from "../utils/common";
 
 const styles = (theme) =>
   createStyles({
@@ -36,8 +36,8 @@ const styles = (theme) =>
     },
     speedDial: {
       position: "fixed",
-      bottom: theme.spacing(10),
-      right: theme.spacing(5),
+      bottom: theme.spacing(15),
+      right: theme.spacing(10),
     },
     title: {
       display: "flex",
@@ -246,10 +246,7 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
 }
 
 const mapStateToProps = ({ accounts, ledger, app: { user, path } }) => ({
-  cities: map(
-    uniqBy(accounts, (x) => x.city.toLowerCase().trim()),
-    "city"
-  ).sort(),
+  cities: getCities(accounts),
   accounts: sortBy(
     map(accounts, (o) => ({
       ...o,

@@ -32,9 +32,12 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "flex-end",
     alignItems: "center",
-    height: 39,
+    height: 40,
     paddingRight: 10,
     userSelect: "none",
+    borderTop: 1,
+    borderTopStyle: "solid",
+    borderTopColor: theme.palette.action.hover,
   },
 }));
 

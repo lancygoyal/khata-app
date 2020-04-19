@@ -1,17 +1,18 @@
-import React from "react";
+import { Grid } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
+import { createStyles, withStyles, WithStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { withStyles, WithStyles, createStyles } from "@material-ui/core/styles";
-import { connect } from "react-redux";
-import { login } from "../redux/app";
-import { Grid } from "@material-ui/core";
 import EnhancedEncryptionIcon from "@material-ui/icons/EnhancedEncryption";
 import LockIcon from "@material-ui/icons/Lock";
+import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
+import KeyboardEventHandler from "react-keyboard-event-handler";
+import { connect } from "react-redux";
 import EnterPassword from "../components/user/enterPassword";
+import { login } from "../redux/app";
 
 const styles = theme =>
   createStyles({
@@ -47,9 +48,9 @@ const styles = theme =>
 
 interface SignInProps
   extends WithStyles,
-    StateProps,
-    DispatchProps,
-    WithTranslation {
+  StateProps,
+  DispatchProps,
+  WithTranslation {
   history: any;
 }
 
@@ -104,8 +105,8 @@ class SignIn extends React.Component<SignInProps, SignInState> {
                   {user.isMaster ? (
                     <EnhancedEncryptionIcon fontSize="large" />
                   ) : (
-                    <LockIcon fontSize="large" />
-                  )}
+                      <LockIcon fontSize="large" />
+                    )}
                 </Avatar>
                 <Typography component="h1" variant="h5">
                   {user.firstName + " " + user.lastName}
@@ -129,6 +130,10 @@ class SignIn extends React.Component<SignInProps, SignInState> {
           open={loginDialog}
           handleClose={this.handleLoginDialog}
           handleOpen={this.login}
+        />
+        <KeyboardEventHandler
+          handleKeys={["enter", "space"]}
+          onKeyEvent={() => this.handleLoginDialog(users[0])}
         />
       </div>
     );

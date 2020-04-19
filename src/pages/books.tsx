@@ -6,36 +6,30 @@ import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Humanize from "humanize-plus";
 import filter from "lodash/filter";
-import reduce from "lodash/reduce";
 import map from "lodash/map";
+import reduce from "lodash/reduce";
 import sortBy from "lodash/sortBy";
-import uniqBy from "lodash/uniqBy";
 import MaterialTable from "material-table";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { connect } from "react-redux";
+import uniqid from "uniqid";
+import UpdateAccount from "../components/accounts/updateAccount";
 import Confirm from "../components/confirm";
 import AddDialog from "../components/daybook/addDialog";
-import UpdateAccount from "../components/accounts/updateAccount";
 import UpdateDialog from "../components/daybook/updateDialog";
 import { TYPES } from "../constants/app";
-import {
-  updateAccount,
-  addInvoice,
-  updateInvoice,
-  removeInvoice,
-} from "../redux";
-import { jsonToXLS, formatDate } from "../utils/common";
-import uniqid from "uniqid";
+import { addInvoice, removeInvoice, updateAccount, updateInvoice } from "../redux";
+import { formatDate, getCities, jsonToXLS } from "../utils/common";
 
 const styles = (theme) => createStyles({});
 const xlsOutCount = 5;
 
 interface BooksProps
   extends WithStyles,
-    WithTranslation,
-    StateProps,
-    DispatchProps {
+  WithTranslation,
+  StateProps,
+  DispatchProps {
   history: any;
 }
 
@@ -58,9 +52,9 @@ const Books: React.FC<BooksProps> = ({
   const [deleteBill, handleDeleteBill] = React.useState(null);
   const accountsByCity = city
     ? sortBy(
-        filter(accounts, (o) => o.city.toLowerCase() === city.toLowerCase()),
-        "accountName"
-      )
+      filter(accounts, (o) => o.city.toLowerCase() === city.toLowerCase()),
+      "accountName"
+    )
     : [];
   const accountList = account ? filter(accountsByCity, ["id", account.id]) : [];
 
@@ -201,10 +195,10 @@ const Books: React.FC<BooksProps> = ({
                 </IconButton>
               </Tooltip>
             ) : (
-              <IconButton aria-label="export">
-                <SaveAltIcon />
-              </IconButton>
-            )}
+                <IconButton aria-label="export">
+                  <SaveAltIcon />
+                </IconButton>
+              )}
           </Grid>
         </Grid>
         <MaterialTable
@@ -255,8 +249,8 @@ const Books: React.FC<BooksProps> = ({
               emptyDataSourceMessage: !city
                 ? t("app:selectCityMsg")
                 : !account
-                ? t("app:selectAccountMsg")
-                : t("app:emptyDataSourceMessage"),
+                  ? t("app:selectAccountMsg")
+                  : t("app:emptyDataSourceMessage"),
             },
             toolbar: {
               searchTooltip: t("app:search"),
@@ -308,8 +302,8 @@ const Books: React.FC<BooksProps> = ({
                   rowData.type === TYPES.IN ? (
                     <>&#8377; {rowData.amount}</>
                   ) : (
-                    <>&mdash;</>
-                  ),
+                      <>&mdash;</>
+                    ),
                 searchable: true,
                 sorting: false,
               },
@@ -320,8 +314,8 @@ const Books: React.FC<BooksProps> = ({
                   rowData.type === TYPES.OUT ? (
                     <>&#8377; {rowData.amount}</>
                   ) : (
-                    <>&mdash;</>
-                  ),
+                      <>&mdash;</>
+                    ),
                 searchable: true,
                 sorting: false,
               },
@@ -429,10 +423,7 @@ const Books: React.FC<BooksProps> = ({
 };
 
 const mapStateToProps = ({ accounts, ledger, app: { user } }) => ({
-  cities: map(
-    uniqBy(accounts, (x) => x.city.toLowerCase().trim()),
-    "city"
-  ).sort(),
+  cities: getCities(accounts),
   accounts: map(accounts, (o) => {
     const accLedger = sortBy(filter(ledger, ["accountId", o.id]), [
       "createAt",

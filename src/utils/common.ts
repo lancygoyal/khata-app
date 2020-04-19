@@ -1,7 +1,9 @@
 import CryptoJS from "crypto-js";
 import * as FileSaver from "file-saver";
-import * as XLSX from "xlsx";
+import map from "lodash/map";
+import uniqBy from "lodash/uniqBy";
 import moment from "moment";
+import * as XLSX from "xlsx";
 import { APP_STORE_KEY, LANGS } from "../constants/app";
 // import { fileOpen, directoryOpen, fileSave } from "browser-nativefs";
 
@@ -49,3 +51,8 @@ export const getBackupTime = (backupTime) =>
   backupTime
     ? " - " + moment(Number(backupTime)).locale(LANGS.EN).fromNow()
     : "";
+
+export const getCities = (accounts) => map(
+  uniqBy(accounts, (x) => x.city.toLowerCase().trim()),
+  "city"
+).sort();
