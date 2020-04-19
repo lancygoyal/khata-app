@@ -47,6 +47,4 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 ## Todo
 
-Auto Backup
-
-Restore
+Auto Backup Using - https://web.dev/native-file-system/

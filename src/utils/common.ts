@@ -3,6 +3,7 @@ import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import moment from "moment";
 import { APP_STORE_KEY, LANGS } from "../constants/app";
+// import { fileOpen, directoryOpen, fileSave } from "browser-nativefs";
 
 export const encryptPassword = (message) => CryptoJS.SHA256(message).toString();
 
@@ -31,11 +32,14 @@ export const decryptData = (data) =>
     CryptoJS.AES.decrypt(data, APP_STORE_KEY).toString(CryptoJS.enc.Utf8)
   );
 
-export const backupData = (data) => {
+export const backupData = async (data) => {
   const blob = new Blob([encryptData(data)], {
     type: "text/plain;charset=utf-8",
   });
   FileSaver.saveAs(blob, "khata-app-backup-" + Date.now() + ".ka");
+  // await fileSave(blob, { fileName: "khata-app-backup-" + Date.now() + ".ka" });
+  // const blobsInDirectory = await directoryOpen();
+  // console.log(blobsInDirectory)
 };
 
 export const setBackupTime = () =>

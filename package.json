@@ -20,6 +20,7 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.7",
+    "browser-nativefs": "^0.7.1",
     "classnames": "^2.2.6",
     "crypto-js": "^4.0.0",
     "electron-is-dev": "^1.1.0",

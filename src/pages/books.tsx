@@ -29,6 +29,7 @@ import { jsonToXLS, formatDate } from "../utils/common";
 import uniqid from "uniqid";
 
 const styles = (theme) => createStyles({});
+const xlsOutCount = 5;
 
 interface BooksProps
   extends WithStyles,
@@ -66,7 +67,10 @@ const Books: React.FC<BooksProps> = ({
   const exportAccountsByCity = () => {
     const data = [];
     accountsByCity.forEach((o) => {
-      const size = o.accLedgerOut.length > 5 ? 5 : o.accLedgerOut.length;
+      const size =
+        o.accLedgerOut.length > xlsOutCount
+          ? xlsOutCount
+          : o.accLedgerOut.length;
       size &&
         data.push({
           [t("app:accountName")]: Humanize.capitalizeAll(o.accountName),
