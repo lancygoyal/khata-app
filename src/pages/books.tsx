@@ -56,7 +56,10 @@ const Books: React.FC<BooksProps> = ({
   const [updateBill, handleUpdateBill] = React.useState(null);
   const [deleteBill, handleDeleteBill] = React.useState(null);
   const accountsByCity = city
-    ? filter(accounts, (o) => o.city.toLowerCase() === city.toLowerCase())
+    ? sortBy(
+        filter(accounts, (o) => o.city.toLowerCase() === city.toLowerCase()),
+        "accountName"
+      )
     : [];
   const accountList = account ? filter(accountsByCity, ["id", account.id]) : [];
 
@@ -121,7 +124,12 @@ const Books: React.FC<BooksProps> = ({
     handleUpdateBill(null);
   };
   const editAccount = (data) => {
-    updateAccount(updateAccountState.id, data);
+    updateAccount(updateAccountState.id, {
+      accountName: data.accountName.toLowerCase().trim(),
+      city: data.city.toLowerCase().trim(),
+      contactNumber: data.contactNumber,
+      addInfo: data.addInfo,
+    });
     handleUpdateAccount(null);
   };
 
@@ -417,7 +425,10 @@ const Books: React.FC<BooksProps> = ({
 };
 
 const mapStateToProps = ({ accounts, ledger, app: { user } }) => ({
-  cities: map(uniqBy(accounts, "city"), "city"),
+  cities: map(
+    uniqBy(accounts, (x) => x.city.toLowerCase().trim()),
+    "city"
+  ).sort(),
   accounts: map(accounts, (o) => {
     const accLedger = sortBy(filter(ledger, ["accountId", o.id]), [
       "createAt",
@@ -441,6 +452,8 @@ const mapStateToProps = ({ accounts, ledger, app: { user } }) => ({
     const balance = amtOut - amtIn;
     return {
       ...o,
+      accountName: o.accountName.toLowerCase().trim(),
+      city: o.city.toLowerCase().trim(),
       accLedger,
       accLedgerIn,
       accLedgerOut,

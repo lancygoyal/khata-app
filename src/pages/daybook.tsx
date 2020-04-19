@@ -12,6 +12,7 @@ import filter from "lodash/filter";
 import find from "lodash/find";
 import map from "lodash/map";
 import uniqBy from "lodash/uniqBy";
+import sortBy from "lodash/sortBy";
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import KeyboardEventHandler from "react-keyboard-event-handler";
@@ -245,8 +246,18 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
 }
 
 const mapStateToProps = ({ accounts, ledger, app: { user, path } }) => ({
-  cities: map(uniqBy(accounts, "city"), "city"),
-  accounts,
+  cities: map(
+    uniqBy(accounts, (x) => x.city.toLowerCase().trim()),
+    "city"
+  ).sort(),
+  accounts: sortBy(
+    map(accounts, (o) => ({
+      ...o,
+      accountName: o.accountName.toLowerCase().trim(),
+      city: o.city.toLowerCase().trim(),
+    })),
+    "accountName"
+  ),
   ledger,
   invoiceNumber:
     ledger.length > 0 ? ledger[ledger.length - 1].invoiceNumber + 1 : 10001,
