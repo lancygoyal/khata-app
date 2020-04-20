@@ -90,7 +90,7 @@ export default ({
   const reset = () => {
     !directAdd && handleSelectAccount(null);
     handleAddAccount(false);
-    setType(TYPES.IN);
+    setType(TYPES.OUT);
   };
 
   return (
@@ -137,7 +137,7 @@ export default ({
                 resetForm();
                 reset();
                 setSubmitting(false);
-              }, 1000);
+              }, 500);
             }
           }}
           validationSchema={Yup.object().shape({
