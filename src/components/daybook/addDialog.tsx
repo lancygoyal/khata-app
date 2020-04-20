@@ -1,39 +1,20 @@
-import {
-  createStyles,
-  FormControlLabel,
-  Grid,
-  IconButton,
-  makeStyles,
-  Radio,
-  RadioGroup,
-  Theme,
-} from "@material-ui/core";
+import DateFnsUtils from "@date-io/date-fns";
+import { createStyles, FormControlLabel, Grid, IconButton, makeStyles, Radio, RadioGroup, Theme } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import Close from "@material-ui/icons/Close";
-import Autocomplete, {
-  createFilterOptions,
-} from "@material-ui/lab/Autocomplete";
+import Autocomplete, { createFilterOptions } from "@material-ui/lab/Autocomplete";
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { Formik } from "formik";
 import Humanize from "humanize-plus";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
 import { TYPES } from "../../constants/app";
-import {
-  ALPHA_SPACE,
-  ALPHA_SPACE_DOT,
-  CONTACT_NUMBER,
-  NUMERIC,
-} from "../../constants/regex";
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+import { ALPHA_SPACE, ALPHA_SPACE_DOT, CONTACT_NUMBER, NUMERIC } from "../../constants/regex";
 
 const filter = createFilterOptions();
 const useStyles = makeStyles((theme: Theme) =>
@@ -246,7 +227,7 @@ export default ({
             };
 
             return (
-              <form className={classes.form} noValidate>
+              <form className={classes.form} noValidate onSubmit={(evt) => handleSave(evt, false)}>
                 <Grid container spacing={2}>
                   <Grid item xs={7} sm={7}>
                     <Autocomplete
@@ -555,11 +536,11 @@ export default ({
                     {t("app:saveMore")}
                   </Button>
                   <Button
+                    type="submit"
                     variant="contained"
                     color="primary"
                     className={classes.btn}
                     disabled={isSubmitting}
-                    onClick={(evt) => handleSave(evt)}
                   >
                     {t("app:save")}
                   </Button>
