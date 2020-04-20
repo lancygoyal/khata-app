@@ -227,7 +227,7 @@ export default ({
             };
 
             return (
-              <form className={classes.form} noValidate onSubmit={(evt) => handleSave(evt, false)}>
+              <form className={classes.form} noValidate onSubmit={handleSave}>
                 <Grid container spacing={2}>
                   <Grid item xs={7} sm={7}>
                     <Autocomplete
