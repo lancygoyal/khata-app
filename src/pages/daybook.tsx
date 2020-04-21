@@ -63,9 +63,9 @@ const styles = (theme) =>
 
 interface DaybookProps
   extends WithStyles,
-    WithTranslation,
-    StateProps,
-    DispatchProps {
+  WithTranslation,
+  StateProps,
+  DispatchProps {
   history: any;
 }
 
@@ -140,7 +140,7 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
         (o) =>
           o.type === TYPES.IN &&
           new Date(o.createAt).toLocaleDateString() ===
-            new Date(date).toLocaleDateString()
+          new Date(date).toLocaleDateString()
       ).map((data) => ({
         ...data,
         account: find(accounts, ["id", data.accountId]),
@@ -150,7 +150,7 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
         (o) =>
           o.type === TYPES.OUT &&
           new Date(o.createAt).toLocaleDateString() ===
-            new Date(date).toLocaleDateString()
+          new Date(date).toLocaleDateString()
       ).map((data) => ({
         ...data,
         account: find(accounts, ["id", data.accountId]),
@@ -237,7 +237,7 @@ class Daybook extends React.Component<DaybookProps, DaybookState> {
           date={date}
         />
         <KeyboardEventHandler
-          handleKeys={["enter", "tab", "space"]}
+          handleKeys={["enter", "space"]}
           onKeyEvent={this.handleAddDialog}
         />
       </div>
