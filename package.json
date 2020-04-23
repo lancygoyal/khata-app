@@ -63,7 +63,12 @@
     "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "npm run build",
-    "electron-pack": "electron-builder build -mw --x64 --c.extraMetadata.main=build/electron.js"
+    "electron-pack": "electron-builder build -mw --x64 --c.extraMetadata.main=build/electron.js",
+    "commit:auto": "npm version patch",
+    "commit:patch": "npm version patch --no-git-tag-version --force",
+    "commit:minor": "npm version minor --no-git-tag-version --force",
+    "commit:major": "npm version major --no-git-tag-version --force",
+    "precommit": "npm run commit:auto"
   },
   "eslintConfig": {
     "extends": "react-app"
