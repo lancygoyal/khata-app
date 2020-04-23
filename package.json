@@ -67,8 +67,7 @@
     "commit:auto": "npm version patch",
     "commit:patch": "npm version patch --no-git-tag-version --force",
     "commit:minor": "npm version minor --no-git-tag-version --force",
-    "commit:major": "npm version major --no-git-tag-version --force",
-    "precommit": "npm run commit:auto"
+    "commit:major": "npm version major --no-git-tag-version --force"
   },
   "eslintConfig": {
     "extends": "react-app"
