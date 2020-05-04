@@ -71,20 +71,20 @@ const Books: React.FC<BooksProps> = ({
           [t("app:contactNumber")]: o.contactNumber,
           [t("app:balance")]: o.balance,
         });
-      size &&
-        data.push({
-          [t("app:accountName")]: "",
-          [t("app:contactNumber")]: t("app:date"),
-          [t("app:balance")]: t("app:out"),
-        });
-      for (let index = 0; index < size; index++) {
-        const newo = o.accLedgerOut[index];
-        data.push({
-          [t("app:accountName")]: "",
-          [t("app:contactNumber")]: formatDate(newo.createAt),
-          [t("app:balance")]: Number(newo.amount),
-        });
-      }
+      // size &&
+      //   data.push({
+      //     [t("app:accountName")]: "",
+      //     [t("app:contactNumber")]: t("app:date"),
+      //     [t("app:balance")]: t("app:out"),
+      //   });
+      // for (let index = 0; index < size; index++) {
+      //   const newo = o.accLedgerOut[index];
+      //   data.push({
+      //     [t("app:accountName")]: "",
+      //     [t("app:contactNumber")]: formatDate(newo.createAt),
+      //     [t("app:balance")]: Number(newo.amount),
+      //   });
+      // }
     });
     jsonToXLS(data, city.toUpperCase());
   };
