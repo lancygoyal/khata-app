@@ -31,7 +31,7 @@
     "i18next": "^19.3.2",
     "loaders.css": "^0.1.2",
     "localforage": "^1.7.3",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "material-design-icons-iconfont": "^5.0.1",
     "material-table": "1.57.2",
     "moment": "^2.24.0",
